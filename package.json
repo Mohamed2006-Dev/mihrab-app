@@ -1,0 +1,122 @@
+{
+  "name": "mihrab-desktop",
+  "version": "1.0.0",
+  "description": "تطبيق مكتبي حديث وعصري لمواقيت الصلاة والأحاديث وورد القرآن والدروس الدينية مع عزل كامل للقوالب الجمالية",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test-engines.js && node --test test-youtube-rss.js test-audio-manager.js test-notifications.js test-geography.js test-quran.js test-hadeethenc.js test-resources.js test-accessibility.js test-performance.js test-project-info.js test-updates.js test-final-guidance.js test-prayer-display.js test-lesson-navigation.js",
+    "dist": "electron-builder --win",
+    "dist:portable": "electron-builder --win portable",
+    "dist:nsis": "electron-builder --win nsis",
+    "export:hadith-image": "electron scripts/export-hadith-image.cjs",
+    "test:ui": "electron scripts/test-ui-controls.cjs",
+    "format": "prettier --write \"src/**/*.{js,css,html}\" \"scripts/*.cjs\" \"test-*.js\" main.js preload.js package.json .prettierrc.json \"themes/{emerald-sanctuary,royal-sapphire,andalusian-sand}.json\"",
+    "format:check": "prettier --check \"src/**/*.{js,css,html}\" \"scripts/*.cjs\" \"test-*.js\" main.js preload.js package.json .prettierrc.json \"themes/{emerald-sanctuary,royal-sapphire,andalusian-sand}.json\""
+  },
+  "keywords": [
+    "prayer-times",
+    "islamic",
+    "electron",
+    "quran",
+    "hadith",
+    "themes"
+  ],
+  "author": "Mihrab Desktop",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "adhan": "^4.4.3",
+    "electron-updater": "^6.8.11",
+    "semver": "^7.7.4"
+  },
+  "devDependencies": {
+    "electron": "^41.2.1",
+    "electron-builder": "^26.18.0",
+    "prettier": "3.6.2"
+  },
+  "build": {
+    "appId": "com.mihrab.desktop",
+    "productName": "Mihrab",
+    "copyright": "Copyright © 2026 Mihrab Desktop",
+    "directories": {
+      "output": "dist"
+    },
+    "asar": true,
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "src/**/*",
+      "themes/**/*",
+      "data/**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powertests,example,examples}",
+      "!**/*.map",
+      "!build_app.py",
+      "!test-engines.js",
+      "!test-youtube-rss.js",
+      "!Project_Assets/**/*",
+      "LICENSE",
+      "!data/personal-data*.json",
+      "!data/user-config.json",
+      "!data/network-usage.json",
+      "!data/city-prayer-cache.json",
+      "!data/youtube-cache.json",
+      "!data/hadith-cache.json",
+      "!data/bank-acc-qr.*",
+      "!data/habous-horaires-*.json",
+      "!themes/active-theme.json"
+    ],
+    "extraResources": [
+      {
+        "from": "themes",
+        "to": "themes",
+        "filter": [
+          "**/*",
+          "!active-theme.json"
+        ]
+      },
+      {
+        "from": "data",
+        "to": "data",
+        "filter": [
+          "**/*",
+          "!personal-data*.json",
+          "!user-config.json",
+          "!network-usage.json",
+          "!city-prayer-cache.json",
+          "!youtube-cache.json",
+          "!hadith-cache.json",
+          "!bank-acc-qr.*",
+          "!habous-horaires-*.json"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "icon": "src/ui/assets/app-icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Mihrab",
+      "artifactName": "${productName}-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable.${ext}"
+    },
+    "beforePack": "scripts/prepare-project-public-info.cjs",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Mohamed2006-Dev",
+        "repo": "mihrab-app"
+      }
+    ]
+  }
+}

@@ -1,0 +1,366 @@
+const { allowed: networkAllowed } = require('./resource-engine');
+const NoticePolicy = require('./notification-settings');
+const Geography = require('./prayer-times-engine');
+/** Scheduling uses the same local minute shown in the prayer cards. */
+class SchedulerEngine {
+  constructor({ storage, prayerEngine, hadithEngine, quranEngine, youtubeEngine, callbacks }) {
+    Object.assign(this, { storage, prayerEngine, hadithEngine, quranEngine, youtubeEngine });
+    this.callbacks = callbacks || {};
+    this.firedEventsToday = new Set();
+    this.lastDateKey = '';
+    this.lockPlans = new Map();
+    this.prayerCache = new Map();
+    this.quranScheduleCache = new Map();
+    this.lastLockEnabled = null;
+    this.lastNow = null;
+    this.motivationalQuotes = [
+      '«قم لصلاتك، عملك سينتظرك.. أما الوقت فإنه يمضي إلى الله»',
+      '«أرحنا بها يا بلال — اجعل صلاتك واحة سكينة لقلبك وسط زحام العمل»',
+      '«أول ما يحاسب به العبد يوم القيامة من عمله صلاته، فإن صلحت فقد أفلح وأنجح»',
+      '«ما نقص وقتٌ اقتُطع للوقوف بين يدي الله، بل يبارك الله في بقية يومك»',
+    ];
+  }
+
+  dayKey(date) {
+    if (this.prayerEngine.getDateKey) return this.prayerEngine.getDateKey(date);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  displayedTime(time) {
+    const date = new Date(time);
+    date.setSeconds(0, 0);
+    return date.getTime();
+  }
+  getRandomMotivationalQuote() {
+    return this.motivationalQuotes[Math.floor(Math.random() * this.motivationalQuotes.length)];
+  }
+
+  invoke(name, payload) {
+    try {
+      const result = this.callbacks[name]?.(payload);
+      if (result?.catch) result.catch((error) => this.reportError(error));
+    } catch (error) {
+      this.reportError(error);
+    }
+  }
+
+  reportError(error) {
+    if (this.callbacks.onError) this.callbacks.onError(error);
+    else console.error('[Scheduler]', error);
+  }
+
+  prayerData(now, config) {
+    const key = `${this.dayKey(now)}:${JSON.stringify([config.location, config.prayerAdjustments])}`;
+    if (!this.prayerCache.has(key)) {
+      if (this.prayerCache.size > 3) this.prayerCache.clear();
+      this.prayerCache.set(key, this.prayerEngine.calculateLocalPrayerTimes(now));
+    }
+    return this.prayerCache.get(key);
+  }
+
+  tick(now = new Date()) {
+    this.lastNow = now;
+    const nowMs = now.getTime();
+    const dateKey = this.dayKey(now);
+    if (this.lastDateKey !== dateKey) {
+      this.firedEventsToday.clear();
+      this.lockPlans.clear();
+      this.lastDateKey = dateKey;
+    }
+    const config = this.storage.getConfig();
+    const lockEnabled = Boolean(config.screenLock?.enabled);
+    if (this.lastLockEnabled !== lockEnabled) {
+      this.lockPlans.clear();
+      for (const key of this.firedEventsToday) {
+        if (key.startsWith('pre_prayer_') || key.startsWith('lock_'))
+          this.firedEventsToday.delete(key);
+      }
+      this.lastLockEnabled = lockEnabled;
+      this.invoke('onModeChanged', { lockEnabled });
+    }
+    const lockTimingKey = JSON.stringify([
+      config.screenLock?.minutesBeforeAdhan,
+      config.screenLock?.warningMinutes,
+    ]);
+    if (this.lastLockTimingKey !== lockTimingKey) {
+      this.lastLockTimingKey = lockTimingKey;
+      this.lockPlans.clear();
+      for (const key of this.firedEventsToday)
+        if (key.startsWith('lock_warn_')) this.firedEventsToday.delete(key);
+    }
+    const data = this.prayerData(now, config);
+    const scheduleKey = `${dateKey}:${JSON.stringify([config.location, config.prayerAdjustments])}`;
+    if (this.lastScheduleKey !== scheduleKey) {
+      this.lastScheduleKey = scheduleKey;
+      this.lockPlans.clear();
+      this.firedEventsToday.clear();
+      this.invoke('onPrayerScheduleChanged', data);
+    }
+    const zone = data.location?.timeZone || config.location?.timeZone;
+    const currentHm = Geography.formatTime(now, zone);
+    const calendar = Geography.calendarDate(now, zone);
+
+    for (const prayer of data.prayers.filter((prayer) => prayer.id !== 'sunrise' && prayer.time)) {
+      const at = this.displayedTime(prayer.time);
+      const id = `${dateKey}:${prayer.id}`;
+      const adhanKey = `adhan_${prayer.id}_${dateKey}`;
+      // Never round the difference: 12:59:30 is still before a 13:00 adhan.
+      if (nowMs >= at && nowMs < at + 60000 && !this.firedEventsToday.has(adhanKey)) {
+        this.firedEventsToday.add(adhanKey);
+        let hadithState = null;
+        try {
+          hadithState = this.hadithEngine.getHadithForPrayer(`${prayer.id}_${dateKey}`, true);
+        } catch (error) {
+          this.reportError(error);
+        }
+        this.invoke('onPrayerTimeReached', {
+          prayer: { ...prayer, time: new Date(at) },
+          hadithState,
+          notify: NoticePolicy.prayerAllowed(config, prayer.id, data.isFriday),
+        });
+      }
+      if (nowMs >= at) continue;
+
+      if (!lockEnabled) {
+        const preference = NoticePolicy.prePrayer(config, prayer.id, data.isFriday);
+        if (!preference.enabled) continue;
+        const preMinutes = preference.minutes;
+        const key = `pre_prayer_${prayer.id}_${dateKey}`;
+        if (nowMs >= at - preMinutes * 60000 && !this.firedEventsToday.has(key)) {
+          this.firedEventsToday.add(key);
+          this.emitNotification({
+            type: 'pre_prayer',
+            prayerId: prayer.id,
+            scheduleId: id,
+            prayerName: prayer.name,
+            prayerTime: new Date(at).toISOString(),
+            playAudio: false,
+            persistent: true,
+            title: `اقترب موعد ${prayer.name}`,
+            body: `موعد ${prayer.name} عند ${prayer.time12 || prayer.time24}. تهيأ بالوضوء والسكينة. يبقى هذا التنبيه حتى إغلاقه أو حلول الأذان.`,
+          });
+        }
+      } else {
+        const before = Math.max(
+          15,
+          Math.min(120, Number(config.screenLock?.minutesBeforeAdhan) || 15),
+        );
+        const initialAt = at - before * 60000;
+        let plan = this.lockPlans.get(id);
+        if (!plan || plan.initialAt !== initialAt) {
+          plan = {
+            id,
+            prayer,
+            prayerAt: at,
+            initialAt,
+            lockAt: initialAt,
+            cancelled: false,
+            activated: false,
+          };
+          this.lockPlans.set(id, plan);
+        }
+        const warningKey = `lock_warn_${prayer.id}_${dateKey}`;
+        if (
+          !plan.cancelled &&
+          !plan.activated &&
+          nowMs >=
+            plan.lockAt -
+              Math.max(1, Math.min(60, Number(config.screenLock?.warningMinutes) || 1)) * 60000 &&
+          nowMs < plan.lockAt &&
+          !this.firedEventsToday.has(warningKey)
+        ) {
+          this.firedEventsToday.add(warningKey);
+          this.triggerPreLockWarning(prayer, plan);
+        }
+        if (
+          !plan.cancelled &&
+          !plan.activated &&
+          nowMs >= plan.lockAt &&
+          nowMs < plan.lockAt + 60000
+        ) {
+          plan.activated = true;
+          this.firedEventsToday.add(`lock_activate_${prayer.id}_${dateKey}`);
+          this.triggerScreenLock(prayer, plan);
+        }
+      }
+    }
+
+    // Relative reminders retain their actual date when a prayer offset crosses midnight.
+    const days = [data];
+    if (Number(Geography.dateParts(now, zone).hour) < 4)
+      days.push(this.prayerData(Geography.shiftDay(now, -1, zone), config));
+    for (const [dayIndex, day] of days.entries()) {
+      const quranKey = JSON.stringify([
+        config.quranWird,
+        day.prayers.map((p) => [p.id, p.time]),
+        day.location,
+      ]);
+      if (!this.quranScheduleCache.has(quranKey)) {
+        if (this.quranScheduleCache.size > 3) this.quranScheduleCache.clear();
+        this.quranScheduleCache.set(quranKey, this.quranEngine.getFullStatus(day));
+      }
+      const { schedules, readingSummary, hifzSummary } = this.quranScheduleCache.get(quranKey);
+      for (const [kind, summary] of [
+        ['reading', readingSummary],
+        ['hifz', hifzSummary],
+      ]) {
+        const due = schedules[kind + 'NotificationAt'],
+          clock = schedules[kind + 'NotificationTime'];
+        const matches =
+          due != null ? nowMs >= due && nowMs < due + 60000 : dayIndex === 0 && currentHm === clock;
+        const key = `quran_${kind}_${due ?? dateKey}`;
+        if (schedules[kind + 'Enabled'] && matches && !this.firedEventsToday.has(key)) {
+          this.firedEventsToday.add(key);
+          this.emitNotification({
+            type: `quran_${kind}`,
+            title: kind === 'reading' ? 'موعد ورد القراءة اليومي' : 'موعد ورد الحفظ والمراجعة',
+            body: `حان موعد وردك: ${summary.currentAssignment}.`,
+            playAudio: false,
+          });
+        }
+      }
+    }
+    const lesson = NoticePolicy.normalizeConfig(config).notifications.lessons;
+    if (lesson.enabled && networkAllowed(config, 'youtube'))
+      for (const [index, day] of days.entries()) {
+        const prayer = day.prayers.find((p) => p.id === lesson.prayer);
+        const due =
+          lesson.timingMode === 'prayer' && prayer?.time
+            ? this.displayedTime(prayer.time) + lesson.minutesAfter * 60000
+            : null;
+        const matches =
+          lesson.timingMode === 'fixed'
+            ? index === 0 && currentHm === lesson.customTime
+            : due != null && nowMs >= due && nowMs < due + 60000;
+        const key = `daily_video_${due ?? dateKey}`;
+        if (matches && !this.firedEventsToday.has(key)) {
+          this.firedEventsToday.add(key);
+          this.triggerDailyVideoNotification().catch((error) => this.reportError(error));
+        }
+      }
+    const fajr = data.prayers.find((prayer) => prayer.id === 'fajr');
+    const syncKey = `habous_auto_sync_${dateKey}`;
+    if (
+      config.officialSync?.enabled !== false &&
+      [1, 4].includes(calendar.getDay()) &&
+      fajr?.time &&
+      nowMs >= this.displayedTime(fajr.time) &&
+      nowMs < this.displayedTime(fajr.time) + 30 * 60000 &&
+      !this.firedEventsToday.has(syncKey)
+    ) {
+      this.firedEventsToday.add(syncKey);
+      this.triggerAutomaticOfficialSync();
+    }
+  }
+
+  async triggerAutomaticOfficialSync(date = this.lastNow || new Date()) {
+    if (!networkAllowed(this.storage.getConfig(), 'prayer')) return;
+    try {
+      this.invoke(
+        'onOfficialSyncCompleted',
+        await this.prayerEngine.verifyWithOfficialAwqafApi({
+          throwOnError: true,
+          date,
+          origin: 'automatic',
+        }),
+      );
+    } catch (error) {
+      this.reportError(error);
+    }
+  }
+
+  emitNotification(payload) {
+    this.invoke('onNotification', payload);
+  }
+
+  triggerPreLockWarning(prayer, plan = null) {
+    const now = this.lastNow || new Date();
+    const previewSeconds =
+      Math.max(1, Math.min(60, Number(this.storage.getConfig().screenLock?.warningMinutes) || 1)) *
+      60;
+    // Preview warnings are isolated and never register a real lock plan.
+    this.invoke('onPreLockWarning', {
+      type: 'lock_warning',
+      prayerId: prayer?.id,
+      prayerName: prayer?.name || 'الصلاة القادمة',
+      scheduleId: plan?.id || 'preview',
+      preview: !plan,
+      lockAt: new Date(plan?.lockAt || now.getTime() + previewSeconds * 1000).toISOString(),
+      prayerTime: plan ? new Date(plan.prayerAt).toISOString() : null,
+      snoozeMinutes: Math.max(
+        1,
+        Math.min(10, Number(this.storage.getConfig().screenLock?.snoozeMinutes) || 3),
+      ),
+      secondsRemaining: plan
+        ? Math.max(0, Math.ceil((plan.lockAt - now.getTime()) / 1000))
+        : previewSeconds,
+    });
+  }
+
+  snoozeScreenLock(minutes = 3, scheduleId, now = this.lastNow || new Date()) {
+    const plan = this.lockPlans.get(scheduleId);
+    if (
+      !this.storage.getConfig().screenLock?.enabled ||
+      !plan ||
+      plan.activated ||
+      now.getTime() >= plan.prayerAt
+    ) {
+      throw new Error('هذا التنبيه لم يعد مرتبطاً بقفل قابل للتمديد.');
+    }
+    const duration = Math.max(1, Math.min(10, Number(minutes) || 3));
+    plan.lockAt = Math.min(plan.prayerAt, Math.max(plan.lockAt, now.getTime()) + duration * 60000);
+    plan.cancelled = plan.lockAt >= plan.prayerAt;
+    return {
+      scheduleId,
+      lockAt: new Date(plan.lockAt).toISOString(),
+      cancelled: plan.cancelled,
+      minutes: duration,
+      message: plan.cancelled
+        ? 'أُجّل القفل حتى الأذان؛ لن تُفتح شاشة التهيئة لهذه الصلاة.'
+        : `تم تمديد موعد القفل ${duration} دقائق.`,
+    };
+  }
+
+  triggerScreenLock(prayer, plan = null) {
+    const config = this.storage.getConfig();
+    const hadithState = this.hadithEngine.getHadithForPrayer(
+      `lock_${prayer?.id}_${Date.now()}`,
+      true,
+    );
+    this.invoke('onActivateScreenLock', {
+      prayerId: prayer?.id,
+      scheduleId: plan?.id,
+      prayerName: prayer?.name || 'صلاة الجماعة',
+      prayerTime12: prayer?.time12 || '',
+      prayerTime: plan ? new Date(plan.prayerAt).toISOString() : null,
+      hadith: hadithState.hadith,
+      motivationalQuote: this.getRandomMotivationalQuote(),
+      muteSystemAudio: Boolean(config.screenLock?.muteSystemAudio),
+    });
+  }
+
+  async triggerDailyVideoNotification() {
+    if (!networkAllowed(this.storage.getConfig(), 'youtube')) return;
+    const feeds = await this.youtubeEngine.refreshFeeds('all');
+    this.youtubeEngine.releaseMemory?.();
+    if (feeds.networkErrors?.length)
+      this.reportError(
+        new Error(feeds.networkErrors.map((error) => `${error.name}: ${error.error}`).join('\n')),
+      );
+    const rec = feeds.dailyRecommendation;
+    if (
+      rec &&
+      networkAllowed(this.storage.getConfig(), 'youtube') &&
+      this.storage.getConfig().notifications?.lessons?.enabled !== false
+    )
+      this.emitNotification({
+        type: 'daily_video',
+        title: `درس الليلة المقترح (${rec.contextTitle})`,
+        body: `${rec.title} — ${rec.channelName}`,
+        video: rec,
+        action: 'open_lessons',
+        playAudio: false,
+      });
+  }
+}
+module.exports = SchedulerEngine;

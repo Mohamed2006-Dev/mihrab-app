@@ -1,0 +1,2261 @@
+[
+  {
+    "code": "AD",
+    "name": "أندورا",
+    "aliases": [
+      "Andorra",
+      "أندورا"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "AE",
+    "name": "الإمارات العربية المتحدة",
+    "aliases": [
+      "United Arab Emirates",
+      "الإمارات العربية المتحدة"
+    ],
+    "cityCount": 55
+  },
+  {
+    "code": "AF",
+    "name": "أفغانستان",
+    "aliases": [
+      "Afghanistan",
+      "أفغانستان"
+    ],
+    "cityCount": 56
+  },
+  {
+    "code": "AG",
+    "name": "أنتيغوا وبربودا",
+    "aliases": [
+      "Antigua and Barbuda",
+      "أنتيغوا وبربودا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "AI",
+    "name": "أنغويلا",
+    "aliases": [
+      "Anguilla",
+      "أنغويلا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "AL",
+    "name": "ألبانيا",
+    "aliases": [
+      "Albania",
+      "ألبانيا"
+    ],
+    "cityCount": 25
+  },
+  {
+    "code": "AM",
+    "name": "أرمينيا",
+    "aliases": [
+      "Armenia",
+      "أرمينيا"
+    ],
+    "cityCount": 29
+  },
+  {
+    "code": "AO",
+    "name": "أنغولا",
+    "aliases": [
+      "Angola",
+      "أنغولا"
+    ],
+    "cityCount": 133
+  },
+  {
+    "code": "AQ",
+    "name": "أنتاركتيكا",
+    "aliases": [
+      "Antarctica",
+      "أنتاركتيكا"
+    ],
+    "cityCount": 0
+  },
+  {
+    "code": "AR",
+    "name": "الأرجنتين",
+    "aliases": [
+      "Argentina",
+      "الأرجنتين"
+    ],
+    "cityCount": 329
+  },
+  {
+    "code": "AS",
+    "name": "ساموا الأمريكية",
+    "aliases": [
+      "American Samoa",
+      "ساموا الأمريكية"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "AT",
+    "name": "النمسا",
+    "aliases": [
+      "Austria",
+      "النمسا"
+    ],
+    "cityCount": 66
+  },
+  {
+    "code": "AU",
+    "name": "أستراليا",
+    "aliases": [
+      "Australia",
+      "أستراليا"
+    ],
+    "cityCount": 313
+  },
+  {
+    "code": "AW",
+    "name": "أروبا",
+    "aliases": [
+      "Aruba",
+      "أروبا"
+    ],
+    "cityCount": 4
+  },
+  {
+    "code": "AX",
+    "name": "جزر آلاند",
+    "aliases": [
+      "Aland Islands",
+      "جزر آلاند"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "AZ",
+    "name": "أذربيجان",
+    "aliases": [
+      "Azerbaijan",
+      "أذربيجان"
+    ],
+    "cityCount": 65
+  },
+  {
+    "code": "BA",
+    "name": "البوسنة والهرسك",
+    "aliases": [
+      "Bosnia and Herzegovina",
+      "البوسنة والهرسك"
+    ],
+    "cityCount": 23
+  },
+  {
+    "code": "BB",
+    "name": "بربادوس",
+    "aliases": [
+      "Barbados",
+      "بربادوس"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "BD",
+    "name": "بنغلاديش",
+    "aliases": [
+      "Bangladesh",
+      "بنغلاديش"
+    ],
+    "cityCount": 144
+  },
+  {
+    "code": "BE",
+    "name": "بلجيكا",
+    "aliases": [
+      "Belgium",
+      "بلجيكا"
+    ],
+    "cityCount": 223
+  },
+  {
+    "code": "BF",
+    "name": "بوركينا فاسو",
+    "aliases": [
+      "Burkina Faso",
+      "بوركينا فاسو"
+    ],
+    "cityCount": 74
+  },
+  {
+    "code": "BG",
+    "name": "بلغاريا",
+    "aliases": [
+      "Bulgaria",
+      "بلغاريا"
+    ],
+    "cityCount": 56
+  },
+  {
+    "code": "BH",
+    "name": "مملكة البحرين",
+    "aliases": [
+      "Bahrain",
+      "البحرين",
+      "مملكة البحرين"
+    ],
+    "cityCount": 7
+  },
+  {
+    "code": "BI",
+    "name": "بوروندي",
+    "aliases": [
+      "Burundi",
+      "بوروندي"
+    ],
+    "cityCount": 14
+  },
+  {
+    "code": "BJ",
+    "name": "بنين",
+    "aliases": [
+      "Benin",
+      "بنين"
+    ],
+    "cityCount": 66
+  },
+  {
+    "code": "BL",
+    "name": "سان بارتليمي",
+    "aliases": [
+      "Saint Barthelemy",
+      "سان بارتليمي"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "BM",
+    "name": "برمودا",
+    "aliases": [
+      "Bermuda",
+      "برمودا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "BN",
+    "name": "بروناي",
+    "aliases": [
+      "Brunei",
+      "بروناي"
+    ],
+    "cityCount": 7
+  },
+  {
+    "code": "BO",
+    "name": "بوليفيا",
+    "aliases": [
+      "Bolivia",
+      "بوليفيا"
+    ],
+    "cityCount": 39
+  },
+  {
+    "code": "BQ",
+    "name": "هولندا الكاريبية",
+    "aliases": [
+      "Bonaire, Saint Eustatius and Saba ",
+      "هولندا الكاريبية"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "BR",
+    "name": "البرازيل",
+    "aliases": [
+      "Brazil",
+      "البرازيل"
+    ],
+    "cityCount": 2378
+  },
+  {
+    "code": "BS",
+    "name": "جزر البهاما",
+    "aliases": [
+      "Bahamas",
+      "جزر البهاما"
+    ],
+    "cityCount": 4
+  },
+  {
+    "code": "BT",
+    "name": "بوتان",
+    "aliases": [
+      "Bhutan",
+      "بوتان"
+    ],
+    "cityCount": 4
+  },
+  {
+    "code": "BV",
+    "name": "جزيرة بوفيه",
+    "aliases": [
+      "Bouvet Island",
+      "جزيرة بوفيه"
+    ],
+    "cityCount": 0
+  },
+  {
+    "code": "BW",
+    "name": "بوتسوانا",
+    "aliases": [
+      "Botswana",
+      "بوتسوانا"
+    ],
+    "cityCount": 25
+  },
+  {
+    "code": "BY",
+    "name": "بيلاروس",
+    "aliases": [
+      "Belarus",
+      "بيلاروس"
+    ],
+    "cityCount": 56
+  },
+  {
+    "code": "BZ",
+    "name": "بليز",
+    "aliases": [
+      "Belize",
+      "بليز"
+    ],
+    "cityCount": 5
+  },
+  {
+    "code": "CA",
+    "name": "كندا",
+    "aliases": [
+      "Canada",
+      "كندا"
+    ],
+    "cityCount": 517
+  },
+  {
+    "code": "CC",
+    "name": "جزر كوكوس (كيلينغ)",
+    "aliases": [
+      "Cocos Islands",
+      "جزر كوكوس (كيلينغ)"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "CD",
+    "name": "الكونغو - كينشاسا",
+    "aliases": [
+      "Democratic Republic of the Congo",
+      "الكونغو - كينشاسا"
+    ],
+    "cityCount": 114
+  },
+  {
+    "code": "CF",
+    "name": "جمهورية أفريقيا الوسطى",
+    "aliases": [
+      "Central African Republic",
+      "جمهورية أفريقيا الوسطى"
+    ],
+    "cityCount": 33
+  },
+  {
+    "code": "CG",
+    "name": "الكونغو - برازافيل",
+    "aliases": [
+      "Republic of the Congo",
+      "الكونغو - برازافيل"
+    ],
+    "cityCount": 23
+  },
+  {
+    "code": "CH",
+    "name": "سويسرا",
+    "aliases": [
+      "Switzerland",
+      "سويسرا"
+    ],
+    "cityCount": 95
+  },
+  {
+    "code": "CI",
+    "name": "ساحل العاج",
+    "aliases": [
+      "Ivory Coast",
+      "ساحل العاج"
+    ],
+    "cityCount": 183
+  },
+  {
+    "code": "CK",
+    "name": "جزر كوك",
+    "aliases": [
+      "Cook Islands",
+      "جزر كوك"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "CL",
+    "name": "تشيلي",
+    "aliases": [
+      "Chile",
+      "تشيلي"
+    ],
+    "cityCount": 147
+  },
+  {
+    "code": "CM",
+    "name": "الكاميرون",
+    "aliases": [
+      "Cameroon",
+      "الكاميرون"
+    ],
+    "cityCount": 87
+  },
+  {
+    "code": "CN",
+    "name": "الصين",
+    "aliases": [
+      "China",
+      "الصين"
+    ],
+    "cityCount": 2123
+  },
+  {
+    "code": "CO",
+    "name": "كولومبيا",
+    "aliases": [
+      "Colombia",
+      "كولومبيا"
+    ],
+    "cityCount": 319
+  },
+  {
+    "code": "CR",
+    "name": "كوستاريكا",
+    "aliases": [
+      "Costa Rica",
+      "كوستاريكا"
+    ],
+    "cityCount": 41
+  },
+  {
+    "code": "CU",
+    "name": "كوبا",
+    "aliases": [
+      "Cuba",
+      "كوبا"
+    ],
+    "cityCount": 140
+  },
+  {
+    "code": "CV",
+    "name": "الرأس الأخضر",
+    "aliases": [
+      "Cabo Verde",
+      "الرأس الأخضر"
+    ],
+    "cityCount": 4
+  },
+  {
+    "code": "CW",
+    "name": "كوراساو",
+    "aliases": [
+      "Curacao",
+      "كوراساو"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "CX",
+    "name": "جزيرة كريسماس",
+    "aliases": [
+      "Christmas Island",
+      "جزيرة كريسماس"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "CY",
+    "name": "قبرص",
+    "aliases": [
+      "Cyprus",
+      "قبرص"
+    ],
+    "cityCount": 15
+  },
+  {
+    "code": "CZ",
+    "name": "التشيك",
+    "aliases": [
+      "Czechia",
+      "التشيك"
+    ],
+    "cityCount": 123
+  },
+  {
+    "code": "DE",
+    "name": "ألمانيا",
+    "aliases": [
+      "Germany",
+      "ألمانيا"
+    ],
+    "cityCount": 1141
+  },
+  {
+    "code": "DJ",
+    "name": "جيبوتي",
+    "aliases": [
+      "Djibouti",
+      "جيبوتي"
+    ],
+    "cityCount": 7
+  },
+  {
+    "code": "DK",
+    "name": "الدانمرك",
+    "aliases": [
+      "Denmark",
+      "الدانمرك"
+    ],
+    "cityCount": 67
+  },
+  {
+    "code": "DM",
+    "name": "دومينيكا",
+    "aliases": [
+      "Dominica",
+      "دومينيكا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "DO",
+    "name": "جمهورية الدومينيكان",
+    "aliases": [
+      "Dominican Republic",
+      "جمهورية الدومينيكان"
+    ],
+    "cityCount": 50
+  },
+  {
+    "code": "DZ",
+    "name": "الجمهورية الجزائرية",
+    "aliases": [
+      "Algeria",
+      "الجزائر",
+      "الجمهورية الجزائرية"
+    ],
+    "cityCount": 293
+  },
+  {
+    "code": "EC",
+    "name": "الإكوادور",
+    "aliases": [
+      "Ecuador",
+      "الإكوادور"
+    ],
+    "cityCount": 71
+  },
+  {
+    "code": "EE",
+    "name": "إستونيا",
+    "aliases": [
+      "Estonia",
+      "إستونيا"
+    ],
+    "cityCount": 15
+  },
+  {
+    "code": "EG",
+    "name": "جمهورية مصر العربية",
+    "aliases": [
+      "Egypt",
+      "مصر",
+      "جمهورية مصر العربية"
+    ],
+    "cityCount": 234
+  },
+  {
+    "code": "EH",
+    "name": "الصحراء الغربية",
+    "aliases": [
+      "Western Sahara",
+      "الصحراء الغربية"
+    ],
+    "cityCount": 4
+  },
+  {
+    "code": "ER",
+    "name": "إريتريا",
+    "aliases": [
+      "Eritrea",
+      "إريتريا"
+    ],
+    "cityCount": 8
+  },
+  {
+    "code": "ES",
+    "name": "إسبانيا",
+    "aliases": [
+      "Spain",
+      "إسبانيا"
+    ],
+    "cityCount": 736
+  },
+  {
+    "code": "ET",
+    "name": "إثيوبيا",
+    "aliases": [
+      "Ethiopia",
+      "إثيوبيا"
+    ],
+    "cityCount": 233
+  },
+  {
+    "code": "FI",
+    "name": "فنلندا",
+    "aliases": [
+      "Finland",
+      "فنلندا"
+    ],
+    "cityCount": 102
+  },
+  {
+    "code": "FJ",
+    "name": "فيجي",
+    "aliases": [
+      "Fiji",
+      "فيجي"
+    ],
+    "cityCount": 7
+  },
+  {
+    "code": "FK",
+    "name": "جزر فوكلاند",
+    "aliases": [
+      "Falkland Islands",
+      "جزر فوكلاند"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "FM",
+    "name": "ميكرونيزيا",
+    "aliases": [
+      "Micronesia",
+      "ميكرونيزيا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "FO",
+    "name": "جزر فارو",
+    "aliases": [
+      "Faroe Islands",
+      "جزر فارو"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "FR",
+    "name": "فرنسا",
+    "aliases": [
+      "France",
+      "فرنسا"
+    ],
+    "cityCount": 692
+  },
+  {
+    "code": "GA",
+    "name": "الغابون",
+    "aliases": [
+      "Gabon",
+      "الغابون"
+    ],
+    "cityCount": 15
+  },
+  {
+    "code": "GB",
+    "name": "المملكة المتحدة",
+    "aliases": [
+      "United Kingdom",
+      "المملكة المتحدة"
+    ],
+    "cityCount": 866
+  },
+  {
+    "code": "GD",
+    "name": "غرينادا",
+    "aliases": [
+      "Grenada",
+      "غرينادا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "GE",
+    "name": "جورجيا",
+    "aliases": [
+      "Georgia",
+      "جورجيا"
+    ],
+    "cityCount": 17
+  },
+  {
+    "code": "GF",
+    "name": "غويانا الفرنسية",
+    "aliases": [
+      "French Guiana",
+      "غويانا الفرنسية"
+    ],
+    "cityCount": 5
+  },
+  {
+    "code": "GG",
+    "name": "غيرنزي",
+    "aliases": [
+      "Guernsey",
+      "غيرنزي"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "GH",
+    "name": "غانا",
+    "aliases": [
+      "Ghana",
+      "غانا"
+    ],
+    "cityCount": 102
+  },
+  {
+    "code": "GI",
+    "name": "جبل طارق",
+    "aliases": [
+      "Gibraltar",
+      "جبل طارق"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "GL",
+    "name": "غرينلاند",
+    "aliases": [
+      "Greenland",
+      "غرينلاند"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "GM",
+    "name": "غامبيا",
+    "aliases": [
+      "Gambia",
+      "غامبيا"
+    ],
+    "cityCount": 33
+  },
+  {
+    "code": "GN",
+    "name": "غينيا",
+    "aliases": [
+      "Guinea",
+      "غينيا"
+    ],
+    "cityCount": 47
+  },
+  {
+    "code": "GP",
+    "name": "غوادلوب",
+    "aliases": [
+      "Guadeloupe",
+      "غوادلوب"
+    ],
+    "cityCount": 10
+  },
+  {
+    "code": "GQ",
+    "name": "غينيا الاستوائية",
+    "aliases": [
+      "Equatorial Guinea",
+      "غينيا الاستوائية"
+    ],
+    "cityCount": 6
+  },
+  {
+    "code": "GR",
+    "name": "اليونان",
+    "aliases": [
+      "Greece",
+      "اليونان"
+    ],
+    "cityCount": 118
+  },
+  {
+    "code": "GS",
+    "name": "جورجيا الجنوبية وجزر ساندويتش الجنوبية",
+    "aliases": [
+      "South Georgia and the South Sandwich Islands",
+      "جورجيا الجنوبية وجزر ساندويتش الجنوبية"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "GT",
+    "name": "غواتيمالا",
+    "aliases": [
+      "Guatemala",
+      "غواتيمالا"
+    ],
+    "cityCount": 102
+  },
+  {
+    "code": "GU",
+    "name": "غوام",
+    "aliases": [
+      "Guam",
+      "غوام"
+    ],
+    "cityCount": 6
+  },
+  {
+    "code": "GW",
+    "name": "غينيا بيساو",
+    "aliases": [
+      "Guinea-Bissau",
+      "غينيا بيساو"
+    ],
+    "cityCount": 15
+  },
+  {
+    "code": "GY",
+    "name": "غيانا",
+    "aliases": [
+      "Guyana",
+      "غيانا"
+    ],
+    "cityCount": 3
+  },
+  {
+    "code": "HK",
+    "name": "هونغ كونغ الصينية (منطقة إدارية خاصة)",
+    "aliases": [
+      "Hong Kong",
+      "هونغ كونغ الصينية (منطقة إدارية خاصة)"
+    ],
+    "cityCount": 141
+  },
+  {
+    "code": "HM",
+    "name": "جزيرة هيرد وجزر ماكدونالد",
+    "aliases": [
+      "Heard Island and McDonald Islands",
+      "جزيرة هيرد وجزر ماكدونالد"
+    ],
+    "cityCount": 0
+  },
+  {
+    "code": "HN",
+    "name": "هندوراس",
+    "aliases": [
+      "Honduras",
+      "هندوراس"
+    ],
+    "cityCount": 65
+  },
+  {
+    "code": "HR",
+    "name": "كرواتيا",
+    "aliases": [
+      "Croatia",
+      "كرواتيا"
+    ],
+    "cityCount": 26
+  },
+  {
+    "code": "HT",
+    "name": "هايتي",
+    "aliases": [
+      "Haiti",
+      "هايتي"
+    ],
+    "cityCount": 32
+  },
+  {
+    "code": "HU",
+    "name": "هنغاريا",
+    "aliases": [
+      "Hungary",
+      "هنغاريا"
+    ],
+    "cityCount": 141
+  },
+  {
+    "code": "ID",
+    "name": "إندونيسيا",
+    "aliases": [
+      "Indonesia",
+      "إندونيسيا"
+    ],
+    "cityCount": 448
+  },
+  {
+    "code": "IE",
+    "name": "أيرلندا",
+    "aliases": [
+      "Ireland",
+      "أيرلندا"
+    ],
+    "cityCount": 43
+  },
+  {
+    "code": "IM",
+    "name": "جزيرة مان",
+    "aliases": [
+      "Isle of Man",
+      "جزيرة مان"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "IN",
+    "name": "الهند",
+    "aliases": [
+      "India",
+      "الهند"
+    ],
+    "cityCount": 3787
+  },
+  {
+    "code": "IO",
+    "name": "الإقليم البريطاني في المحيط الهندي",
+    "aliases": [
+      "British Indian Ocean Territory",
+      "الإقليم البريطاني في المحيط الهندي"
+    ],
+    "cityCount": 0
+  },
+  {
+    "code": "IQ",
+    "name": "جمهورية العراق",
+    "aliases": [
+      "Iraq",
+      "العراق",
+      "جمهورية العراق"
+    ],
+    "cityCount": 104
+  },
+  {
+    "code": "IR",
+    "name": "إيران",
+    "aliases": [
+      "Iran",
+      "إيران"
+    ],
+    "cityCount": 429
+  },
+  {
+    "code": "IS",
+    "name": "آيسلندا",
+    "aliases": [
+      "Iceland",
+      "آيسلندا"
+    ],
+    "cityCount": 6
+  },
+  {
+    "code": "IT",
+    "name": "إيطاليا",
+    "aliases": [
+      "Italy",
+      "إيطاليا"
+    ],
+    "cityCount": 663
+  },
+  {
+    "code": "JE",
+    "name": "جيرسي",
+    "aliases": [
+      "Jersey",
+      "جيرسي"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "JM",
+    "name": "جامايكا",
+    "aliases": [
+      "Jamaica",
+      "جامايكا"
+    ],
+    "cityCount": 13
+  },
+  {
+    "code": "JO",
+    "name": "المملكة الأردنية الهاشمية",
+    "aliases": [
+      "Jordan",
+      "الأردن",
+      "المملكة الأردنية الهاشمية"
+    ],
+    "cityCount": 34
+  },
+  {
+    "code": "JP",
+    "name": "اليابان",
+    "aliases": [
+      "Japan",
+      "اليابان"
+    ],
+    "cityCount": 1300
+  },
+  {
+    "code": "KE",
+    "name": "كينيا",
+    "aliases": [
+      "Kenya",
+      "كينيا"
+    ],
+    "cityCount": 123
+  },
+  {
+    "code": "KG",
+    "name": "قيرغيزستان",
+    "aliases": [
+      "Kyrgyzstan",
+      "قيرغيزستان"
+    ],
+    "cityCount": 32
+  },
+  {
+    "code": "KH",
+    "name": "كمبوديا",
+    "aliases": [
+      "Cambodia",
+      "كمبوديا"
+    ],
+    "cityCount": 46
+  },
+  {
+    "code": "KI",
+    "name": "كيريباتي",
+    "aliases": [
+      "Kiribati",
+      "كيريباتي"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "KM",
+    "name": "جزر القمر",
+    "aliases": [
+      "Comoros",
+      "جزر القمر"
+    ],
+    "cityCount": 3
+  },
+  {
+    "code": "KN",
+    "name": "سانت كيتس ونيفيس",
+    "aliases": [
+      "Saint Kitts and Nevis",
+      "سانت كيتس ونيفيس"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "KP",
+    "name": "كوريا الشمالية",
+    "aliases": [
+      "North Korea",
+      "كوريا الشمالية"
+    ],
+    "cityCount": 97
+  },
+  {
+    "code": "KR",
+    "name": "كوريا الجنوبية",
+    "aliases": [
+      "South Korea",
+      "كوريا الجنوبية"
+    ],
+    "cityCount": 148
+  },
+  {
+    "code": "XK",
+    "name": "كوسوفو",
+    "aliases": [
+      "Kosovo",
+      "كوسوفو"
+    ],
+    "cityCount": 21
+  },
+  {
+    "code": "KW",
+    "name": "دولة الكويت",
+    "aliases": [
+      "Kuwait",
+      "الكويت",
+      "دولة الكويت"
+    ],
+    "cityCount": 14
+  },
+  {
+    "code": "KY",
+    "name": "جزر كايمان",
+    "aliases": [
+      "Cayman Islands",
+      "جزر كايمان"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "KZ",
+    "name": "كازاخستان",
+    "aliases": [
+      "Kazakhstan",
+      "كازاخستان"
+    ],
+    "cityCount": 84
+  },
+  {
+    "code": "LA",
+    "name": "لاوس",
+    "aliases": [
+      "Laos",
+      "لاوس"
+    ],
+    "cityCount": 18
+  },
+  {
+    "code": "LB",
+    "name": "الجمهورية اللبنانية",
+    "aliases": [
+      "Lebanon",
+      "لبنان",
+      "الجمهورية اللبنانية"
+    ],
+    "cityCount": 17
+  },
+  {
+    "code": "LC",
+    "name": "سانت لوسيا",
+    "aliases": [
+      "Saint Lucia",
+      "سانت لوسيا"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "LI",
+    "name": "ليختنشتاين",
+    "aliases": [
+      "Liechtenstein",
+      "ليختنشتاين"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "LK",
+    "name": "سريلانكا",
+    "aliases": [
+      "Sri Lanka",
+      "سريلانكا"
+    ],
+    "cityCount": 60
+  },
+  {
+    "code": "LR",
+    "name": "ليبيريا",
+    "aliases": [
+      "Liberia",
+      "ليبيريا"
+    ],
+    "cityCount": 16
+  },
+  {
+    "code": "LS",
+    "name": "ليسوتو",
+    "aliases": [
+      "Lesotho",
+      "ليسوتو"
+    ],
+    "cityCount": 11
+  },
+  {
+    "code": "LT",
+    "name": "ليتوانيا",
+    "aliases": [
+      "Lithuania",
+      "ليتوانيا"
+    ],
+    "cityCount": 36
+  },
+  {
+    "code": "LU",
+    "name": "لوكسمبورغ",
+    "aliases": [
+      "Luxembourg",
+      "لوكسمبورغ"
+    ],
+    "cityCount": 3
+  },
+  {
+    "code": "LV",
+    "name": "لاتفيا",
+    "aliases": [
+      "Latvia",
+      "لاتفيا"
+    ],
+    "cityCount": 15
+  },
+  {
+    "code": "LY",
+    "name": "دولة ليبيا",
+    "aliases": [
+      "Libya",
+      "ليبيا",
+      "دولة ليبيا"
+    ],
+    "cityCount": 59
+  },
+  {
+    "code": "MA",
+    "name": "المملكة المغربية",
+    "aliases": [
+      "Morocco",
+      "المغرب",
+      "المملكة المغربية"
+    ],
+    "cityCount": 178
+  },
+  {
+    "code": "MC",
+    "name": "موناكو",
+    "aliases": [
+      "Monaco",
+      "موناكو"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "MD",
+    "name": "مولدوفا",
+    "aliases": [
+      "Moldova",
+      "مولدوفا"
+    ],
+    "cityCount": 22
+  },
+  {
+    "code": "ME",
+    "name": "الجبل الأسود",
+    "aliases": [
+      "Montenegro",
+      "الجبل الأسود"
+    ],
+    "cityCount": 8
+  },
+  {
+    "code": "MF",
+    "name": "سان مارتن",
+    "aliases": [
+      "Saint Martin",
+      "سان مارتن"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "MG",
+    "name": "مدغشقر",
+    "aliases": [
+      "Madagascar",
+      "مدغشقر"
+    ],
+    "cityCount": 106
+  },
+  {
+    "code": "MH",
+    "name": "جزر مارشال",
+    "aliases": [
+      "Marshall Islands",
+      "جزر مارشال"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "MK",
+    "name": "مقدونيا الشمالية",
+    "aliases": [
+      "North Macedonia",
+      "مقدونيا الشمالية"
+    ],
+    "cityCount": 38
+  },
+  {
+    "code": "ML",
+    "name": "مالي",
+    "aliases": [
+      "Mali",
+      "مالي"
+    ],
+    "cityCount": 60
+  },
+  {
+    "code": "MM",
+    "name": "ميانمار (بورما)",
+    "aliases": [
+      "Myanmar",
+      "ميانمار (بورما)"
+    ],
+    "cityCount": 178
+  },
+  {
+    "code": "MN",
+    "name": "منغوليا",
+    "aliases": [
+      "Mongolia",
+      "منغوليا"
+    ],
+    "cityCount": 24
+  },
+  {
+    "code": "MO",
+    "name": "منطقة ماكاو الإدارية الخاصة",
+    "aliases": [
+      "Macao",
+      "منطقة ماكاو الإدارية الخاصة"
+    ],
+    "cityCount": 6
+  },
+  {
+    "code": "MP",
+    "name": "جزر ماريانا الشمالية",
+    "aliases": [
+      "Northern Mariana Islands",
+      "جزر ماريانا الشمالية"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "MQ",
+    "name": "جزر المارتينيك",
+    "aliases": [
+      "Martinique",
+      "جزر المارتينيك"
+    ],
+    "cityCount": 8
+  },
+  {
+    "code": "MR",
+    "name": "الجمهورية الإسلامية الموريتانية",
+    "aliases": [
+      "Mauritania",
+      "موريتانيا",
+      "الجمهورية الإسلامية الموريتانية"
+    ],
+    "cityCount": 23
+  },
+  {
+    "code": "MS",
+    "name": "مونتسرات",
+    "aliases": [
+      "Montserrat",
+      "مونتسرات"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "MT",
+    "name": "مالطا",
+    "aliases": [
+      "Malta",
+      "مالطا"
+    ],
+    "cityCount": 7
+  },
+  {
+    "code": "MU",
+    "name": "موريشيوس",
+    "aliases": [
+      "Mauritius",
+      "موريشيوس"
+    ],
+    "cityCount": 14
+  },
+  {
+    "code": "MV",
+    "name": "جزر المالديف",
+    "aliases": [
+      "Maldives",
+      "جزر المالديف"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "MW",
+    "name": "ملاوي",
+    "aliases": [
+      "Malawi",
+      "ملاوي"
+    ],
+    "cityCount": 23
+  },
+  {
+    "code": "MX",
+    "name": "المكسيك",
+    "aliases": [
+      "Mexico",
+      "المكسيك"
+    ],
+    "cityCount": 642
+  },
+  {
+    "code": "MY",
+    "name": "ماليزيا",
+    "aliases": [
+      "Malaysia",
+      "ماليزيا"
+    ],
+    "cityCount": 355
+  },
+  {
+    "code": "MZ",
+    "name": "موزمبيق",
+    "aliases": [
+      "Mozambique",
+      "موزمبيق"
+    ],
+    "cityCount": 66
+  },
+  {
+    "code": "NA",
+    "name": "ناميبيا",
+    "aliases": [
+      "Namibia",
+      "ناميبيا"
+    ],
+    "cityCount": 19
+  },
+  {
+    "code": "NC",
+    "name": "كاليدونيا الجديدة",
+    "aliases": [
+      "New Caledonia",
+      "كاليدونيا الجديدة"
+    ],
+    "cityCount": 3
+  },
+  {
+    "code": "NE",
+    "name": "النيجر",
+    "aliases": [
+      "Niger",
+      "النيجر"
+    ],
+    "cityCount": 42
+  },
+  {
+    "code": "NF",
+    "name": "جزيرة نورفولك",
+    "aliases": [
+      "Norfolk Island",
+      "جزيرة نورفولك"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "NG",
+    "name": "نيجيريا",
+    "aliases": [
+      "Nigeria",
+      "نيجيريا"
+    ],
+    "cityCount": 270
+  },
+  {
+    "code": "NI",
+    "name": "نيكاراغوا",
+    "aliases": [
+      "Nicaragua",
+      "نيكاراغوا"
+    ],
+    "cityCount": 37
+  },
+  {
+    "code": "NL",
+    "name": "هولندا",
+    "aliases": [
+      "The Netherlands",
+      "هولندا"
+    ],
+    "cityCount": 254
+  },
+  {
+    "code": "NO",
+    "name": "النرويج",
+    "aliases": [
+      "Norway",
+      "النرويج"
+    ],
+    "cityCount": 42
+  },
+  {
+    "code": "NP",
+    "name": "نيبال",
+    "aliases": [
+      "Nepal",
+      "نيبال"
+    ],
+    "cityCount": 46
+  },
+  {
+    "code": "NR",
+    "name": "ناورو",
+    "aliases": [
+      "Nauru",
+      "ناورو"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "NU",
+    "name": "نيوي",
+    "aliases": [
+      "Niue",
+      "نيوي"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "NZ",
+    "name": "نيوزيلندا",
+    "aliases": [
+      "New Zealand",
+      "نيوزيلندا"
+    ],
+    "cityCount": 58
+  },
+  {
+    "code": "OM",
+    "name": "سلطنة عمان",
+    "aliases": [
+      "Oman",
+      "عُمان",
+      "سلطنة عمان"
+    ],
+    "cityCount": 28
+  },
+  {
+    "code": "PA",
+    "name": "بنما",
+    "aliases": [
+      "Panama",
+      "بنما"
+    ],
+    "cityCount": 27
+  },
+  {
+    "code": "PE",
+    "name": "بيرو",
+    "aliases": [
+      "Peru",
+      "بيرو"
+    ],
+    "cityCount": 140
+  },
+  {
+    "code": "PF",
+    "name": "بولينيزيا الفرنسية",
+    "aliases": [
+      "French Polynesia",
+      "بولينيزيا الفرنسية"
+    ],
+    "cityCount": 3
+  },
+  {
+    "code": "PG",
+    "name": "بابوا غينيا الجديدة",
+    "aliases": [
+      "Papua New Guinea",
+      "بابوا غينيا الجديدة"
+    ],
+    "cityCount": 13
+  },
+  {
+    "code": "PH",
+    "name": "الفلبين",
+    "aliases": [
+      "Philippines",
+      "الفلبين"
+    ],
+    "cityCount": 529
+  },
+  {
+    "code": "PK",
+    "name": "باكستان",
+    "aliases": [
+      "Pakistan",
+      "باكستان"
+    ],
+    "cityCount": 374
+  },
+  {
+    "code": "PL",
+    "name": "بولندا",
+    "aliases": [
+      "Poland",
+      "بولندا"
+    ],
+    "cityCount": 363
+  },
+  {
+    "code": "PM",
+    "name": "سان بيير ومكويلون",
+    "aliases": [
+      "Saint Pierre and Miquelon",
+      "سان بيير ومكويلون"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "PN",
+    "name": "جزر بيتكيرن",
+    "aliases": [
+      "Pitcairn",
+      "جزر بيتكيرن"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "PR",
+    "name": "بورتوريكو",
+    "aliases": [
+      "Puerto Rico",
+      "بورتوريكو"
+    ],
+    "cityCount": 21
+  },
+  {
+    "code": "PS",
+    "name": "فلسطين",
+    "aliases": [
+      "Palestinian Territory",
+      "الأراضي الفلسطينية",
+      "دولة فلسطين",
+      "فلسطين"
+    ],
+    "cityCount": 146
+  },
+  {
+    "code": "PT",
+    "name": "البرتغال",
+    "aliases": [
+      "Portugal",
+      "البرتغال"
+    ],
+    "cityCount": 179
+  },
+  {
+    "code": "PW",
+    "name": "بالاو",
+    "aliases": [
+      "Palau",
+      "بالاو"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "PY",
+    "name": "باراغواي",
+    "aliases": [
+      "Paraguay",
+      "باراغواي"
+    ],
+    "cityCount": 30
+  },
+  {
+    "code": "QA",
+    "name": "دولة قطر",
+    "aliases": [
+      "Qatar",
+      "قطر",
+      "دولة قطر"
+    ],
+    "cityCount": 17
+  },
+  {
+    "code": "RE",
+    "name": "روينيون",
+    "aliases": [
+      "Reunion",
+      "روينيون"
+    ],
+    "cityCount": 14
+  },
+  {
+    "code": "RO",
+    "name": "رومانيا",
+    "aliases": [
+      "Romania",
+      "رومانيا"
+    ],
+    "cityCount": 134
+  },
+  {
+    "code": "RS",
+    "name": "صربيا",
+    "aliases": [
+      "Serbia",
+      "صربيا"
+    ],
+    "cityCount": 51
+  },
+  {
+    "code": "RU",
+    "name": "روسيا",
+    "aliases": [
+      "Russia",
+      "روسيا"
+    ],
+    "cityCount": 1108
+  },
+  {
+    "code": "RW",
+    "name": "رواندا",
+    "aliases": [
+      "Rwanda",
+      "رواندا"
+    ],
+    "cityCount": 45
+  },
+  {
+    "code": "SA",
+    "name": "المملكة العربية السعودية",
+    "aliases": [
+      "Saudi Arabia",
+      "المملكة العربية السعودية"
+    ],
+    "cityCount": 100
+  },
+  {
+    "code": "SB",
+    "name": "جزر سليمان",
+    "aliases": [
+      "Solomon Islands",
+      "جزر سليمان"
+    ],
+    "cityCount": 7
+  },
+  {
+    "code": "SC",
+    "name": "سيشل",
+    "aliases": [
+      "Seychelles",
+      "سيشل"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "SD",
+    "name": "جمهورية السودان",
+    "aliases": [
+      "Sudan",
+      "السودان",
+      "جمهورية السودان"
+    ],
+    "cityCount": 77
+  },
+  {
+    "code": "SS",
+    "name": "جنوب السودان",
+    "aliases": [
+      "South Sudan",
+      "جنوب السودان"
+    ],
+    "cityCount": 16
+  },
+  {
+    "code": "SE",
+    "name": "السويد",
+    "aliases": [
+      "Sweden",
+      "السويد"
+    ],
+    "cityCount": 111
+  },
+  {
+    "code": "SG",
+    "name": "سنغافورة",
+    "aliases": [
+      "Singapore",
+      "سنغافورة"
+    ],
+    "cityCount": 65
+  },
+  {
+    "code": "SH",
+    "name": "سانت هيلينا",
+    "aliases": [
+      "Saint Helena",
+      "سانت هيلينا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "SI",
+    "name": "سلوفينيا",
+    "aliases": [
+      "Slovenia",
+      "سلوفينيا"
+    ],
+    "cityCount": 9
+  },
+  {
+    "code": "SJ",
+    "name": "سفالبارد وجان ماين",
+    "aliases": [
+      "Svalbard and Jan Mayen",
+      "سفالبارد وجان ماين"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "SK",
+    "name": "سلوفاكيا",
+    "aliases": [
+      "Slovakia",
+      "سلوفاكيا"
+    ],
+    "cityCount": 61
+  },
+  {
+    "code": "SL",
+    "name": "سيراليون",
+    "aliases": [
+      "Sierra Leone",
+      "سيراليون"
+    ],
+    "cityCount": 14
+  },
+  {
+    "code": "SM",
+    "name": "سان مارينو",
+    "aliases": [
+      "San Marino",
+      "سان مارينو"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "SN",
+    "name": "السنغال",
+    "aliases": [
+      "Senegal",
+      "السنغال"
+    ],
+    "cityCount": 71
+  },
+  {
+    "code": "SO",
+    "name": "الصومال",
+    "aliases": [
+      "Somalia",
+      "الصومال"
+    ],
+    "cityCount": 42
+  },
+  {
+    "code": "SR",
+    "name": "سورينام",
+    "aliases": [
+      "Suriname",
+      "سورينام"
+    ],
+    "cityCount": 12
+  },
+  {
+    "code": "ST",
+    "name": "ساو تومي وبرينسيبي",
+    "aliases": [
+      "Sao Tome and Principe",
+      "ساو تومي وبرينسيبي"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "SV",
+    "name": "السلفادور",
+    "aliases": [
+      "El Salvador",
+      "السلفادور"
+    ],
+    "cityCount": 35
+  },
+  {
+    "code": "SX",
+    "name": "سانت مارتن",
+    "aliases": [
+      "Sint Maarten",
+      "سانت مارتن"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "SY",
+    "name": "الجمهورية العربية السورية",
+    "aliases": [
+      "Syria",
+      "سوريا",
+      "الجمهورية العربية السورية"
+    ],
+    "cityCount": 89
+  },
+  {
+    "code": "SZ",
+    "name": "إسواتيني",
+    "aliases": [
+      "Eswatini",
+      "إسواتيني"
+    ],
+    "cityCount": 3
+  },
+  {
+    "code": "TC",
+    "name": "جزر توركس وكايكوس",
+    "aliases": [
+      "Turks and Caicos Islands",
+      "جزر توركس وكايكوس"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "TD",
+    "name": "تشاد",
+    "aliases": [
+      "Chad",
+      "تشاد"
+    ],
+    "cityCount": 46
+  },
+  {
+    "code": "TF",
+    "name": "الأقاليم الجنوبية الفرنسية",
+    "aliases": [
+      "French Southern Territories",
+      "الأقاليم الجنوبية الفرنسية"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "TG",
+    "name": "توغو",
+    "aliases": [
+      "Togo",
+      "توغو"
+    ],
+    "cityCount": 20
+  },
+  {
+    "code": "TH",
+    "name": "تايلاند",
+    "aliases": [
+      "Thailand",
+      "تايلاند"
+    ],
+    "cityCount": 330
+  },
+  {
+    "code": "TJ",
+    "name": "طاجيكستان",
+    "aliases": [
+      "Tajikistan",
+      "طاجيكستان"
+    ],
+    "cityCount": 31
+  },
+  {
+    "code": "TK",
+    "name": "توكيلاو",
+    "aliases": [
+      "Tokelau",
+      "توكيلاو"
+    ],
+    "cityCount": 0
+  },
+  {
+    "code": "TL",
+    "name": "تيمور - ليشتي",
+    "aliases": [
+      "Timor Leste",
+      "تيمور - ليشتي"
+    ],
+    "cityCount": 10
+  },
+  {
+    "code": "TM",
+    "name": "تركمانستان",
+    "aliases": [
+      "Turkmenistan",
+      "تركمانستان"
+    ],
+    "cityCount": 36
+  },
+  {
+    "code": "TN",
+    "name": "الجمهورية التونسية",
+    "aliases": [
+      "Tunisia",
+      "تونس",
+      "الجمهورية التونسية"
+    ],
+    "cityCount": 130
+  },
+  {
+    "code": "TO",
+    "name": "تونغا",
+    "aliases": [
+      "Tonga",
+      "تونغا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "TR",
+    "name": "تركيا",
+    "aliases": [
+      "Turkey",
+      "تركيا"
+    ],
+    "cityCount": 434
+  },
+  {
+    "code": "TT",
+    "name": "ترينيداد وتوباغو",
+    "aliases": [
+      "Trinidad and Tobago",
+      "ترينيداد وتوباغو"
+    ],
+    "cityCount": 14
+  },
+  {
+    "code": "TV",
+    "name": "توفالو",
+    "aliases": [
+      "Tuvalu",
+      "توفالو"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "TW",
+    "name": "تايوان",
+    "aliases": [
+      "Taiwan",
+      "تايوان"
+    ],
+    "cityCount": 67
+  },
+  {
+    "code": "TZ",
+    "name": "تنزانيا",
+    "aliases": [
+      "Tanzania",
+      "تنزانيا"
+    ],
+    "cityCount": 228
+  },
+  {
+    "code": "UA",
+    "name": "أوكرانيا",
+    "aliases": [
+      "Ukraine",
+      "أوكرانيا"
+    ],
+    "cityCount": 402
+  },
+  {
+    "code": "UG",
+    "name": "أوغندا",
+    "aliases": [
+      "Uganda",
+      "أوغندا"
+    ],
+    "cityCount": 141
+  },
+  {
+    "code": "UM",
+    "name": "جزر الولايات المتحدة النائية",
+    "aliases": [
+      "United States Minor Outlying Islands",
+      "جزر الولايات المتحدة النائية"
+    ],
+    "cityCount": 0
+  },
+  {
+    "code": "US",
+    "name": "الولايات المتحدة",
+    "aliases": [
+      "United States",
+      "الولايات المتحدة"
+    ],
+    "cityCount": 3408
+  },
+  {
+    "code": "UY",
+    "name": "أورغواي",
+    "aliases": [
+      "Uruguay",
+      "أورغواي"
+    ],
+    "cityCount": 31
+  },
+  {
+    "code": "UZ",
+    "name": "أوزبكستان",
+    "aliases": [
+      "Uzbekistan",
+      "أوزبكستان"
+    ],
+    "cityCount": 112
+  },
+  {
+    "code": "VA",
+    "name": "الفاتيكان",
+    "aliases": [
+      "Vatican",
+      "الفاتيكان"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "VC",
+    "name": "سانت فنسنت وجزر غرينادين",
+    "aliases": [
+      "Saint Vincent and the Grenadines",
+      "سانت فنسنت وجزر غرينادين"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "VE",
+    "name": "فنزويلا",
+    "aliases": [
+      "Venezuela",
+      "فنزويلا"
+    ],
+    "cityCount": 216
+  },
+  {
+    "code": "VG",
+    "name": "جزر فيرجن البريطانية",
+    "aliases": [
+      "British Virgin Islands",
+      "جزر فيرجن البريطانية"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "VI",
+    "name": "جزر فيرجن الأمريكية",
+    "aliases": [
+      "U.S. Virgin Islands",
+      "جزر فيرجن الأمريكية"
+    ],
+    "cityCount": 2
+  },
+  {
+    "code": "VN",
+    "name": "فيتنام",
+    "aliases": [
+      "Vietnam",
+      "فيتنام"
+    ],
+    "cityCount": 314
+  },
+  {
+    "code": "VU",
+    "name": "فانواتو",
+    "aliases": [
+      "Vanuatu",
+      "فانواتو"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "WF",
+    "name": "جزر والس وفوتونا",
+    "aliases": [
+      "Wallis and Futuna",
+      "جزر والس وفوتونا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "WS",
+    "name": "ساموا",
+    "aliases": [
+      "Samoa",
+      "ساموا"
+    ],
+    "cityCount": 1
+  },
+  {
+    "code": "YE",
+    "name": "الجمهورية اليمنية",
+    "aliases": [
+      "Yemen",
+      "اليمن",
+      "الجمهورية اليمنية"
+    ],
+    "cityCount": 25
+  },
+  {
+    "code": "YT",
+    "name": "مايوت",
+    "aliases": [
+      "Mayotte",
+      "مايوت"
+    ],
+    "cityCount": 6
+  },
+  {
+    "code": "ZA",
+    "name": "جنوب أفريقيا",
+    "aliases": [
+      "South Africa",
+      "جنوب أفريقيا"
+    ],
+    "cityCount": 307
+  },
+  {
+    "code": "ZM",
+    "name": "زامبيا",
+    "aliases": [
+      "Zambia",
+      "زامبيا"
+    ],
+    "cityCount": 77
+  },
+  {
+    "code": "ZW",
+    "name": "زيمبابوي",
+    "aliases": [
+      "Zimbabwe",
+      "زيمبابوي"
+    ],
+    "cityCount": 31
+  }
+]

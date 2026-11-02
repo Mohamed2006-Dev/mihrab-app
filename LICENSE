@@ -1,0 +1,79 @@
+رخصة محراب لإتاحة المصدر والاستخدام غير التجاري — الإصدار 1.0
+
+النص العربي هو النص الأساسي لهذه الرخصة. تليه ترجمة إنجليزية للتيسير فقط؛
+عند اختلاف المعنى يُرجع إلى النص العربي.
+
+نطاق الرخصة
+تسري هذه الشروط على الكود الأصلي لمشروع محراب الذي يملك مطوره حقوقه.
+أما المكتبات والخطوط والبيانات والمواد العلمية والوسائط الخارجية فتبقى
+خاضعة لحقوق أصحابها ورخصهم وإشعاراتهم المستقلة.
+
+الإذن بالاستخدام والتعديل
+يُسمح للجميع بدراسة المصدر واستخدامه ونسخه وتعديله وإعادة نشره، وكذلك
+توزيع النسخ المعدلة، وفق الشروط التالية:
+
+1. احترام الضوابط الشرعية، وعدم تحويل المشروع أو مشتقاته إلى وسيلة
+   لاستخدام محرم أو إفساد غايته المتمثلة في الإعانة على الصلاة والتعلم.
+2. عدم تحويل المشروع أو النسخ المشتقة إلى منتج تجاري أو مصدر للربح؛
+   فلا يجوز بيع التطبيق، أو فرض اشتراك أو مقابل للوصول إليه أو إلى
+   ميزاته، أو استغلاله للإعلانات أو الكسب التجاري.
+3. يجوز تعديل سياسة النسخة المشتقة، مع إبقاء شرط احترام الضوابط
+   الشرعية ومنع الاستغلال التجاري، وإبلاغ المستخدم بهذه الشروط.
+4. ذكر اسم المطور أو نسب الكود الأصلي إليه اختياري، وليس شرطاً
+   للاستخدام أو التعديل. لا يشمل هذا الإعفاء إشعارات ورخص وحقوق
+   الأطراف الثالثة؛ فتبقى واجبة الاحترام بحسب شروطها.
+
+الدعم الطوعي مباح ومسموح صراحة
+إضافة وسائل الدعم الطوعي إلى محراب أو أي نسخة معدلة منه ليست ممنوعة
+بموجب هذه الرخصة. الدعم مشروع ومسموح متى أُنفق فيما يرضي الله عز وجل،
+سواء لصيانة المشروع وتطويره أو في وجه مباح آخر، مع الصدق في بيان غرضه.
+لا يُعد مجرد قبول هذا الدعم مخالفة لشرط منع الاستغلال التجاري.
+يشترط أن يبقى اختيارياً تماماً، وألا يقابله فتح محتوى أو ميزة أو امتياز
+مدفوع، وألا يتحول إلى ثمن أو اشتراك مقنّع. يظل التطبيق وميزاته متاحين
+دون دفع. يسري الإذن بإضافة الدعم على النسخ المشتقة أيضاً بالشروط نفسها.
+
+حقوق المصادر الخارجية
+لا تنقل هذه الرخصة ملكية المحتوى الخارجي إلى مطور محراب أو مستخدميه،
+ولا تلغي متطلبات الإسناد أو الحفظ أو العرض أو إعادة التوزيع الخاصة به.
+
+طبيعة الرخصة والمسؤولية
+هذه رخصة مخصصة لإتاحة المصدر مع قيود غير تجارية وشرعية، وليست رخصة
+مصدر مفتوح معتمدة تسمح بجميع الاستخدامات التجارية.
+يُقدم البرنامج كما هو، دون ضمان ملاءمته لغرض معين أو خلوه من الأخطاء
+أو دقة المواقيت والمحتوى الخارجي في جميع الحالات. لا يتحمل المؤلفون
+المسؤولية عن الأضرار الناتجة عن استخدامه بالقدر الذي يسمح به القانون.
+لا تلغي هذه الشروط أي حقوق إلزامية يقررها القانون للمستخدم.
+
+--------------------------------------------------------------------
+Secondary English translation — Arabic text above governs
+
+Mihrab Source-Available Noncommercial License — Version 1.0
+
+Scope: These terms apply to original Mihrab code owned by its developer.
+Third-party code, fonts, data, scientific content and media retain their own
+licenses, rights and required notices.
+
+Permission is granted to study, use, copy, modify and redistribute the code
+and derivative works, subject to the following conditions:
+1. Respect Islamic religious principles; do not repurpose the project for
+   prohibited uses or undermine its prayer and learning purpose.
+2. Do not commercialize or profit from the project or derivatives by sale,
+   subscriptions, paid access, paid features, advertisements or commercial use.
+3. A derivative may change its policy while retaining the religious-use and
+   noncommercial restrictions and informing recipients of these conditions.
+4. Attribution for original Mihrab code is optional. Third-party attribution
+   and license obligations remain unchanged.
+
+Voluntary support is expressly allowed: the original app and derivatives
+may include voluntary support methods. Such support is legitimate and allowed
+when spent in ways pleasing to Allah, whether maintaining the project or
+another permissible purpose, with honest disclosure of its purpose. Accepting
+this support alone does not violate the noncommercial condition. It must be
+entirely optional and must not purchase access, content, features or privileges,
+or disguise a price or subscription. The app and its features remain free.
+
+This custom source-available license is not an OSI-approved open-source license.
+The software is provided as is without warranties, including fitness for a
+particular purpose or the accuracy of times and external content. Authors are
+not liable for resulting losses to the extent permitted by applicable law.
+Mandatory legal rights remain unaffected.

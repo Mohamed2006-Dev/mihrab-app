@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>تنبيه محراب</title
+    ><link rel="stylesheet" href="./styles/fonts.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        scrollbar-width: none;
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        font-family: var(--font-family-base, 'Segoe UI', sans-serif);
+        color: var(--text-primary, #f0e9d2);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .popup-wrapper {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+      }
+      .popup-card {
+        max-height: 100%;
+        border: 1px solid var(--border-focus, #c9a850);
+        border-radius: 24px;
+        background: var(--bg-surface-elevated, #10261c);
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        overflow-y: auto;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.24);
+      }
+      .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .popup-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+      .popup-icon-badge {
+        color: var(--accent-primary, #c9a850);
+        font-size: 24px;
+        display: flex;
+        flex: 0 0 auto;
+      }
+      .popup-title {
+        margin: 0;
+        font-family: var(--font-family-heading, inherit);
+        font-size: 27px;
+        line-height: 1.45;
+      }
+      button {
+        font: inherit;
+        font-size: 16px;
+        cursor: pointer;
+        border: 1px solid var(--border-subtle, #456);
+        border-radius: 12px;
+        background: var(--bg-secondary, #08180f);
+        color: var(--text-primary, #f0e9d2);
+        padding: 8px 13px;
+      }
+      button:focus-visible,
+      .popup-card:focus-visible {
+        outline: 2px solid var(--accent-primary, #c9a850);
+        outline-offset: 2px;
+      }
+      button:disabled {
+        opacity: 0.55;
+        cursor: wait;
+      }
+      .popup-close-btn {
+        padding: 4px 9px;
+        flex: 0 0 auto;
+      }
+      .popup-body {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.75;
+        overflow-wrap: anywhere;
+      }
+      .popup-spiritual-quote {
+        margin: 0;
+        padding: 12px 14px;
+        border-inline-start: 3px solid var(--accent-primary, #c9a850);
+        border-radius: 10px;
+        background: var(--bg-secondary, #08180f);
+        font-size: 19px;
+        line-height: 1.8;
+        color: var(--text-primary, #f0e9d2);
+      }
+      .hadith-source {
+        display: block;
+        font-size: 14px;
+        line-height: 1.65;
+        color: var(--text-secondary, #cdd6bd);
+        margin-top: 6px;
+      }
+      .prayer-attention {
+        color: var(--accent-primary, #c9a850);
+        animation: prayer-attention 2.8s ease-in-out 6;
+      }
+      @keyframes prayer-attention {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.62;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .prayer-attention {
+          animation: none;
+        }
+      }
+      .popup-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .popup-hint {
+        font-size: 15px;
+        color: var(--text-muted, #8fa28a);
+        line-height: 1.5;
+      }
+      .popup-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .popup-action {
+        background: var(--accent-primary, #c9a850);
+        color: var(--on-accent, #18130a);
+        font-weight: 600;
+      }
+      .popup-countdown {
+        font-variant-numeric: tabular-nums;
+        color: var(--accent-secondary, #8fbf9f);
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .popup-progress-track {
+        height: 3px;
+        background: var(--bg-secondary, #08180f);
+        border-radius: 4px;
+        overflow: hidden;
+        flex: 0 0 auto;
+      }
+      .popup-progress-bar {
+        width: 100%;
+        height: 100%;
+        background: var(--accent-primary, #c9a850);
+      }
+      .popup-error {
+        margin: 0;
+        font-size: 15px;
+        color: var(--status-danger, #f39380);
+        overflow-wrap: anywhere;
+      }
+      .ui-icon {
+        width: 1.15em;
+        height: 1.15em;
+        display: inline-block;
+        vertical-align: middle;
+        flex: 0 0 auto;
+      }
+      .popup-card[data-type='daily_video'] {
+        cursor: pointer;
+      }
+      #popup-video-image {
+        display: block;
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin: 10px 0;
+      }
+      #popup-video-image[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="popup-wrapper"
+      ><section class="popup-card" id="popup-card" aria-labelledby="popup-title">
+        <header class="popup-header"
+          ><div class="popup-title-wrap"
+            ><div class="popup-icon-badge" id="popup-icon">🔔</div
+            ><h1 class="popup-title" id="popup-title">تنبيه محراب</h1></div
+          ><button class="popup-close-btn" id="popup-close-btn" aria-label="إغلاق التنبيه"
+            >✖</button
+          ></header
+        >
+        <img id="popup-video-image" alt="صورة المقطع المقترح" hidden />
+        <p class="popup-body" id="popup-body"></p>
+        <div class="popup-spiritual-quote" id="popup-spiritual"></div>
+        <div class="popup-countdown" id="popup-countdown" hidden></div>
+        <div class="popup-footer"
+          ><span class="popup-hint" id="popup-hint"></span
+          ><div class="popup-actions" id="popup-actions" hidden>
+            <button class="popup-action" id="popup-snooze" hidden>تمديد موعد القفل</button>
+            <button class="popup-action" id="popup-open-lessons" hidden
+              >مشاهدة المقطع على يوتيوب</button
+            >
+          </div></div
+        >
+        <p class="popup-error" id="popup-hadith-error" role="status" hidden></p>
+        <p class="popup-error" id="popup-audio-error" role="status" hidden></p>
+        <div class="popup-progress-track" id="popup-progress-track"
+          ><div class="popup-progress-bar" id="popup-progress"></div
+        ></div> </section
+    ></div>
+    <script src="./icons.js"></script>
+    <script>
+      function renderTitle(data) {
+        const title = document.getElementById('popup-title'),
+          text = data.title || 'تنبيه محراب';
+        title.replaceChildren();
+        const prayerNotice = ['pre_prayer', 'prayer_time', 'lock_warning'].includes(data.type);
+        const keyword = prayerNotice
+          ? data.prayerName && text.includes(data.prayerName)
+            ? data.prayerName
+            : ['الصلاة', 'صلاة', 'الأذان', 'القفل', 'قفل'].find((word) => text.includes(word))
+          : null;
+        if (!keyword) {
+          title.textContent = text;
+          return;
+        }
+        const index = text.indexOf(keyword),
+          attention = document.createElement('span');
+        attention.className = 'prayer-attention';
+        attention.textContent = keyword;
+        title.append(
+          document.createTextNode(text.slice(0, index)),
+          attention,
+          document.createTextNode(text.slice(index + keyword.length)),
+        );
+      }
+      function renderHadith(data) {
+        const el = document.getElementById('popup-spiritual');
+        el.replaceChildren();
+        if (data.hadith?.text) {
+          const text = document.createElement('span');
+          text.textContent = data.hadith.text;
+          const source = document.createElement('small');
+          source.className = 'hadith-source';
+          source.textContent = [data.hadith.source, data.hadith.grade].filter(Boolean).join(' • ');
+          el.append(text, source);
+          el.hidden = false;
+        } else {
+          el.hidden = true;
+        }
+      }
+      let currentData = null;
+      let adhanAudio = null;
+      let countdownTimer = null;
+      function applyTheme(themeState) {
+        for (const [key, value] of Object.entries(themeState?.cssVariables || {}))
+          document.documentElement.style.setProperty(key, value);
+      }
+      function reportAudio(status, message = '', duration = 0) {
+        window.mihrabApi?.reportNotificationAudioStatus?.({ status, message, duration });
+      }
+      function showError(error) {
+        const el = document.getElementById('popup-audio-error');
+        el.textContent = error.message || String(error);
+        el.hidden = false;
+      }
+      function startProgress(milliseconds) {
+        const track = document.getElementById('popup-progress-track');
+        track.hidden = !milliseconds;
+        if (!milliseconds) return;
+        const bar = document.getElementById('popup-progress');
+        bar.style.transition = 'none';
+        bar.style.width = '100%';
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            bar.style.transition = `width ${milliseconds}ms linear`;
+            bar.style.width = '0%';
+          }),
+        );
+      }
+      async function playAdhanAudio() {
+        if (adhanAudio) adhanAudio.pause();
+        const audio = new Audio(
+          new URL('./assets/audio/ALLAHO_AKBAR_audio.flac', location.href).href,
+        );
+        adhanAudio = audio;
+        audio.volume = 1;
+        audio.muted = false;
+        audio.preload = 'auto';
+        let failed = false;
+        const failure = (error) => {
+          if (audio !== adhanAudio || failed) return;
+          failed = true;
+          const message =
+            error?.message || `تعذر تشغيل ملف الصوت (رمز ${audio.error?.code || 'غير معروف'}).`;
+          showError(new Error(message));
+          reportAudio('error', message);
+        };
+        audio.addEventListener('error', failure, { once: true });
+        audio.addEventListener(
+          'playing',
+          () => {
+            document.getElementById('popup-audio-error').hidden = true;
+            startProgress(
+              Math.max(14700, (Number.isFinite(audio.duration) ? audio.duration : 0) * 1000 + 1000),
+            );
+            reportAudio('playing', 'بدأ تشغيل صوت الأذان.', audio.duration);
+          },
+          { once: true },
+        );
+        audio.addEventListener('ended', () => reportAudio('ended', 'اكتمل تشغيل صوت الأذان.'), {
+          once: true,
+        });
+        try {
+          await audio.play();
+        } catch (error) {
+          failure(error);
+        }
+      }
+      async function closeSelf() {
+        if (adhanAudio) {
+          adhanAudio.pause();
+          adhanAudio = null;
+        }
+        try {
+          await window.mihrabApi.closeNotificationPopup();
+        } catch (error) {
+          showError(error);
+        }
+      }
+      function updateCountdown() {
+        const el = document.getElementById('popup-countdown');
+        if (currentData?.type !== 'lock_warning') {
+          el.hidden = true;
+          return;
+        }
+        el.hidden = false;
+        if (currentData.cancelled) {
+          el.textContent = 'تم تأجيل القفل لهذه الصلاة حتى الأذان.';
+          return;
+        }
+        const seconds = Math.max(
+          0,
+          Math.ceil((new Date(currentData.lockAt).getTime() - Date.now()) / 1000),
+        );
+        el.textContent = seconds
+          ? `قفل الشاشة بعد ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+          : 'حان موعد شاشة التهيئة.';
+      }
+      async function performAction(action, button) {
+        if (button) button.disabled = true;
+        try {
+          await window.mihrabApi.notificationPopupAction(action);
+        } catch (error) {
+          showError(error);
+        } finally {
+          if (button) button.disabled = false;
+        }
+      }
+      document.getElementById('popup-close-btn').addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeSelf();
+      });
+      document.getElementById('popup-snooze').addEventListener('click', (event) => {
+        event.stopPropagation();
+        performAction('snooze', event.currentTarget);
+      });
+      document.getElementById('popup-open-lessons').addEventListener('click', (event) => {
+        event.stopPropagation();
+        performAction('open_lessons', event.currentTarget);
+      });
+      const card = document.getElementById('popup-card');
+      card.addEventListener('click', (event) => {
+        if (currentData?.type === 'daily_video' && !event.target.closest('button'))
+          performAction('open_lessons');
+      });
+      card.addEventListener('keydown', (event) => {
+        if (
+          event.target === card &&
+          currentData?.type === 'daily_video' &&
+          ['Enter', ' '].includes(event.key)
+        ) {
+          event.preventDefault();
+          performAction('open_lessons');
+        }
+      });
+      window.mihrabApi.onNotificationPopupData((data) => {
+        currentData = data;
+        applyTheme(data.themeState);
+        card.dataset.type = data.type || 'notice';
+        renderTitle(data);
+        document.getElementById('popup-body').textContent = data.body || '';
+        const lock = data.type === 'lock_warning',
+          daily = data.type === 'daily_video',
+          pre = data.type === 'pre_prayer';
+        const image = document.getElementById('popup-video-image');
+        image.hidden = true;
+        image.removeAttribute('src');
+        if (daily && /^[A-Za-z0-9_-]{11}$/.test(data.video?.videoId || '')) {
+          image.hidden = false;
+          image.onerror = () => {
+            image.hidden = true;
+          };
+          image.src = 'https://img.youtube.com/vi/' + data.video.videoId + '/mqdefault.jpg';
+        }
+        card.tabIndex = daily ? 0 : -1;
+        card.setAttribute('role', daily ? 'button' : 'status');
+        document.getElementById('popup-icon').textContent = lock
+          ? '🔒'
+          : daily
+            ? '🎬'
+            : data.type === 'prayer_time'
+              ? '🕌'
+              : '🔔';
+        renderHadith(data);
+        document.getElementById('popup-hint').textContent = pre
+          ? 'تنبيه صامت — يبقى حتى إغلاقه أو بدء الأذان.'
+          : lock
+            ? data.preview
+              ? 'معاينة فقط — لا تُفتح شاشة قفل فعلية.'
+              : 'التمديد هنا يؤجل هذه الشاشة فقط.'
+            : '';
+        document.getElementById('popup-actions').hidden = !(lock || daily);
+        document.getElementById('popup-snooze').hidden = !lock;
+        document.getElementById('popup-snooze').disabled = Boolean(data.cancelled);
+        document.getElementById('popup-snooze').textContent =
+          `تمديد القفل ${data.snoozeMinutes || 3} دقائق`;
+        document.getElementById('popup-open-lessons').hidden = !daily;
+        document.getElementById('popup-audio-error').hidden = true;
+        const hadithError = document.getElementById('popup-hadith-error');
+        hadithError.hidden = !data.hadithError;
+        hadithError.textContent = data.hadithError || '';
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+        updateCountdown();
+        if (lock && !data.cancelled) countdownTimer = setInterval(updateCountdown, 1000);
+        startProgress(data.persistent ? null : data.autoCloseMs);
+        if (data.type === 'prayer_time' && data.playAudio === true && data.soundEnabled !== false)
+          playAdhanAudio();
+        else if (data.type === 'prayer_time' && data.soundEnabled === false)
+          reportAudio('disabled', 'صوت التنبيهات معطل في الإعدادات.');
+      });
+      window.addEventListener(
+        'pagehide',
+        () => {
+          clearInterval(countdownTimer);
+          if (adhanAudio) adhanAudio.pause();
+        },
+        { once: true },
+      );
+    </script>
+  </body></html
+>

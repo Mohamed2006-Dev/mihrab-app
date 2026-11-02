@@ -1,0 +1,9 @@
+{
+  "singleQuote": true,
+  "quoteProps": "preserve",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "htmlWhitespaceSensitivity": "strict",
+  "endOfLine": "lf"
+}

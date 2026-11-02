@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>شاشة التهيؤ للصلاة — مِحْراب</title>
+    <link rel="stylesheet" href="./styles/structural.css" />
+    <style>
+      .lock-container {
+        height: 100vh;
+        width: 100vw;
+        background: var(--gradient-hero);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-xl);
+        text-align: center;
+        gap: var(--spacing-xl);
+      }
+
+      .lock-card {
+        max-width: 920px;
+        width: 100%;
+        background: var(--bg-surface-elevated);
+        border: 2px solid var(--accent-secondary);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-xl);
+        box-shadow: var(--shadow-card);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-lg);
+      }
+
+      .lock-motivational {
+        font-family: var(--font-family-heading);
+        font-size: var(--font-size-2xl);
+        color: var(--accent-secondary);
+        font-weight: 700;
+      }
+
+      .lock-timer-pill {
+        font-family: var(--font-family-mono);
+        font-size: var(--font-size-2xl);
+        background: var(--bg-primary);
+        color: var(--accent-primary);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-pill);
+        padding: var(--spacing-sm) var(--spacing-xl);
+        box-shadow: var(--shadow-glow);
+      }
+
+      .test-bypass-box {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-xs);
+        margin-top: var(--spacing-xs);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        background: var(--bg-primary);
+        border: 1px dashed var(--status-warning);
+        width: 100%;
+      }
+
+      .test-bypass-box.visible {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lock-container">
+      <div class="lock-card">
+        <div class="brand-logo" style="width: 68px; height: 68px; font-size: 2rem">🕌</div>
+
+        <div>
+          <div
+            style="
+              font-size: var(--font-size-sm);
+              color: var(--text-muted);
+              margin-bottom: var(--spacing-xs);
+            "
+          >
+            تم تجميد شاشة العمل وتوقيف الأصوات وإخفاء شريط المهام للتهيؤ للعبادة
+          </div>
+          <h1
+            style="
+              font-family: var(--font-family-heading);
+              font-size: var(--font-size-3xl);
+              color: var(--text-primary);
+            "
+            id="lock-prayer-title"
+          >
+            حان وقت التهيؤ لصلاة الجماعة
+          </h1>
+        </div>
+
+        <div class="lock-motivational" id="lock-motivational-quote">
+          «قم لصلاتك، عملك سينتظرك.. أما الوقت فإنه يمضي إلى الله»
+        </div>
+
+        <div class="hadith-quote-box" id="lock-hadith-text" style="width: 100%; text-align: right">
+          ...
+        </div>
+
+        <div class="hadith-meta-bar" id="lock-hadith-meta">
+          <span class="meta-pill" id="lock-hadith-rawi">الراوي: -</span>
+          <span class="meta-pill" id="lock-hadith-grade">الدرجة: صحيح</span>
+        </div>
+
+        <div class="lock-timer-pill" id="lock-remaining-timer"> وقت التهيؤ المتبقي: 00:30 </div>
+
+        <!-- Close the preparation screen preview. -->
+        <div class="test-bypass-box" id="test-bypass-container">
+          <div
+            style="font-size: var(--font-size-xs); color: var(--status-warning); font-weight: 700"
+          >
+            🧪 الوضع الاختباري نشط (Test / Preview Mode) — ستغلق الشاشة تلقائياً عند وصول العداد إلى
+            00:00
+          </div>
+          <button
+            class="btn btn-danger"
+            id="btn-test-bypass-now"
+            style="font-size: var(--font-size-base); padding: var(--spacing-sm) var(--spacing-xl)"
+          >
+            🔓 تجاوز وإغلاق شاشة التجميد فوراً (زر الأمان للوضع الاختباري)
+          </button>
+        </div>
+
+        <div style="font-size: var(--font-size-xs); color: var(--text-muted)">
+          تُغلق هذه الشاشة تلقائياً فور انتهاء المؤقت التنازلي (وفي الوضع الفعلي لا يتم تجاوزها إلا
+          عبر مدير المهام Task Manager).
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function applyThemeVariables(themeState) {
+        if (!themeState || !themeState.cssVariables) return;
+        const root = document.documentElement;
+        for (const [key, val] of Object.entries(themeState.cssVariables)) {
+          root.style.setProperty(key, val);
+        }
+      }
+
+      let remainingSec = 30;
+      let countdownInterval = null;
+
+      function renderTimer() {
+        const mm = String(Math.floor(remainingSec / 60)).padStart(2, '0');
+        const ss = String(remainingSec % 60).padStart(2, '0');
+        const el = document.getElementById('lock-remaining-timer');
+        if (el) el.textContent = `وقت التهيؤ المتبقي: ${mm}:${ss}`;
+      }
+
+      function startAccurateCountdown(seconds) {
+        remainingSec = Math.max(1, Math.round(Number(seconds) || 30));
+        renderTimer();
+
+        if (countdownInterval) clearInterval(countdownInterval);
+        const endTimestamp = Date.now() + remainingSec * 1000;
+
+        countdownInterval = setInterval(() => {
+          const diff = Math.max(0, Math.ceil((endTimestamp - Date.now()) / 1000));
+          remainingSec = diff;
+          renderTimer();
+
+          if (diff <= 0) {
+            clearInterval(countdownInterval);
+            if (window.mihrabApi && window.mihrabApi.forceCloseLockscreen) {
+              window.mihrabApi.forceCloseLockscreen();
+            }
+          }
+        }, 250);
+      }
+
+      document.getElementById('btn-test-bypass-now').addEventListener('click', () => {
+        if (window.mihrabApi && window.mihrabApi.forceCloseLockscreen) {
+          window.mihrabApi.forceCloseLockscreen();
+        }
+      });
+
+      // بدء مؤقت افتراضي احتياطي حتى لو تأخر حدث التهيئة
+      startAccurateCountdown(30);
+
+      if (window.mihrabApi) {
+        window.mihrabApi.onLockscreenInit((payload) => {
+          if (payload.themeState) applyThemeVariables(payload.themeState);
+          if (payload.prayerName) {
+            document.getElementById('lock-prayer-title').textContent =
+              `حان وقت التهيؤ لـ ${payload.prayerName}`;
+          }
+          if (payload.motivationalQuote) {
+            document.getElementById('lock-motivational-quote').textContent =
+              payload.motivationalQuote;
+          }
+          if (payload.hadith) {
+            document.getElementById('lock-hadith-text').textContent = payload.hadith.text || '';
+            document.getElementById('lock-hadith-rawi').textContent =
+              `الراوي: ${payload.hadith.rawi || '-'}`;
+            document.getElementById('lock-hadith-grade').textContent =
+              `الدرجة: ${payload.hadith.grade || 'صحيح'}`;
+          }
+
+          const bypassBox = document.getElementById('test-bypass-container');
+          if (payload.isTestMode) {
+            bypassBox.classList.add('visible');
+          } else {
+            bypassBox.classList.remove('visible');
+          }
+
+          const totalSec =
+            Number(payload.durationSeconds) > 0
+              ? Number(payload.durationSeconds)
+              : Math.max(1, Number(payload.lockDurationMinutes) || 10) * 60;
+
+          startAccurateCountdown(totalSec);
+        });
+
+        window.mihrabApi.onLockscreenThemeUpdated((themeState) => {
+          applyThemeVariables(themeState);
+        });
+      }
+    </script>
+  </body>
+</html>

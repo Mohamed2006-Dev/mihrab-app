@@ -1,0 +1,169 @@
+<!doctype html>
+<html dir="rtl" lang="ar"
+  ><head
+    ><meta charset="utf-8" /><meta
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';"
+      http-equiv="Content-Security-Policy"
+    /><link href="style.css" rel="stylesheet" /><link
+      href="styles/structural.css"
+      rel="stylesheet"
+    /><style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg-primary, #0c2019);
+        color: var(--text-primary, #eee);
+        font-family: var(--font-family-base, 'Segoe UI'), sans-serif;
+      }
+      body {
+        padding: 16px;
+        box-sizing: border-box;
+        border: 1px solid var(--border-subtle, #776a35);
+        border-radius: 18px;
+      }
+      .mini-hero {
+        position: relative;
+        border-radius: 14px;
+        padding: 18px;
+        background:
+          linear-gradient(90deg, #102b2670, #0b2019cc),
+          url('assets/prayer-hero.png') center/cover;
+        min-height: 160px;
+        box-sizing: border-box;
+      }
+      .mini-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+      .mini-header button {
+        font: inherit;
+        color: inherit;
+        background: transparent;
+        border: 1px solid var(--border-subtle, #776a35);
+        border-radius: 9px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      h2 {
+        font-size: 24px;
+        margin: 14px 0 5px;
+      }
+      #mini-countdown {
+        font-size: 24px;
+        color: var(--accent-primary, #d5b554);
+      }
+      #mini-region {
+        margin-top: 14px;
+        display: grid;
+        gap: 9px;
+      }
+      #mini-region[hidden] {
+        display: none;
+      }
+      label {
+        font-size: 12px;
+      }
+      select,
+      button {
+        max-width: 100%;
+      }
+      #mini-status {
+        font-size: 12px;
+        line-height: 1.7;
+        min-height: 18px;
+      }
+      .mini-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .mini-city {
+        font-size: 12px;
+        color: var(--text-secondary, #bbb);
+      }
+      .mini-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .mini-footer button {
+        font-size: 12px;
+      }
+      .mini-content {
+        height: 100%;
+        overflow: auto;
+      }
+      body {
+        animation: mini-in var(--mini-duration, 180ms) ease-out;
+      }
+      @keyframes mini-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body {
+          animation: none;
+        }
+      }
+
+      #mini-save {
+        margin-top: 16px;
+        margin-bottom: 8px;
+        padding: 12px;
+      }
+      #mini-region {
+        padding-top: 12px;
+        border-top: 1px solid var(--border-subtle);
+        gap: 10px;
+      }
+    </style></head
+  ><body
+    ><div class="mini-content"
+      ><div class="mini-hero" id="mini-hero"
+        ><header class="mini-header"
+          ><span>مِحْراب</span
+          ><button aria-label="إخفاء النافذة المصغرة" id="mini-close">إغلاق</button></header
+        ><div class="mini-city" id="mini-city"></div><h2 id="mini-next">جارٍ التحميل…</h2
+        ><div dir="ltr" id="mini-countdown">--:--:--</div><div id="mini-at"></div></div
+      ><div class="mini-footer"
+        ><button
+          aria-controls="mini-region"
+          aria-expanded="false"
+          class="btn btn-secondary"
+          id="mini-toggle-region"
+          >إعدادات المنطقة</button
+        ><button class="btn btn-secondary" id="mini-open-main">فتح محراب</button></div
+      ><section hidden="" id="mini-region"
+        ><label for="mini-country">الدولة</label
+        ><select class="select-field" id="mini-country"></select
+        ><label for="mini-city-select">المدينة</label
+        ><select class="select-field" id="mini-city-select"></select
+        ><label for="mini-method">طريقة حساب المواقيت</label
+        ><select class="select-field" id="mini-method"
+          ><option value="UmmAlQura">أم القرى (مكة المكرمة والخليج)</option
+          ><option value="MuslimWorldLeague">رابطة العالم الإسلامي</option
+          ><option value="Habous">وزارة الأوقاف والشؤون الإسلامية (المملكة المغربية)</option
+          ><option value="Egyptian">الهيئة المصرية العامة للمساحة</option
+          ><option value="Dubai">دائرة الشؤون الإسلامية بدبي</option
+          ><option value="Kuwait">وزارة الأوقاف الكويتية</option
+          ><option value="Qatar">وزارة الأوقاف القطرية</option
+          ><option value="NorthAmerica">الجمعية الإسلامية لأمريكا الشمالية (ISNA)</option
+          ><option value="Karachi">جامعة العلوم الإسلامية بكراتشي</option
+          ><option value="Turkey">رئاسة الشؤون الدينية التركية</option></select
+        ><button class="btn btn-primary" id="mini-save">حفظ المنطقة</button></section
+      ><p id="mini-status" role="status"></p></div
+    ><script src="prayer-display.js"></script
+    ><script src="final-polish.js"></script
+    ><script src="mini-prayer.js"></script></body
+></html>
