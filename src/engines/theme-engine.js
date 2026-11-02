@@ -3,33 +3,30 @@ const path = require('path');
 
 /** Load external theme definitions independently of application behavior. */
 class ThemeEngine {
-  constructor(baseDir) {
+  constructor(baseDir, writableDir = baseDir) {
     this.themesDir = path.join(baseDir, 'themes');
-    this.activeConfigPath = path.join(this.themesDir, 'active-theme.json');
+    this.activeConfigPath = path.join(writableDir, 'themes', 'active-theme.json');
   }
 
   getActiveThemeState() {
-    try {
-      const configRaw = fs.readFileSync(this.activeConfigPath, 'utf8');
-      const config = JSON.parse(configRaw);
-      const themeId = config.activeTheme || 'emerald-sanctuary';
-      const mode = config.activeMode || 'dark';
-      const themeData = this.loadThemeById(themeId);
-
-      // Discover JSON themes added to the themes directory.
-      const discoveredThemes = this.discoverAllThemes();
-
-      return {
-        activeTheme: themeId,
-        activeMode: mode,
-        availableThemes: discoveredThemes,
-        themeData,
-        cssVariables: this.compileCssVariables(themeData, mode),
-      };
-    } catch (err) {
-      console.error('[ThemeEngine] Failed to load active theme state:', err.message);
-      return null;
+    let config = { activeTheme: 'emerald-sanctuary', activeMode: 'dark' };
+    if (fs.existsSync(this.activeConfigPath)) {
+      try {
+        config = { ...config, ...JSON.parse(fs.readFileSync(this.activeConfigPath, 'utf8')) };
+      } catch (error) {
+        console.warn('[ThemeEngine] Invalid local preferences; using defaults:', error.message);
+      }
     }
+    const themeId = config.activeTheme || 'emerald-sanctuary';
+    const mode = config.activeMode === 'light' ? 'light' : 'dark';
+    const themeData = this.loadThemeById(themeId);
+    return {
+      activeTheme: themeData.id || themeId,
+      activeMode: mode,
+      availableThemes: this.discoverAllThemes(),
+      themeData,
+      cssVariables: this.compileCssVariables(themeData, mode),
+    };
   }
 
   discoverAllThemes() {
@@ -81,6 +78,7 @@ class ThemeEngine {
       }
       if (themeId) current.activeTheme = themeId;
       if (mode) current.activeMode = mode;
+      fs.mkdirSync(path.dirname(this.activeConfigPath), { recursive: true });
       fs.writeFileSync(this.activeConfigPath, JSON.stringify(current, null, 2), 'utf8');
       return this.getActiveThemeState();
     } catch (err) {

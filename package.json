@@ -5,14 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node test-engines.js && node --test test-youtube-rss.js test-audio-manager.js test-notifications.js test-geography.js test-quran.js test-hadeethenc.js test-resources.js test-accessibility.js test-performance.js test-project-info.js test-updates.js test-final-guidance.js test-prayer-display.js test-lesson-navigation.js",
     "dist": "electron-builder --win",
     "dist:portable": "electron-builder --win portable",
-    "dist:nsis": "electron-builder --win nsis",
-    "export:hadith-image": "electron scripts/export-hadith-image.cjs",
-    "test:ui": "electron scripts/test-ui-controls.cjs",
-    "format": "prettier --write \"src/**/*.{js,css,html}\" \"scripts/*.cjs\" \"test-*.js\" main.js preload.js package.json .prettierrc.json \"themes/{emerald-sanctuary,royal-sapphire,andalusian-sand}.json\"",
-    "format:check": "prettier --check \"src/**/*.{js,css,html}\" \"scripts/*.cjs\" \"test-*.js\" main.js preload.js package.json .prettierrc.json \"themes/{emerald-sanctuary,royal-sapphire,andalusian-sand}.json\""
+    "dist:nsis": "electron-builder --win nsis"
   },
   "keywords": [
     "prayer-times",

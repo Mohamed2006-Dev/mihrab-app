@@ -40,7 +40,8 @@ app.on('second-instance', () => {
 // ============================================================================
 app.name = 'mihrab-desktop';
 try {
-  app.setPath('userData', path.join(app.getPath('appData'), 'mihrab-desktop'));
+  if (!app.commandLine.hasSwitch('user-data-dir'))
+    app.setPath('userData', path.join(app.getPath('appData'), 'mihrab-desktop'));
 } catch (_) {}
 app.disableHardwareAcceleration();
 
@@ -65,7 +66,7 @@ const resourcesDir =
 const writableDir = isPackaged ? app.getPath('userData') : __dirname;
 
 const storage = new StorageEngine(resourcesDir, writableDir);
-const themeEngine = new ThemeEngine(resourcesDir);
+const themeEngine = new ThemeEngine(resourcesDir, writableDir);
 const { ProjectInfoEngine } = require('./src/engines/project-info-engine');
 const projectInfoEngine = new ProjectInfoEngine(resourcesDir, writableDir, isPackaged);
 
@@ -1310,10 +1311,11 @@ app.whenReady().then(() => {
 
   // Enable open-at-login startup.
   try {
-    app.setLoginItemSettings({
-      openAtLogin: storage.getConfig().startup?.enabled !== false,
-      openAsHidden: false,
-    });
+    if (!app.commandLine.hasSwitch('user-data-dir'))
+      app.setLoginItemSettings({
+        openAtLogin: storage.getConfig().startup?.enabled !== false,
+        openAsHidden: false,
+      });
   } catch (startupErr) {
     console.warn('[Startup] LoginItemSettings warning:', startupErr.message);
   }
