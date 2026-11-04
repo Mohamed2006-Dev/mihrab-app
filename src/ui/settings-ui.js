@@ -282,7 +282,8 @@ function initializeSettingsSegments() {
       const delta=event.deltaY*(event.deltaMode===1?24:event.deltaMode===2?rail.clientWidth:1)*(rtl?-1:1);
       const target=Math.max(rtl?-overflow:0,Math.min(rtl?0:overflow,rail.scrollLeft+delta));
       if(Math.abs(target-rail.scrollLeft)<1)return;
-      event.preventDefault();rail.scrollTo({left:target,behavior:'instant'});
+      const before=rail.scrollLeft;rail.scrollTo({left:target,behavior:'instant'});
+      if(Math.abs(rail.scrollLeft-before)>.5)event.preventDefault();
     },{passive:false});
   }
 

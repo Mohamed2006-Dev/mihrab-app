@@ -1,6 +1,6 @@
 const fs = require('fs'),
   path = require('path');
-const PRIVATE_FILE = 'personal-data(do_not_read_this_throw_network).json';
+const PRIVATE_FILE = 'personal-data.json';
 function safeUrl(value, kind) {
   if (typeof value !== 'string' || !value.trim()) return null;
   let raw = value.trim().replace(/^https?\/\//i, 'https://');
@@ -64,11 +64,11 @@ class ProjectInfoEngine {
   }
   readSource() {
     const files = this.packaged
-      ? [path.join(this.baseDir, 'data', 'project-public-info.json')]
+      ? [path.join(this.baseDir, 'data', 'personal-data.json')]
       : [
           path.join(this.writableDir, 'data', PRIVATE_FILE),
           path.join(this.baseDir, 'data', PRIVATE_FILE),
-          path.join(this.baseDir, 'data', 'project-public-info.json'),
+          path.join(this.baseDir, 'data', 'personal-data.json'),
         ];
     const file = files.find((f) => fs.existsSync(f));
     if (!file) return null;

@@ -13,7 +13,7 @@ module.exports = async (context) => {
     bank_account_informations: sanitizeBank(source?.bank_account_informations),
   };
   fs.writeFileSync(
-    path.join(root, 'data', 'project-public-info.json'),
+    path.join(root, 'data', 'personal-data.json'),
     JSON.stringify(output, null, 2),
     'utf8',
   );

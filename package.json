@@ -52,7 +52,7 @@
       "!test-youtube-rss.js",
       "!Project_Assets/**/*",
       "LICENSE",
-      "!data/personal-data*.json",
+      "!data/personal-data(*).json",
       "!data/user-config.json",
       "!data/network-usage.json",
       "!data/city-prayer-cache.json",
@@ -76,7 +76,7 @@
         "to": "data",
         "filter": [
           "**/*",
-          "!personal-data*.json",
+          "!personal-data(*).json",
           "!user-config.json",
           "!network-usage.json",
           "!city-prayer-cache.json",
