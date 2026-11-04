@@ -1786,7 +1786,7 @@ function renderVerificationStatus(report = state.prayerData?.verification) {
       ? 'التحديث عبر الإنترنت متوقف؛ تُعرض المواقيت بالحساب المحلي وآخر ضبط محفوظ.'
       : navigator.onLine === false
         ? OFFLINE_PRAYER_MESSAGE
-        : report?.message || 'اضغط «التحقق من أوقات الصلاة» لتحديث المواقيت.';
+        : report?.message || '';
   if (state.prayerData?.calculationWarning)
     box.textContent += ' ' + state.prayerData.calculationWarning;
 }
@@ -1900,6 +1900,10 @@ async function refreshCurrentCountryCities(location) {
 }
 
 function renderSettingsForm(config, cities) {
+  document.getElementById('auto-prayer-verification').checked = config.automation?.verifyPrayerTimes ?? config.officialSync?.enabled !== false;
+  document.getElementById('location-auto-update').checked = config.location?.autoUpdate === true;
+  syncAutomationButtons(config);
+
   if (!config) return;
   state.config = config;
   if (Array.isArray(cities)) state.cities = cities;
@@ -1963,6 +1967,11 @@ function renderSettingsForm(config, cities) {
 // 7. Event bindings.
 // ============================================================================
 function bindEvents() {
+  document.getElementById('link-automatic-settings').addEventListener('click',event=>{
+    event.preventDefault();activateTabById('tab-settings');
+    document.querySelector('[data-settings-section="other"]').click();
+    document.getElementById('automatic-settings').scrollIntoView({block:'nearest',behavior:'smooth'});
+  });
   initializeInlineSettings();
   initializeProjectInfo();
   initializeBugReport();
@@ -2489,6 +2498,7 @@ async function navigateToNotification(target) {
 // ============================================================================
 async function initApp() {
   bindEvents();
+  window.mihrabApi.onAutomationStatus?.(data=>{const node=document.getElementById("automatic-settings-status");node.textContent=data.message||"";node.dataset.state=data.error?"error":"success";});
   bindHadithLibraryEvents();
   const data = await window.mihrabApi.getBootstrapData();
 
@@ -2553,14 +2563,7 @@ window.addEventListener(
   'DOMContentLoaded',
   () => {
     uiMotion.init();
-    initApp().catch((error) =>
-      showOperationResultModal({
-        success: false,
-        title: 'تعذر تهيئة التطبيق',
-        summary: error.message,
-        details: error.stack,
-      }),
-    );
+    initApp().then(()=>window.MihrabBoot.ready()).catch(error=>window.MihrabBoot.fail(error));
   },
   { once: true },
 );

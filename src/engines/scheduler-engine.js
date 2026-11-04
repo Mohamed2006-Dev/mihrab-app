@@ -50,7 +50,7 @@ class SchedulerEngine {
   }
 
   prayerData(now, config) {
-    const key = `${this.dayKey(now)}:${JSON.stringify([config.location, config.prayerAdjustments])}`;
+    const key = `${this.dayKey(now)}:${JSON.stringify([config.location, config.prayerAdjustments, config.officialSync?.lastSuccessfulReport])}`;
     if (!this.prayerCache.has(key)) {
       if (this.prayerCache.size > 3) this.prayerCache.clear();
       this.prayerCache.set(key, this.prayerEngine.calculateLocalPrayerTimes(now));
@@ -89,7 +89,7 @@ class SchedulerEngine {
         if (key.startsWith('lock_warn_')) this.firedEventsToday.delete(key);
     }
     const data = this.prayerData(now, config);
-    const scheduleKey = `${dateKey}:${JSON.stringify([config.location, config.prayerAdjustments])}`;
+    const scheduleKey = `${dateKey}:${JSON.stringify([config.location, config.prayerAdjustments, config.officialSync?.lastSuccessfulReport])}`;
     if (this.lastScheduleKey !== scheduleKey) {
       this.lastScheduleKey = scheduleKey;
       this.lockPlans.clear();
@@ -238,35 +238,17 @@ class SchedulerEngine {
           this.triggerDailyVideoNotification().catch((error) => this.reportError(error));
         }
       }
-    const fajr = data.prayers.find((prayer) => prayer.id === 'fajr');
-    const syncKey = `habous_auto_sync_${dateKey}`;
-    if (
-      config.officialSync?.enabled !== false &&
-      [1, 4].includes(calendar.getDay()) &&
-      fajr?.time &&
-      nowMs >= this.displayedTime(fajr.time) &&
-      nowMs < this.displayedTime(fajr.time) + 30 * 60000 &&
-      !this.firedEventsToday.has(syncKey)
-    ) {
-      this.firedEventsToday.add(syncKey);
-      this.triggerAutomaticOfficialSync();
-    }
+    this.automation ||= new (require('./prayer-automation'))({
+      storage:this.storage,prayerEngine:this.prayerEngine,
+      onUpdated:report=>{this.prayerCache.clear();this.quranScheduleCache.clear();this.invoke('onOfficialSyncCompleted',report);},
+      onError:error=>this.invoke('onAutomationError',error),
+    });
+    this.automation.tick(now).catch(error=>this.reportError(error));
   }
 
   async triggerAutomaticOfficialSync(date = this.lastNow || new Date()) {
-    if (!networkAllowed(this.storage.getConfig(), 'prayer')) return;
-    try {
-      this.invoke(
-        'onOfficialSyncCompleted',
-        await this.prayerEngine.verifyWithOfficialAwqafApi({
-          throwOnError: true,
-          date,
-          origin: 'automatic',
-        }),
-      );
-    } catch (error) {
-      this.reportError(error);
-    }
+    this.automation ||= new (require('./prayer-automation'))({storage:this.storage,prayerEngine:this.prayerEngine,onUpdated:report=>{this.prayerCache.clear();this.quranScheduleCache.clear();this.invoke('onOfficialSyncCompleted',report);},onError:error=>this.invoke('onAutomationError',error)});
+    return this.automation.tick(date,{retry:true});
   }
 
   emitNotification(payload) {
@@ -341,6 +323,7 @@ class SchedulerEngine {
 
   async triggerDailyVideoNotification() {
     if (!networkAllowed(this.storage.getConfig(), 'youtube')) return;
+    if (!this.youtubeEngine.getChannels().length) return;
     const feeds = await this.youtubeEngine.refreshFeeds('all');
     this.youtubeEngine.releaseMemory?.();
     if (feeds.networkErrors?.length)
@@ -349,7 +332,8 @@ class SchedulerEngine {
       );
     const rec = feeds.dailyRecommendation;
     if (
-      rec &&
+      /^[A-Za-z0-9_-]{11}$/.test(rec?.videoId || '') &&
+      feeds.channels?.some(channel => channel.channelId === rec.channelId) &&
       networkAllowed(this.storage.getConfig(), 'youtube') &&
       this.storage.getConfig().notifications?.lessons?.enabled !== false
     )

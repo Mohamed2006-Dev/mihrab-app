@@ -76,13 +76,13 @@ class ProjectInfoEngine {
     try {
       source = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
     } catch {
-      throw Error('تعذر قراءة ملف حسابات المطور. يرجى مراجعة تنسيقه محلياً.');
+      throw Error('تعذر قراءة إعدادات دعم المشروع. يرجى مراجعة تنسيقها محلياً.');
     }
     return source;
   }
   publicInfo() {
     const source = this.readSource();
-    return { contacts: sanitize(source), configured: !!source };
+    return { contacts: {paypal:sanitize(source).paypal}, configured: !!source };
   }
   bankInfo() {
     return { bank: sanitizeBank(this.readSource()?.bank_account_informations) };
@@ -95,7 +95,7 @@ class ProjectInfoEngine {
     return value;
   }
   contactUrl(kind) {
-    if (!['gitHub', 'instagram', 'gmail', 'paypal'].includes(kind))
+    if (kind !== 'paypal')
       throw Error('نوع رابط غير مسموح.');
     const url = this.publicInfo().contacts[kind];
     if (!url) throw Error('هذا الحساب غير مهيأ برابط صالح حالياً.');

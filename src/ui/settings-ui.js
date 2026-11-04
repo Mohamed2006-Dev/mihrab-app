@@ -273,6 +273,19 @@ function initializeInlineSettings() {
 }
 
 function initializeSettingsSegments() {
+  for(const rail of document.querySelectorAll('.settings-segments')){
+    rail.addEventListener('wheel',event=>{
+      if(event.ctrlKey||Math.abs(event.deltaX)>Math.abs(event.deltaY))return;
+      const overflow=rail.scrollWidth-rail.clientWidth;
+      if(overflow<=1)return;
+      const rtl=getComputedStyle(rail).direction==='rtl';
+      const delta=event.deltaY*(event.deltaMode===1?24:event.deltaMode===2?rail.clientWidth:1)*(rtl?-1:1);
+      const target=Math.max(rtl?-overflow:0,Math.min(rtl?0:overflow,rail.scrollLeft+delta));
+      if(Math.abs(target-rail.scrollLeft)<1)return;
+      event.preventDefault();rail.scrollTo({left:target,behavior:'instant'});
+    },{passive:false});
+  }
+
   for (const attribute of [
     'data-settings-section',
     'data-notice-section',
@@ -296,6 +309,7 @@ function initializeSettingsSegments() {
         item.tabIndex = active ? 0 : -1;
         document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
       }
+      button.scrollIntoView({block:"nearest", inline:"nearest", behavior:"smooth"});
       if (focus) button.focus();
     };
     if (attribute === 'data-resource-section') {
@@ -322,37 +336,8 @@ function initializeSettingsSegments() {
 }
 
 let detectedLocationCandidate = null;
-function renderLastPrayerUpdate(report) {
-  const node = document.getElementById('prayer-last-update');
-  if (!node) return;
-  if (!report?.syncedAt) {
-    node.textContent = 'لم تُحدّث المواقيت من مزود بعد؛ تُعرض المواقيت المحسوبة لإعدادات منطقتك.';
-    return;
-  }
-  const date = new Date(report.syncedAt);
-  if (!Number.isFinite(date.getTime())) {
-    node.textContent = '';
-    return;
-  }
-  const stamp = new Intl.DateTimeFormat('ar', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: state.prayerData?.location?.timeZone,
-  }).format(date);
-  const origin =
-    report.origin === 'automatic'
-      ? 'تلقائي'
-      : report.origin === 'manual'
-        ? 'يدوي'
-        : 'غير مسجل للبيانات السابقة';
-  const kind =
-    report.status === 'verified_cached'
-      ? 'مطابقة بجدول محفوظ'
-      : report.providerKind === 'alternative'
-        ? 'ضبط عبر المزود البديل'
-        : 'مطابقة التوقيت الرسمي';
-  node.textContent = `آخر تحديث: ${stamp} — ${origin} — ${kind}`;
-}
+function renderLastPrayerUpdate() {}
+
 function addPrayerNoticeButton(card, prayer, isFriday) {
   const button = document.createElement('button');
   button.type = 'button';
@@ -482,6 +467,7 @@ function initializePrayerPageControls() {
 
 const settingsDraftBaselines = new Map();
 function settingsGroupSnapshot(group) {
+  if (group === 'other') return JSON.stringify(collectAutomationSettings());
   if (group === 'updates') return JSON.stringify(updatePreferencesFromForm());
   if (group === 'performance') return JSON.stringify(getPerformanceSelection());
   if (group === 'resources') return JSON.stringify(resourcePolicyFromForm());
@@ -512,11 +498,11 @@ function refreshSettingsDraftStatus() {
   }
 }
 function resetSettingsDraftBaselines() {
-  for (const group of ['notifications', 'screen', 'resources', 'performance', 'updates'])
+  for (const group of ['notifications', 'screen', 'resources', 'performance', 'updates', 'other'])
     settingsDraftBaselines.set(group, settingsGroupSnapshot(group));
 }
 function dirtySettingsGroups() {
-  return ['notifications', 'screen', 'resources', 'performance', 'updates'].filter(
+  return ['notifications', 'screen', 'resources', 'performance', 'updates', 'other'].filter(
     (group) =>
       settingsDraftBaselines.has(group) &&
       settingsDraftBaselines.get(group) !== settingsGroupSnapshot(group),
@@ -532,6 +518,7 @@ async function commitSettingsGroups(groups) {
       enabled: document.getElementById('settings-lock-enabled').checked,
       muteSystemAudio: document.getElementById('settings-lock-mute').checked,
     };
+  if (groups.includes('other')) patch = { ...patch, ...collectAutomationSettings() };
   if (groups.includes('resources')) patch.network = resourcePolicyFromForm();
   if (groups.includes('updates')) patch.updates = updatePreferencesFromForm();
   if (groups.includes('performance')) patch.performance = { level: getPerformanceSelection() };
@@ -539,6 +526,7 @@ async function commitSettingsGroups(groups) {
     ? await window.mihrabApi.saveSettings(patch)
     : { config: state.config };
   state.config = res.config;
+  syncAutomationButtons(res.config);
   if (res.performanceProfile) await refreshPerformanceView(res.performanceProfile);
   for (const [group, snapshot] of snapshots) settingsDraftBaselines.set(group, snapshot);
   if (res.quranState) {
@@ -1121,4 +1109,14 @@ function initializeResourceSettings() {
         b.disabled = false;
       }
     });
+}
+
+function collectAutomationSettings(){
+ return {automation:{verifyPrayerTimes:document.getElementById('auto-prayer-verification').checked}, location:{autoUpdate:document.getElementById('location-auto-update').checked}};
+}
+document.getElementById('automatic-settings').addEventListener('change',refreshSettingsDraftStatus);
+
+function syncAutomationButtons(config){
+ document.getElementById('btn-sync-habous').hidden = config.automation?.verifyPrayerTimes ?? config.officialSync?.enabled !== false;
+ document.getElementById('btn-auto-location').hidden = config.location?.autoUpdate === true;
 }

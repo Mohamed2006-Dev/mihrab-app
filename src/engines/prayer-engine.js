@@ -292,7 +292,17 @@ class PrayerEngine {
     const city = loc.city || 'مكة المكرمة';
     const country = loc.country || '';
 
-    const adj = config.prayerAdjustments || {};
+    const manual = config.prayerAdjustments || {};
+    const report = config.officialSync?.lastSuccessfulReport;
+    const keys = ['fajr','sunrise','dhuhr','asr','maghrib','isha'];
+    // Older releases stored provider corrections in the manual fields. Do not double them.
+    const legacy = !config.officialSync?.adjustmentsSeparated && report?.autoApplied &&
+      keys.every(key => Number(manual[key] || 0) === Number(report.discrepanciesInMinutes?.[key] || 0));
+    const adj = legacy ? {} : {...manual};
+    if (config.officialSync?.autoApplyDiscrepancy !== false && report?.autoApplied &&
+        report.locationKey === Geography.locationKey(loc) && report.dateKey === Geography.dateKey(date,loc.timeZone)) {
+      for (const key of keys) adj[key] = Number(adj[key] || 0) + Number(report.discrepanciesInMinutes?.[key] || 0);
+    }
 
     const coordinates = new adhan.Coordinates(lat, lng);
     const params = this.getCalculationParams(calculationMethod);

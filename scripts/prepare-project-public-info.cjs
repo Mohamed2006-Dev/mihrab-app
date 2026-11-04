@@ -8,7 +8,8 @@ module.exports = async (context) => {
     source = engine.readSource();
   const output = {
     'git-issues': require('../src/engines/bug-report-engine').issueBase(source?.['git-issues']),
-    ...sanitize(source),
+    paypal: sanitize(source).paypal,
+    'report-email': source?.['report-email'] || sanitize(source).gmail?.replace(/^mailto:/i,''),
     bank_account_informations: sanitizeBank(source?.bank_account_informations),
   };
   fs.writeFileSync(

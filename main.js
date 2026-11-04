@@ -504,7 +504,12 @@ const scheduler = new SchedulerEngine({
   quranEngine,
   youtubeEngine,
   callbacks: {
+    onAutomationError: (error) => {
+      console.warn('[Prayer verification]',error.message);
+      if(mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('app:automation-status',{error:true,message:'تعذر التحقق التلقائي من المواقيت: '+error.message});
+    },
     onOfficialSyncCompleted: () => {
+      if(mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('app:automation-status',{message:'تم تحديث مواقيت اليوم وحفظها لمنطقتك.'});
       if (mainWindow && !mainWindow.isDestroyed())
         mainWindow.webContents.send(
           'app:prayer-schedule',
@@ -569,6 +574,7 @@ const scheduler = new SchedulerEngine({
 function createMainWindow() {
   const appIconPath = path.join(appDir, 'src', 'ui', 'assets', 'app-icon.png');
   mainWindow = new BrowserWindow({
+    show: false,
     width: 1360,
     height: 880,
     minWidth: 1060,
@@ -586,6 +592,8 @@ function createMainWindow() {
           .zoom / 100,
     },
   });
+
+  mainWindow.once('ready-to-show',()=>{if(mainWindow&&!mainWindow.isDestroyed())mainWindow.show();});
 
   // Interface zoom shortcuts.
   mainWindow.webContents.on('before-input-event', (event, input) => {
@@ -1002,37 +1010,19 @@ async function saveApplicationSettings(newConfig) {
 }
 ipcMain.handle('settings:save', (_, newConfig) => saveApplicationSettings(newConfig));
 
-const cityVerifications = new Map();
 function queueCityVerification() {
-  const config = storage.getConfig(),
-    loc = prayerEngine.getLocation(),
-    G = require('./src/engines/prayer-times-engine');
-  if (!networkAllowed(config, 'prayer')) return;
-  const key = G.locationKey(loc) + ':' + G.dateKey(getAppNow(), loc.timeZone),
-    last = config.officialSync?.lastSuccessfulReport;
-  if (
-    last?.locationKey === G.locationKey(loc) &&
-    last.dateKey === G.dateKey(getAppNow(), loc.timeZone) &&
-    Date.now() - new Date(last.syncedAt).getTime() < 6 * 3600000
-  )
-    return;
-  if (cityVerifications.has(key)) return;
-  const work = prayerEngine
-    .verifyWithOfficialAwqafApi({ date: getAppNow(), bypassCache: false, origin: 'automatic' })
-    .then(() => {
-      if (
-        G.locationKey(prayerEngine.getLocation()) === G.locationKey(loc) &&
-        mainWindow &&
-        !mainWindow.isDestroyed()
-      )
-        mainWindow.webContents.send(
-          'app:prayer-schedule',
-          prayerEngine.calculateLocalPrayerTimes(getAppNow()),
-        );
-    })
-    .catch(reportNotificationError)
-    .finally(() => cityVerifications.delete(key));
-  cityVerifications.set(key, work);
+  return scheduler.triggerAutomaticOfficialSync(getAppNow());
+}
+let locationUpdateTask=null,lastLocationUpdate=0;
+function updateLocationAutomatically(){
+  const cfg=storage.getConfig();
+  if(!cfg.location?.autoUpdate||!networkAllowed(cfg,'location')||locationUpdateTask||Date.now()-lastLocationUpdate<1800000)return;
+  lastLocationUpdate=Date.now();
+  locationUpdateTask=prayerEngine.detectLocationOnline({dryRun:true,throwOnError:true}).then(result=>{
+    if(!result.success||!storage.getConfig().location?.autoUpdate)return;
+    const current=storage.getConfig().location;
+    return saveApplicationSettings({location:{...result.location,autoUpdate:true,...(current.calculationMethodSelection==='manual'?{calculationMethod:current.calculationMethod,calculationMethodSelection:'manual'}:{})}});
+  }).catch(reportNotificationError).finally(()=>{locationUpdateTask=null});
 }
 ipcMain.handle('resources:stats', async () =>
   resources.stats(
@@ -1321,24 +1311,11 @@ app.whenReady().then(() => {
   }
 
   scheduler.tick(getAppNow());
-  schedulerTimer = setInterval(() => scheduler.tick(getAppNow()), 1000);
+  schedulerTimer = setInterval(() => {scheduler.tick(getAppNow());updateLocationAutomatically();}, 1000);
   screen.on('display-metrics-changed', () => notificationCenter.reflow());
 
-  setTimeout(() => {
-    const cfg = storage.getConfig();
-    if (cfg.officialSync?.enabled && networkAllowed(cfg, 'prayer')) {
-      prayerEngine
-        .verifyWithOfficialAwqafApi({ throwOnError: false, origin: 'automatic' })
-        .then(() => {
-          if (mainWindow && !mainWindow.isDestroyed())
-            mainWindow.webContents.send(
-              'app:prayer-schedule',
-              prayerEngine.calculateLocalPrayerTimes(getAppNow()),
-            );
-        })
-        .catch(() => {});
-    }
-  }, 3000);
+  setTimeout(()=>queueCityVerification(),3000);
+  updateLocationAutomatically();
 
   const themesDir = path.join(resourcesDir, 'themes');
   if (fs.existsSync(themesDir)) {

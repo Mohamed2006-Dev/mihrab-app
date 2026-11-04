@@ -74,14 +74,14 @@ function initializeProjectInfo() {
   document.getElementById('btn-project-info').addEventListener('click', async () => {
     dialog.showModal();
     const status = document.getElementById('project-contact-status');
-    status.textContent = 'جارٍ تحميل الحسابات المحلية…';
+    status.textContent = 'جارٍ تحميل وسائل الدعم…';
     try {
       const info = await window.mihrabApi.getProjectInfo();
       for (const button of document.querySelectorAll('[data-project-contact]')) {
         const kind = button.dataset.projectContact;
         button.disabled = !info.contacts[kind];
       }
-      status.textContent = info.configured ? '' : 'ستظهر الحسابات بعد تهيئة الملف المحلي.';
+      status.textContent = info.configured ? '' : 'وسائل الدعم غير مهيأة حالياً.';
     } catch (error) {
       status.textContent = error.message;
     }

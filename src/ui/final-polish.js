@@ -524,6 +524,7 @@ function updateDirtyBadges() {
           resources: 'resources',
           performance: 'performance',
           updates: 'updates',
+          other:'other',
         }[button.dataset.settingsSection],
       );
     if (button.hasAttribute('data-notice-section')) {
@@ -553,7 +554,10 @@ function discardSettingsDrafts(snapshots = settingsDraftBaselines, quiet = false
           else n.value = value;
         }
       }
-    } else if (group === 'performance') setPerformanceChoice(base);
+    } else if (group === 'other') {
+      document.getElementById('auto-prayer-verification').checked=base.automation.verifyPrayerTimes;
+      document.getElementById('location-auto-update').checked=base.location.autoUpdate;
+    } else if (group === 'performance') {setPerformanceChoice(base);lastPerformanceDraft=base;}
     else if (group === 'resources') renderResourcePolicy({ network: base });
     else if (group === 'updates')
       for (const [id, key] of [

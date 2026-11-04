@@ -3,7 +3,7 @@ const fs = require('fs');
 const adhan = require('adhan');
 const Geography = require('./prayer-times-engine');
 
-/** Compare Habous timings from habous.gov.ma for all six daily events; apply official-minus-local minute offsets. Automatic checks run before dawn on Monday and Thursday. */
+/** Compare Habous timings from habous.gov.ma for all six daily events; apply official-minus-local minute offsets. Automatic checks are cached per place and local day. */
 class HabousSyncEngine {
   constructor(storageEngine, baseDir, fetchFn = null) {
     this.storage = storageEngine;
@@ -223,11 +223,18 @@ class HabousSyncEngine {
         ) !== Geography.locationKey(loc)
       )
         throw Error('تغيرت المدينة أثناء التحقق؛ لم تطبق مواقيت المدينة السابقة.');
+      const latest = this.storage.getConfig();
+      if (origin === 'automatic' && (!(latest.automation?.verifyPrayerTimes ?? latest.officialSync?.enabled !== false) || !require('./resource-engine').allowed(latest,'prayer'))) {
+        return {...report,status:'cancelled',autoApplied:false};
+      }
+      const legacyOffsets = !latest.officialSync?.adjustmentsSeparated && latest.officialSync?.lastSuccessfulReport?.autoApplied &&
+        keys.every(key => Number(latest.prayerAdjustments?.[key] || 0) === Number(latest.officialSync.lastSuccessfulReport.discrepanciesInMinutes?.[key] || 0));
       if (!dryRun)
         this.storage.saveConfig({
-          prayerAdjustments: discrepanciesInMinutes,
+          ...(legacyOffsets ? {prayerAdjustments:Object.fromEntries(keys.map(key=>[key,0]))} : {}),
           officialSync: {
-            ...(config.officialSync || {}),
+            ...(latest.officialSync || {}),
+            adjustmentsSeparated: true,
             lastSyncTime: report.syncedAt,
             lastDiscrepancyReport: report,
             lastSuccessfulReport: report,

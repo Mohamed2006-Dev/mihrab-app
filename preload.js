@@ -84,6 +84,7 @@ contextBridge.exposeInMainWorld('mihrabApi', {
   // In-app notification window API.
   notificationPopupAction: (action) => ipcRenderer.invoke('notification-popup:action', { action }),
   onNavigateTo: (cb) => ipcRenderer.on('app:navigate', (_, target) => cb(target)),
+  onAutomationStatus: (cb) => ipcRenderer.on('app:automation-status', (_, data) => cb(data)),
   onNotificationError: (cb) => ipcRenderer.on('app:notification-error', (_, data) => cb(data)),
   reportNotificationAudioStatus: (status) =>
     ipcRenderer.send('notification-popup:audio-status', status),
