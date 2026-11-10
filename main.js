@@ -687,12 +687,20 @@ ipcMain.handle('accessibility:set', (_, value) => {
   storage.saveConfig({ accessibility: preferences });
   return preferences;
 });
+function updateAuxiliaryWindowThemes(themeState) {
+  if (!themeState) return;
+  if (lockWindow && !lockWindow.isDestroyed()) {
+    lockWindow.webContents.send('lockscreen:theme-updated', themeState);
+  }
+  if (miniWindow && !miniWindow.isDestroyed()) {
+    miniWindow.webContents.send('theme:live-reloaded', themeState);
+  }
+}
+
 ipcMain.handle('theme:get-state', () => themeEngine.getActiveThemeState());
 ipcMain.handle('theme:set', (_, { themeId, mode }) => {
   const newState = themeEngine.setTheme(themeId, mode);
-  if (lockWindow && !lockWindow.isDestroyed()) {
-    lockWindow.webContents.send('lockscreen:theme-updated', newState);
-  }
+  updateAuxiliaryWindowThemes(newState);
   return newState;
 });
 
@@ -960,6 +968,23 @@ const localSync = new LocalSync({
     if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('app:sync-link-changed', status);
   },
   getConfig: () => storage.getConfig(),
+  resolveLocation: ({ country, city }) => {
+    const geography = prayerEngine.geography;
+    const entry = geography.country(country);
+    if (!entry) return null;
+    const candidates = geography.cities(entry.code).filter((row) => row.city === city);
+    const match = candidates.length === 1 ? candidates[0] : null;
+    if (!match) return null;
+    const previous = storage.getConfig().location;
+    const manual = previous?.calculationMethodSelection === 'manual';
+    return {
+      city: match.city, country: entry.name, countryCode: entry.code,
+      lat: match.lat, lng: match.lng, timeZone: match.timeZone,
+      calculationMethod: manual ? previous.calculationMethod : entry.method,
+      calculationMethodSelection: manual ? 'manual' : 'auto',
+      source: 'manual', autoUpdate: false, autoDetect: false,
+    };
+  },
   applyPatch: async patch => {
     const result = await saveApplicationSettings(patch, true);
     if (mainWindow && !mainWindow.isDestroyed()) {
@@ -1407,9 +1432,7 @@ app.whenReady().then(() => {
       if (mainWindow && !mainWindow.isDestroyed() && updatedTheme) {
         mainWindow.webContents.send('theme:live-reloaded', updatedTheme);
       }
-      if (lockWindow && !lockWindow.isDestroyed() && updatedTheme) {
-        lockWindow.webContents.send('lockscreen:theme-updated', updatedTheme);
-      }
+      updateAuxiliaryWindowThemes(updatedTheme);
     });
   }
 });

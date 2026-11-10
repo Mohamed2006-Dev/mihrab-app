@@ -97,6 +97,7 @@
       "icon": "src/ui/assets/app-icon.ico"
     },
     "nsis": {
+      "include": "scripts/local-sync-firewall.nsh",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,

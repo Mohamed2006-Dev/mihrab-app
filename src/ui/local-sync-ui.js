@@ -271,7 +271,7 @@ function bindLocalSync() {
     }else{
       if(state.linked){
         const row=document.createElement('div');row.className='local-sync-desktop-peer';
-        row.append(note('الهاتف المرتبط'),
+        row.append(note(state.awaitingPhone?'بانتظار تأكيد استلام الربط من الهاتف.':'الهاتف المرتبط'),
           note(directions[state.link.direction]+' · '+state.link.groups.map(group=>labels[group]).join('، ')),
           note(state.online?'عنوان الاتصال '+state.host:'عنوان الشبكة غير متاح.'),
           note('يمكن تعديل اتجاه الاتصال والبيانات من الهاتف المرتبط.'),

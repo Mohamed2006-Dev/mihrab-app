@@ -196,15 +196,19 @@
   -webkit-mask-image: none;
   mask-image: none;
 }
-#tab-prayers .hero-sun-art::after {
-  display: block;
-  background: linear-gradient(
+.hero-prayer-card,
+.mini-hero {
+  --prayer-photo-overlay: linear-gradient(
     to right,
     color-mix(in srgb, var(--bg-surface-elevated) 8%, transparent) 0%,
     color-mix(in srgb, var(--bg-surface-elevated) 20%, transparent) 35%,
     color-mix(in srgb, var(--bg-surface-elevated) 52%, transparent) 65%,
     color-mix(in srgb, var(--bg-surface-elevated) 65%, transparent) 100%
   );
+}
+#tab-prayers .hero-sun-art::after {
+  display: block;
+  background: var(--prayer-photo-overlay);
 }
 #tab-prayers .hero-prayer-main {
   text-shadow:
@@ -228,7 +232,7 @@
   line-height: 1.35;
   letter-spacing: 0.025em;
   direction: ltr;
-  color: color-mix(in srgb, var(--accent-primary) 82%, #d8a26b);
+  color: var(--accent-primary);
   background: color-mix(in srgb, var(--bg-primary) 70%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-primary) 24%, transparent);
   box-shadow: none;
@@ -538,10 +542,10 @@ details[open] > .hadith-library-heading .hadith-chevron,
   color: var(--accent-primary);
 }
 .hadith-grade-detail[data-verdict='weak'] {
-  border-color: #c58269;
+  border-color: var(--status-danger);
 }
 .hadith-grade-detail[data-verdict='weak'] dd {
-  color: #e7a28a;
+  color: var(--status-danger);
 }
 .hadith-grade-detail[data-verdict='unknown'] {
   border-color: var(--border-subtle);
@@ -806,16 +810,11 @@ html[data-motion='enabled'] .scroll-item:not(.is-visible) {
 
 /* A continuous manuscript surface, with protected text areas on both pages. */
 :root {
-  --illuminated-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23d4b778' stroke-width='.75'%3E%3Cpath d='M48 8 60 26 82 14 70 36 88 48 70 60 82 82 60 70 48 88 36 70 14 82 26 60 8 48 26 36 14 14 36 26Z'/%3E%3Cpath d='M48 0 96 48 48 96 0 48Z M0 0h96v96H0z'/%3E%3Ccircle cx='48' cy='48' r='13'/%3E%3C/g%3E%3C/svg%3E");
+  --illuminated-pattern: var(--pattern-image-book, var(--pattern-image));
 }
 .app-shell {
   background:
     linear-gradient(135deg, rgba(225, 232, 234, 0.06), transparent 70%), var(--gradient-hero);
-}
-.app-shell::before {
-  background-image: var(--illuminated-pattern);
-  filter: grayscale(1) brightness(1.65);
-  opacity: 0.14;
 }
 /* One perspective scene. The flat binding remains behind it, never across its faces. */
 .quran-book-shell {
@@ -2619,7 +2618,6 @@ html[data-a11y-motion='reduce'] .scroll-view {
   cursor: pointer;
   margin-block: 10px;
 }
-html[data-performance='eco'] .app-shell::before,
 html[data-performance='eco'] .main-content .card-panel::before,
 html[data-performance='eco'] .quran-boundary::before,
 html[data-performance='eco'] .hero-sun-art {
@@ -2660,8 +2658,12 @@ html[data-performance='eco'] .lesson-card {
   will-change: auto;
   backface-visibility: visible;
 }
+/* A static tile stays legible without adding a filter or animation. */
+html[data-performance='eco'] .app-shell::before {
+  opacity: 0.56;
+}
 html[data-performance='balanced'] .app-shell::before {
-  opacity: 0.04;
+  opacity: 0.8;
 }
 html[data-performance='balanced'] .main-content .card-panel {
   box-shadow: 0 3px 8px #0002;
@@ -3561,14 +3563,6 @@ dialog.location-confirm-dialog:not([open]) {
     width: 150px;
     min-width: 150px;
   }
-}
-
-html[data-theme='emerald-sanctuary'] #btn-complete-reading,
-html[data-theme='emerald-sanctuary'] #btn-complete-hifz,
-html[data-theme='emerald-sanctuary'] #btn-roll-random-reading {
-  background: linear-gradient(135deg, #3678b0, #255988);
-  border-color: #3678b0;
-  color: #fff;
 }
 
 #hadith-image-preview[hidden] {

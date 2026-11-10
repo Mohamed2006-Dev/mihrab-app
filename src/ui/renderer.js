@@ -1391,7 +1391,7 @@ function renderQuranSummaries(data) {
     const summary = data?.[kind + 'Summary'];
     if (!summary) continue;
     const points = ['start', 'end'].map((side) => {
-      const point = summary.boundaries?.[side];
+      const point = (summary.rangeBoundaries || summary.boundaries)?.[side];
       if (
         !point ||
         typeof point.text !== 'string' ||

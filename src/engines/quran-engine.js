@@ -192,6 +192,7 @@ class QuranEngine {
       startNumber: start,
       endNumber: end,
       boundaries: { start: rows[start - 1].start, end: rows[end - 1].end },
+      ...(isHifz && { rangeBoundaries: { start: rows[min - 1].start, end: rows[max - 1].end } }),
       riwaya: this.metadata.riwaya,
       progress: {
         current: start,

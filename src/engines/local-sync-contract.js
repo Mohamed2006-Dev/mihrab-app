@@ -2,7 +2,6 @@
 const Reminders = require('./custom-reminders');
 const GROUPS = ['channels', 'reminders', 'wird', 'location'];
 const DIRECTIONS = ['phone-to-desktop', 'desktop-to-phone', 'two-way'];
-const LOCATION_METHOD = /^[A-Za-z0-9_]{2,40}$/;
 const ID = /^[A-Za-z0-9_-]{22,64}$/;
 const modes = ['both','reading_only','hifz_only','none'];
 const units = ['juz','hizb','rub','surah','page'];
@@ -60,17 +59,15 @@ function sanitize(group, value) {
   }
   if(group==='location'){
     if(value==null)return null;
-    assert(Number.isFinite(value.lat)&&Math.abs(value.lat)<=90&&Number.isFinite(value.lng)&&Math.abs(value.lng)<=180);
-    assert(str(value.city,160)&&value.city.trim()&&str(value.country,160)&&/^[A-Z]{2}$/.test(value.countryCode||''));
-    assert(str(value.timeZone,80)&&LOCATION_METHOD.test(value.calculationMethod||''));
-    new Intl.DateTimeFormat('ar',{timeZone:value.timeZone});
-    return pick(value,['lat','lng','city','country','countryCode','timeZone','calculationMethod']);
+    assert(str(value.city,160)&&value.city.trim()&&str(value.country,160)&&value.country.trim());
+    return {city:value.city.trim(),country:value.country.trim()};
   }
   throw Error('مجموعة مزامنة غير مدعومة.');
 }
 function phoneLocation(config, gpsAuthorized) {
   const loc=config.location;
   if(!loc||(loc.source!=='manual' && !(loc.source==='device'&&gpsAuthorized)))return null;
+  if(!loc.country?.trim()||!loc.city?.trim()||loc.city==='موقعي الحالي')return null;
   return sanitize('location',loc);
 }
 function project(config, group) {
@@ -82,7 +79,7 @@ function patch(group,value) {
   if(group==='channels')return {youtube:{channels:safe}};
   if(group==='reminders')return {notifications:{customReminders:safe}};
   if(group==='wird')return {quranWird:safe};
-  return {location:{...safe,source:'manual',autoUpdate:false,autoDetect:false}};
+  throw Error('تُحل أسماء المدن محلياً على الحاسوب.');
 }
 function locationAllowed(link) {
   return Boolean(link?.groups?.includes('location') &&

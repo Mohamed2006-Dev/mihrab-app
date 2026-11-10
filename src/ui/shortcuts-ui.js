@@ -46,22 +46,41 @@ function navigateShortcutHistory(direction) {
   shortcutHistoryTarget = null;
 }
 
+const shortcutModifiers = { Control: 'Ctrl', Alt: 'Alt', Shift: 'Shift', Meta: 'Meta' };
+const shortcutEditor = 'input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]';
+
 function shortcutChord(event) {
-  if (event.isComposing || ['Alt', 'Control', 'Shift', 'Meta', 'Unidentified'].includes(event.key)) return null;
-  const key = /^Key[A-Z]$/.test(event.code) ? event.code.slice(3) :
-    /^Digit[0-9]$/.test(event.code) ? event.code.slice(5) : event.key;
-  if (!event.altKey && !event.ctrlKey && !event.metaKey && key !== 'Escape' && !/^Key[A-Z]$/.test(event.code)) return null;
-  return [event.ctrlKey && 'Ctrl', event.altKey && 'Alt', event.shiftKey && 'Shift', event.metaKey && 'Meta', key].filter(Boolean).join('+');
+  if (event.isComposing || ['Dead', 'Process'].includes(event.key)) return null;
+  const { code } = event;
+  const key = /^Key[A-Z]$/.test(code) ? code.slice(3) :
+    /^Digit[0-9]$/.test(code) ? code.slice(5) :
+    code && code !== 'Unidentified' ? code : event.key;
+  if (!key || key === 'Unidentified') return null;
+  const modifiers = [event.ctrlKey && 'Ctrl', event.altKey && 'Alt',
+    event.shiftKey && 'Shift', event.metaKey && 'Meta'].filter(Boolean);
+  if (key.startsWith('Arrow') && !modifiers.length) return null;
+  return [...modifiers, key].join('+');
 }
 
 function bindDesktopShortcuts() {
   const panel = document.getElementById('data-settings-section-panel-shortcuts');
   const host = document.getElementById('shortcut-rows');
-  const status = document.getElementById('shortcut-status');
   try { shortcutBindings = JSON.parse(localStorage.getItem(shortcutStorageKey) || '{}') || {}; }
   catch { shortcutBindings = {}; }
   let editing = null;
-  const binding = ([id, , fallback]) => shortcutBindings[id] || fallback;
+  let standaloneModifier = null;
+  const binding = ([id, , fallback]) => (shortcutBindings[id] || fallback).replace(/(^|\+) $/, '$1Space');
+  function updateButtons() {
+    for (const action of desktopShortcuts) {
+      const button = host.querySelector('[data-shortcut-action="' + action[0] + '"]');
+      if (!button) continue;
+      const listening = action[0] === editing;
+      button.dir = listening ? 'rtl' : 'ltr';
+      button.textContent = listening ? 'استماع…' : binding(action);
+      button.setAttribute('aria-label', action[1] + ' — ' + button.textContent);
+      button.setAttribute('aria-pressed', String(listening));
+    }
+  }
   function render() {
     host.replaceChildren();
     for (const action of desktopShortcuts) {
@@ -77,56 +96,72 @@ function bindDesktopShortcuts() {
       button.setAttribute('aria-label', action[1] + ' — ' + binding(action));
       button.textContent = binding(action);
       button.addEventListener('click', () => {
-        editing = action[0];
-        status.textContent = 'اضغط الاختصار الجديد مع Alt أو Ctrl، أو اختر Esc.';
+        editing = editing === action[0] ? null : action[0];
+        standaloneModifier = null;
+        updateButtons();
       });
       row.append(label, button);
       host.append(row);
     }
+    updateButtons();
   }
   recordShortcutTab(document.querySelector('.tab-section.active')?.id || 'tab-prayers');
   render();
   document.getElementById('shortcut-reset').addEventListener('click', () => {
     shortcutBindings = {};
     localStorage.removeItem(shortcutStorageKey);
-    status.textContent = 'تمت استعادة الاختصارات الأصلية.';
+    showSuccessFeedback('تمت استعادة الاختصارات الأصلية.');
     editing = null;
     render();
   });
   function cancelEditing() {
     editing = null;
-    status.textContent = '';
+    standaloneModifier = null;
+    updateButtons();
   }
   const observer = new MutationObserver(() => {
     if (panel.hidden || !panel.closest('.tab-section').classList.contains('active')) cancelEditing();
   });
   observer.observe(panel, { attributes: true, attributeFilter: ['hidden'] });
   observer.observe(panel.closest('.tab-section'), { attributes: true, attributeFilter: ['class'] });
-  document.addEventListener('keydown', event => {
-    const chord = shortcutChord(event);
-    if (!chord || event.repeat) return;
+  function handleShortcut(event, chord) {
+    if (!chord || event.defaultPrevented || event.isComposing ||
+        event.target.closest?.(shortcutEditor) || document.activeElement?.closest?.(shortcutEditor) ||
+        document.querySelector('dialog[open], .modal-overlay.open')) return;
     if (editing && !panel.hidden && panel.closest('.tab-section').classList.contains('active')) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      if (desktopShortcuts.some(action => action[0] !== editing && binding(action) === chord)) {
-        status.textContent = 'هذا الاختصار مستخدم بالفعل.';
+      if (chord === 'Ctrl+Shift+Space' || desktopShortcuts.some(action => action[0] !== editing && binding(action) === chord)) {
+        showSuccessFeedback('هذا الاختصار مستخدم بالفعل.');
         return;
       }
-      const actionId = editing;
-      shortcutBindings[actionId] = chord;
+      shortcutBindings[editing] = chord;
       localStorage.setItem(shortcutStorageKey, JSON.stringify(shortcutBindings));
-      status.textContent = 'تم حفظ الاختصار.';
-      editing = null;
-      render();
-      host.querySelector('[data-shortcut-action="' + actionId + '"]')?.focus();
+      cancelEditing();
       return;
     }
-    if (event.defaultPrevented || event.target.closest?.('input, textarea, select, [contenteditable="true"]') ||
-        document.querySelector('dialog[open], .modal-overlay.open')) return;
     const action = desktopShortcuts.find(item => binding(item) === chord);
     if (action) {
       event.preventDefault();
       action[3]();
     }
+  }
+  window.addEventListener('blur', cancelEditing);
+  document.addEventListener('keydown', event => {
+    if (event.repeat) return;
+    const modifier = Object.hasOwn(shortcutModifiers, event.key) && shortcutModifiers[event.key];
+    if (modifier) {
+      const count = [event.ctrlKey, event.altKey, event.shiftKey, event.metaKey].filter(Boolean).length;
+      standaloneModifier = count === 1 && !event.target.closest?.(shortcutEditor) ? modifier : null;
+      return;
+    }
+    standaloneModifier = null;
+    handleShortcut(event, shortcutChord(event));
+  }, true);
+  document.addEventListener('keyup', event => {
+    if (!standaloneModifier || shortcutModifiers[event.key] !== standaloneModifier) return;
+    const chord = standaloneModifier;
+    standaloneModifier = null;
+    handleShortcut(event, chord);
   }, true);
 }
