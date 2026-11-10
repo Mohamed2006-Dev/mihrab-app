@@ -63,7 +63,7 @@ async function refreshPerformanceView(result) {
 }
 function markPerformanceDraft() {
   const status = document.getElementById('settings-save-status');
-  cancelInlineFeedback(status);
+
   status.textContent = 'لديك تغييرات لم تُحفظ بعد.';
 }
 function initializePerformance(value) {

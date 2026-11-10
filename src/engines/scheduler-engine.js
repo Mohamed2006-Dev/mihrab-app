@@ -1,5 +1,6 @@
 const { allowed: networkAllowed } = require('./resource-engine');
 const NoticePolicy = require('./notification-settings');
+const Custom = require('./custom-reminders');
 const Geography = require('./prayer-times-engine');
 /** Scheduling uses the same local minute shown in the prayer cards. */
 class SchedulerEngine {
@@ -238,12 +239,38 @@ class SchedulerEngine {
           this.triggerDailyVideoNotification().catch((error) => this.reportError(error));
         }
       }
+    this.tickCustomReminders(now, config, data, scheduleKey);
     this.automation ||= new (require('./prayer-automation'))({
       storage:this.storage,prayerEngine:this.prayerEngine,
       onUpdated:report=>{this.prayerCache.clear();this.quranScheduleCache.clear();this.invoke('onOfficialSyncCompleted',report);},
       onError:error=>this.invoke('onAutomationError',error),
     });
     this.automation.tick(now).catch(error=>this.reportError(error));
+  }
+
+  tickCustomReminders(now, config, data, scheduleKey) {
+    const rows = config.notifications?.customReminders;
+    if (!rows?.length) return;
+    const hour = Math.floor(+now / 3600000) * 3600000;
+    const key = JSON.stringify([hour, scheduleKey, config.notifications, config.quranWird, config.screenLock, config.youtube]);
+    if (this.customReminderKey !== key) {
+      const zone = data.location?.effectiveTimeZone || data.location?.timeZone;
+      const days = [-1, 0, 1].map(offset => {
+        const date = Geography.shiftDay(now, offset, zone);
+        return { date, data: offset === 0 ? data : this.prayerEngine.calculateLocalPrayerTimes(date) };
+      });
+      const video = rows.some(row => row.type === 'video')
+        ? this.youtubeEngine.getFeedState('all').dailyRecommendation : null;
+      this.customReminderPlan = Custom.plan(rows, config, days, hour, hour + 3600000, Boolean(video))
+        .map(item => item.type === 'video' ? { ...item, body: video.title, lesson: true, videoId: video.videoId } : item);
+      this.customReminderKey = key;
+    }
+    for (const item of this.customReminderPlan) {
+      const key = 'custom_' + item.id + '_' + item.time;
+      if (+now < item.time || +now >= item.time + 60000 || this.firedEventsToday.has(key)) continue;
+      this.firedEventsToday.add(key);
+      this.invoke('onCustomReminder', item);
+    }
   }
 
   async triggerAutomaticOfficialSync(date = this.lastNow || new Date()) {

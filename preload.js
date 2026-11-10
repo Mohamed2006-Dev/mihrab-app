@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer, webFrame } = require('electron');
 
 contextBridge.exposeInMainWorld('mihrabApi', {
+  getLessonById: (id) => ipcRenderer.invoke('youtube:lesson-by-id', id),
+  getAnotherLesson: (excluded) => ipcRenderer.invoke('youtube:lesson-another', excluded),
+  snoozeLesson: (id) => ipcRenderer.invoke('youtube:lesson-snooze', id),
   setPerformanceLevel: (level) => ipcRenderer.invoke('performance:set', level),
   getYoutubePage: (options) => ipcRenderer.invoke('youtube:get-page', options),
   saveAccessibility: (value) => ipcRenderer.invoke('accessibility:set', value),
@@ -72,6 +75,12 @@ contextBridge.exposeInMainWorld('mihrabApi', {
 
   // Settings and preparation screen API.
   saveSettings: (newConfig) => ipcRenderer.invoke('settings:save', newConfig),
+  onSyncLinkChanged: cb => ipcRenderer.on('app:sync-link-changed', (_, data) => cb(data)),
+  syncStatus: () => ipcRenderer.invoke('sync:status'),
+  syncOffer: host => ipcRenderer.invoke('sync:offer', host),
+  syncApprove: code => ipcRenderer.invoke('sync:approve', code),
+  syncUnlink: () => ipcRenderer.invoke('sync:unlink'),
+  saveCustomReminders: (rows) => ipcRenderer.invoke('reminders:save', rows),
   snoozeScreenLock: (minutes) => ipcRenderer.invoke('lockscreen:snooze', { minutes }),
   previewPreLockWarning: () => ipcRenderer.invoke('lockscreen:preview-warning'),
   previewScreenLock: (options) =>
@@ -96,6 +105,7 @@ contextBridge.exposeInMainWorld('mihrabApi', {
   onPreLockWarning: (cb) => ipcRenderer.on('app:pre-lock-warning', (_, data) => cb(data)),
   onPrayerScheduleChanged: (cb) => ipcRenderer.on('app:prayer-schedule', (_, data) => cb(data)),
   onPrayerReached: (cb) => ipcRenderer.on('app:prayer-reached', (_, data) => cb(data)),
+  onSyncApplied: cb => ipcRenderer.on('app:sync-applied', (_, data) => cb(data)),
   onConfigUpdated: (cb) => ipcRenderer.on('app:config-updated', (_, data) => cb(data)),
 
   // Full-screen preparation window events.

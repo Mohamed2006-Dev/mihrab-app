@@ -1,6 +1,6 @@
 {
   "name": "mihrab-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "تطبيق مكتبي حديث وعصري لمواقيت الصلاة والأحاديث وورد القرآن والدروس الدينية مع عزل كامل للقوالب الجمالية",
   "main": "main.js",
   "scripts": {
@@ -22,6 +22,8 @@
   "dependencies": {
     "adhan": "^4.4.3",
     "electron-updater": "^6.8.11",
+    "qrcode": "1.5.4",
+    "selfsigned": "5.5.0",
     "semver": "^7.7.4"
   },
   "devDependencies": {

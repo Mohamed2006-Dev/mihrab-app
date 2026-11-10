@@ -75,15 +75,6 @@
         <div class="brand-logo" style="width: 68px; height: 68px; font-size: 2rem">🕌</div>
 
         <div>
-          <div
-            style="
-              font-size: var(--font-size-sm);
-              color: var(--text-muted);
-              margin-bottom: var(--spacing-xs);
-            "
-          >
-            تم تجميد شاشة العمل وتوقيف الأصوات وإخفاء شريط المهام للتهيؤ للعبادة
-          </div>
           <h1
             style="
               font-family: var(--font-family-heading);
@@ -113,24 +104,22 @@
 
         <!-- Close the preparation screen preview. -->
         <div class="test-bypass-box" id="test-bypass-container">
-          <div
-            style="font-size: var(--font-size-xs); color: var(--status-warning); font-weight: 700"
-          >
-            🧪 الوضع الاختباري نشط (Test / Preview Mode) — ستغلق الشاشة تلقائياً عند وصول العداد إلى
-            00:00
-          </div>
           <button
             class="btn btn-danger"
             id="btn-test-bypass-now"
             style="font-size: var(--font-size-base); padding: var(--spacing-sm) var(--spacing-xl)"
           >
-            🔓 تجاوز وإغلاق شاشة التجميد فوراً (زر الأمان للوضع الاختباري)
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="11" width="16" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 7.8-1.2M12 15v2" />
+            </svg>
+            تجاوز الشاشة
           </button>
         </div>
 
         <div style="font-size: var(--font-size-xs); color: var(--text-muted)">
-          تُغلق هذه الشاشة تلقائياً فور انتهاء المؤقت التنازلي (وفي الوضع الفعلي لا يتم تجاوزها إلا
-          عبر مدير المهام Task Manager).
+          تُغلق الشاشة تلقائياً عند انتهاء الوقت.
         </div>
       </div>
     </div>

@@ -30,6 +30,19 @@ const channelAvatarObserver = new IntersectionObserver(
   { rootMargin: '40px' },
 );
 function observeChannelAvatar(row, id) {
+  const source = bundledChannelAvatars.get(id);
+  if (source) {
+    const placeholder = row.querySelector('.channel-avatar');
+    if (!placeholder || placeholder.tagName === 'IMG') return;
+    const img = document.createElement('img');
+    img.className = 'channel-avatar';
+    img.alt = '';
+    img.loading = 'lazy';
+    img.addEventListener('error', () => img.replaceWith(placeholder), { once: true });
+    img.src = source;
+    placeholder.replaceWith(img);
+    return;
+  }
   row.dataset.avatarId = id;
   channelAvatarObserver.observe(row);
 }
@@ -185,6 +198,7 @@ function installCustomSelect(select) {
   input.setAttribute('aria-controls', pop.id);
   toggle.setAttribute('aria-controls', pop.id);
   wrap.append(pop);
+  const showDisabledTopics = select.id === 'yt-context-picker';
   let rows = [],
     active = -1,
     searching = false,
@@ -240,7 +254,8 @@ function installCustomSelect(select) {
       }
     }
     // A top-layer popover is viewport-positioned. Reset every UA inset, especially right in RTL.
-    const width = Math.min(rect.width, innerWidth - margin * 2);
+    const minimum = select.closest('.lesson-filters') ? 280 : 0;
+    const width = Math.min(Math.max(rect.width, minimum), innerWidth - margin * 2);
     const below = Math.max(0, innerHeight - rect.bottom - gap - margin),
       above = Math.max(0, rect.top - gap - margin);
     if (rect.bottom <= margin || rect.top >= innerHeight - margin) {
@@ -259,7 +274,8 @@ function installCustomSelect(select) {
     const disabled = select.matches(':disabled');
     if (input.disabled !== disabled) input.disabled = disabled;
     if (toggle.disabled !== disabled) toggle.disabled = disabled;
-    const searchable = options().length > 20;
+    const optionCount = [...select.options].filter(option => option.value !== '').length;
+    const searchable = optionCount > 20;
     input.readOnly = !searchable;
     input.setAttribute('aria-autocomplete', searchable ? 'list' : 'none');
     wrap.dataset.searchable = String(searchable);
@@ -289,9 +305,10 @@ function installCustomSelect(select) {
           search: [city.city, city.nativeName, city.asciiName].join(' '),
         }))
       : [...select.options].filter(
-          (option) => !option.disabled && !option.closest('optgroup[disabled]'),
+          (option) => (showDisabledTopics || !option.disabled) && !option.closest('optgroup[disabled]'),
         );
   const choose = (row) => {
+    if (!row || row.disabled) return;
     if (![...select.options].some((option) => option.value === row.value))
       select.add(new Option(row.textContent, row.value));
     select.value = row.value;
@@ -307,7 +324,7 @@ function installCustomSelect(select) {
     rows = options()
       .filter(
         (option) =>
-          !option.disabled && fold(option.search || option.textContent).includes(fold(query)),
+          fold(option.search || option.textContent).includes(fold(query)),
       )
       .slice(0, 150);
     for (const [index, row] of rows.entries()) {
@@ -318,6 +335,8 @@ function installCustomSelect(select) {
       button.id = pop.id + '-' + index;
       button.setAttribute('aria-selected', String(row.value === select.value));
       button.textContent = row.textContent;
+      button.disabled = Boolean(row.disabled);
+      if (button.disabled) button.setAttribute('aria-disabled', 'true');
       button.addEventListener('pointerdown', (event) => event.preventDefault());
       button.addEventListener('click', () => choose(row));
       pop.append(button);
@@ -417,13 +436,13 @@ function installCustomSelect(select) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       open();
-      if (!rows.length) return;
-      active =
-        active < 0
-          ? event.key === 'ArrowDown'
-            ? 0
-            : rows.length - 1
-          : Math.max(0, Math.min(rows.length - 1, active + (event.key === 'ArrowDown' ? 1 : -1)));
+      const enabled = rows.flatMap((row, index) => row.disabled ? [] : [index]);
+      if (!enabled.length) return;
+      const current = enabled.indexOf(active);
+      const next = event.key === 'ArrowDown'
+        ? Math.min(enabled.length - 1, current + 1)
+        : current < 0 ? enabled.length - 1 : Math.max(0, current - 1);
+      active = enabled[next];
       [...pop.children].forEach((button, index) =>
         button.classList.toggle('highlighted', index === active),
       );
@@ -527,7 +546,7 @@ function updateDirtyBadges() {
           other:'other',
         }[button.dataset.settingsSection],
       );
-    if (button.hasAttribute('data-notice-section')) {
+    if (button.hasAttribute('data-notice-section') && button.dataset.noticeSection !== 'custom') {
       const base = new Map(JSON.parse(settingsDraftBaselines.get('notifications') || '[]'));
       dirty = [...panel.querySelectorAll('input:not([data-select-search]),select')].some(
         (n) =>

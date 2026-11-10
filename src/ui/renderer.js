@@ -107,7 +107,6 @@ const uiMotion = (() => {
 })();
 
 let feedbackTimer;
-const inlineFeedbackTimers = new Map();
 function conciseFeedback(text) {
   return String(text || '')
     .replace(/[✅❌ℹ️]/gu, '')
@@ -120,29 +119,19 @@ function showSuccessFeedback(message) {
     host = document.createElement('div');
     host.id = 'action-feedback';
     host.setAttribute('role', 'status');
+    host.setAttribute('popover', 'manual');
     document.body.append(host);
   }
   host.textContent = conciseFeedback(message);
-  host.hidden = false;
+  if (!host.matches(':popover-open')) host.showPopover();
   clearTimeout(feedbackTimer);
   feedbackTimer = setTimeout(() => {
-    host.hidden = true;
-  }, 3500);
+    if (host.matches(':popover-open')) host.hidePopover();
+  }, 7000);
 }
 function briefInlineFeedback(node, message) {
-  clearTimeout(inlineFeedbackTimers.get(node));
-  node.textContent = message;
-  inlineFeedbackTimers.set(
-    node,
-    setTimeout(() => {
-      node.textContent = '';
-      inlineFeedbackTimers.delete(node);
-    }, 3500),
-  );
-}
-function cancelInlineFeedback(node) {
-  clearTimeout(inlineFeedbackTimers.get(node));
-  inlineFeedbackTimers.delete(node);
+  if (node) node.textContent = '';
+  showSuccessFeedback(message);
 }
 
 // ============================================================================
@@ -150,7 +139,6 @@ function cancelInlineFeedback(node) {
 // ============================================================================
 function showOperationResultModal({ success, title, summary, details, extraUrl = null }) {
   summary = conciseFeedback(summary);
-  if (success && title === 'جلب الأحاديث من موسوعة الأحاديث النبوية') return;
   if (
     success &&
     !extraUrl &&
@@ -222,6 +210,7 @@ function activateTabById(tabId) {
   document
     .querySelectorAll('.tab-section')
     .forEach((section) => section.classList.toggle('active', section.id === tabId));
+  recordShortcutTab(tabId);
   document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'instant' });
   if (tabId === 'tab-youtube') {
     renderFilteredLessons();
@@ -398,10 +387,6 @@ function renderPrayerTimes(prayerData) {
     cityEl.textContent = countryName ? `${cityName}، ${countryName}` : cityName;
   }
 
-  const fridayBadge = document.getElementById('friday-special-badge');
-  if (fridayBadge) {
-    fridayBadge.style.display = prayerData.isFriday ? 'inline-block' : 'none';
-  }
 
   const nextP = MihrabPrayerDisplay.select(prayerData)?.prayer;
 
@@ -489,6 +474,7 @@ function resumeVisibleClock() {
 document.addEventListener('visibilitychange', resumeVisibleClock);
 
 function updateLiveClockAndCountdown(now = new Date()) {
+  checkAdhkarCycle(now);
   const clockEl = document.getElementById('live-clock');
   if (clockEl) {
     clockEl.textContent = new Intl.DateTimeFormat('en-GB', {
@@ -712,7 +698,7 @@ function bindHadithLibraryEvents() {
         status = document.getElementById('hadith-action-status');
       if (!hadith) return;
       button.disabled = true;
-      cancelInlineFeedback(status);
+
       status.textContent = '';
       try {
         if (action === 'previewHadithImage') {
@@ -1065,14 +1051,15 @@ function renderFilteredLessons() {
   feed.setActive(active);
 }
 
-function reportYoutubeRefreshError(error) {
-  document.getElementById('yt-feed-status').hidden = false;
-  document.getElementById('yt-feed-status').textContent = `تعذر تحديث الخلاصات: ${error.message}`;
+function reportYoutubeRefreshError(...errors) {
+  const codes = [...new Set(errors.map(error => {
+    const explicit = Number(error?.status);
+    return explicit >= 400 && explicit <= 599 ? explicit : /HTTP\s+([45]\d{2})/.exec(error?.error || error?.message || '')?.[1];
+  }).filter(Boolean).map(String))];
   showOperationResultModal({
     success: false,
-    title: 'تعذر تحديث الخلاصات',
-    summary: error.message,
-    details: error.stack,
+    title: 'حصل خطأ',
+    summary: codes.length ? codes.join('، ') : 'تعذر تحديث الخلاصات.',
   });
 }
 
@@ -1086,15 +1073,14 @@ function ensureYoutubeRefresh() {
   )
     return;
   state.youtubeRefreshStarted = true;
-  refreshYoutubeData().catch(reportYoutubeRefreshError);
+  refreshYoutubeData().catch(error => console.warn('Background lesson refresh:', error.message));
 }
 
 async function refreshYoutubeData() {
   if (state.youtubeRefreshPromise) return state.youtubeRefreshPromise;
   const button = document.getElementById('btn-refresh-yt');
-  const label = button.innerHTML;
   button.disabled = true;
-  button.textContent = '🔄 جاري التحديث...';
+  button.classList.add('is-refreshing');
   state.youtubeRefreshPromise = window.mihrabApi
     .refreshYoutubeFeeds('all')
     .then((feeds) => {
@@ -1104,7 +1090,7 @@ async function refreshYoutubeData() {
     .finally(() => {
       state.youtubeRefreshPromise = null;
       button.disabled = false;
-      button.innerHTML = label;
+      button.classList.remove('is-refreshing');
     });
   return state.youtubeRefreshPromise;
 }
@@ -1112,19 +1098,15 @@ async function refreshYoutubeData() {
 function renderYoutubeState(ytState) {
   if (!ytState) return;
   state.youtubeState = ytState;
-  const feedStatus = document.getElementById('yt-feed-status');
-  if (feedStatus) {
-    const errors = ytState.networkErrors || [];
-    feedStatus.hidden = errors.length === 0;
-    feedStatus.textContent = errors.length
-      ? `تعذر تحديث ${errors.length} من القنوات؛ تُعرض المقاطع المحفوظة إن وجدت. ${errors.map((item) => `${item.name}: ${item.error}`).join(' | ')}`
-      : '';
-  }
+  const followed = new Set((ytState.channels || []).map(channel => channel.channelId));
+  for (const id of state.selectedChannelIds) if (!followed.has(id)) state.selectedChannelIds.delete(id);
+  const contextCounts = lessonContextCounts(ytState, state.selectedChannelIds);
+  for (const id of state.selectedContextIds) if (!contextCounts.get(id)) state.selectedContextIds.delete(id);
 
   // 1. Populate the channel picker without already selected channels.
   const channelPicker = document.getElementById('yt-channel-picker');
   if (channelPicker && Array.isArray(ytState.channels)) {
-    channelPicker.innerHTML = '<option value="">اختر شيخ / قناة للتصفية...</option>';
+    channelPicker.innerHTML = '<option value="">الشيوخ والقنوات</option>';
     for (const ch of ytState.channels) {
       if (!state.selectedChannelIds.has(ch.channelId)) {
         channelPicker.appendChild(new Option(ch.name, ch.channelId));
@@ -1154,7 +1136,7 @@ function renderYoutubeState(ytState) {
       const chip = document.createElement('span');
       chip.className = 'filter-chip active';
       chip.innerHTML = `
-        <span>🎙️ ${escapeYoutubeText(ch.name)}</span>
+        <span class="channel-chip-label" title="${escapeYoutubeText(ch.name)}">${escapeYoutubeText(ch.name)}</span>
         <button class="chip-remove" title="إلغاء التحديد">&times;</button>
       `;
       chip.querySelector('.chip-remove').addEventListener('click', (e) => {
@@ -1169,10 +1151,13 @@ function renderYoutubeState(ytState) {
   // 3. Populate the topic picker without already selected topics.
   const contextPicker = document.getElementById('yt-context-picker');
   if (contextPicker && Array.isArray(ytState.contexts)) {
-    contextPicker.innerHTML = '<option value="">اختر سياق ديني للتصفية...</option>';
+    contextPicker.innerHTML = '<option value="">السياقات</option>';
     for (const ctx of ytState.contexts) {
       if (!state.selectedContextIds.has(ctx.id)) {
-        contextPicker.appendChild(new Option(ctx.title, ctx.id));
+        const count = contextCounts.get(ctx.id) || 0;
+        const option = new Option(count ? `${ctx.title} (${count})` : ctx.title, ctx.id);
+        option.disabled = count === 0;
+        contextPicker.appendChild(option);
       }
     }
   }
@@ -1199,7 +1184,7 @@ function renderYoutubeState(ytState) {
       const chip = document.createElement('span');
       chip.className = 'filter-chip active';
       chip.innerHTML = `
-        <span>🎯 ${ctx.title}</span>
+        <span>🎯 ${escapeYoutubeText(ctx.title)}</span>
         <button class="chip-remove" title="إلغاء التحديد">&times;</button>
       `;
       chip.querySelector('.chip-remove').addEventListener('click', (e) => {
@@ -1967,6 +1952,12 @@ function renderSettingsForm(config, cities) {
 // 7. Event bindings.
 // ============================================================================
 function bindEvents() {
+  bindAdhkar();
+  bindLocalSync();
+  bindCustomReminders();
+  bindLessonExtras();
+  bindLessonCard();
+  bindDesktopShortcuts();
   document.getElementById('link-automatic-settings').addEventListener('click',event=>{
     event.preventDefault();activateTabById('tab-settings');
     document.querySelector('[data-settings-section="other"]').click();
@@ -2132,7 +2123,7 @@ function bindEvents() {
     const button = document.getElementById('btn-sync-hadeethenc');
     button.disabled = true;
     const statusEl = document.getElementById('hadeethenc-sync-status');
-    cancelInlineFeedback(statusEl);
+
     statusEl.textContent = 'جارٍ جلب الأحاديث…';
     try {
       const { syncResult, hadithState } = await window.mihrabApi.syncHadeethEncHadiths(topic);
@@ -2226,14 +2217,7 @@ function bindEvents() {
     try {
       state.youtubeRefreshStarted = true;
       const feeds = await refreshYoutubeData();
-      if (feeds.networkErrors?.length) {
-        showOperationResultModal({
-          success: false,
-          title: 'تعذر تحديث بعض الخلاصات',
-          summary: 'تم الاحتفاظ بالمقاطع المحفوظة للقنوات التي تعذر تحديثها.',
-          details: feeds.networkErrors.map((item) => `${item.name}: ${item.error}`).join('\n'),
-        });
-      }
+      if (feeds.networkErrors?.length) reportYoutubeRefreshError(...feeds.networkErrors);
     } catch (error) {
       reportYoutubeRefreshError(error);
     }
@@ -2246,7 +2230,9 @@ function bindEvents() {
 
   document.getElementById('btn-confirm-delete-channel').addEventListener('click', async () => {
     if (!state.pendingDeleteChannel) return;
-    const res = await window.mihrabApi.removeYoutubeChannel(state.pendingDeleteChannel.channelId);
+    const channel = state.pendingDeleteChannel;
+    const res = await window.mihrabApi.removeYoutubeChannel(channel.channelId);
+    rememberRemovedChannel(channel);
     document.getElementById('modal-delete-channel').classList.remove('open');
     state.pendingDeleteChannel = null;
     renderYoutubeState(res.feeds);
@@ -2484,6 +2470,7 @@ function bindEvents() {
 async function navigateToNotification(target) {
   state.pendingNavigationTarget = null;
   if (target.tabId !== 'tab-youtube') return activateTabById(target.tabId);
+  if (target.lesson || target.videoId) return openLessonCard(target);
   state.recommendedVideoId = target.videoId || null;
   state.selectedChannelIds.clear();
   state.selectedContextIds.clear();
@@ -2514,6 +2501,10 @@ async function initApp() {
   renderYoutubeState(data.youtubeState);
   initializeHadithImagePreview();
   initializeFinalPolish();
+  document.getElementById('btn-update-highlights').addEventListener('click', () => {
+    document.getElementById('update-highlights').showModal();
+  });
+  showUpdateHighlights();
   resetSettingsDraftBaselines();
   if (state.pendingNavigationTarget) await navigateToNotification(state.pendingNavigationTarget);
 
@@ -2523,6 +2514,20 @@ async function initApp() {
 
   window.mihrabApi.onThemeLiveReloaded((updatedThemeState) => {
     applyThemeStateToDom(updatedThemeState);
+  });
+
+  window.mihrabApi.onSyncApplied?.(({ config, prayerData, quranState, youtubeState }) => {
+    state.config = config;
+    if (prayerData) {
+      const drafts = new Map(dirtySettingsGroups().map(group => [group, settingsGroupSnapshot(group)]));
+      renderSettingsForm(config, null);
+      discardSettingsDrafts(drafts, true);
+      renderPrayerTimes(prayerData);
+      refreshCurrentCountryCities(config.location).catch(error => console.warn('Synced region:', error.message));
+    }
+    if (quranState) renderQuranState(quranState);
+    if (youtubeState) renderYoutubeState(youtubeState);
+    window.dispatchEvent(new Event('mihrab-sync-applied'));
   });
 
   if (window.mihrabApi.onConfigUpdated) {
@@ -2572,8 +2577,8 @@ window.addEventListener(
   () => {
     uiMotion.dispose();
     clearTimeout(feedbackTimer);
-    for (const timer of inlineFeedbackTimers.values()) clearTimeout(timer);
-    inlineFeedbackTimers.clear();
+
+
     clearTimeout(hadithSearchTimer);
     hadithLibraryRequest++;
     hadithDetailsRequest++;

@@ -753,13 +753,23 @@ class YouTubeRssEngine {
         const { videos } = await this.fetchChannelRss(ch.channelId, ch.name);
         collected.push(...videos);
       } catch (err) {
-        errors.push({ channelId: ch.channelId, name: ch.name, error: err.message });
+        errors.push({ channelId: ch.channelId, name: ch.name, error: err.message, status: err.status });
       }
     }
 
     const allVideos = this.mergeVideosIntoCache(collected);
     await this.flushCache();
     return this.getFeedState(selectedContextId, errors, allVideos);
+  }
+
+  getLessonById(videoId) {
+    if (!/^[A-Za-z0-9_-]{11}$/.test(videoId || '')) return null;
+    return this.getFeedState().videos.find(video => video.videoId === videoId) || null;
+  }
+
+  getAnotherLesson(excluded) {
+    const seen = new Set(Array.isArray(excluded) ? excluded.slice(0, 500) : []);
+    return this.getFeedState().videos.find(video => !seen.has(video.videoId)) || null;
   }
 
   getFeedState(selectedContextId = 'all', errors = [], cachedVideos = null) {
@@ -776,6 +786,16 @@ class YouTubeRssEngine {
         : allVideos;
 
     const dailyRecommendation = filtered[0] || allVideos[0] || null;
+    const countsByChannel = new Map();
+    for (const video of allVideos) {
+      if (!video.contextId) continue;
+      if (!countsByChannel.has(video.channelId)) countsByChannel.set(video.channelId, new Map());
+      const counts = countsByChannel.get(video.channelId);
+      counts.set(video.contextId, (counts.get(video.contextId) || 0) + 1);
+    }
+    const contextCounts = Array.from(countsByChannel).flatMap(([channelId, counts]) =>
+      Array.from(counts, ([contextId, count]) => ({ channelId, contextId, count })));
+
 
     return {
       contexts,
@@ -783,6 +803,7 @@ class YouTubeRssEngine {
       videos: allVideos,
       filteredVideos: filtered,
       allVideosCount: allVideos.length,
+      contextCounts,
       dailyRecommendation,
       networkErrors: this.cacheError
         ? [...errors, { name: 'التخزين المحلي', error: this.cacheError.message }]

@@ -2,6 +2,7 @@ const NoticePolicy = require('./src/engines/notification-settings');
 const {
   app,
   BrowserWindow,
+  safeStorage,
   ipcMain,
   shell,
   screen,
@@ -131,10 +132,17 @@ const notificationCenter = new NotificationCenter({
       }
       return scheduler.snoozeScreenLock(data.snoozeMinutes, data.scheduleId, getAppNow());
     }
-    return require('./src/engines/video-notification').openVideo(data, {
-      shell,
-      config: storage.getConfig(),
-    });
+    if (!mainWindow || mainWindow.isDestroyed()) createMainWindow();
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+    const target = action === 'open_reminder'
+      ? { tabId: data.tabId, lesson: data.lesson, videoId: data.videoId }
+      : { tabId: 'tab-youtube', lesson: true, videoId: data.video?.videoId };
+    const send = () => mainWindow?.webContents.send('app:navigate', target);
+    if (mainWindow.webContents.isLoadingMainFrame()) mainWindow.webContents.once('did-finish-load', send);
+    else send();
+    return { opened: true };
   },
 });
 
@@ -400,6 +408,7 @@ function createPrayerLockWindow(lockPayload = {}) {
     closable: false,
     focusable: true,
     webPreferences: {
+      devTools: false,
       preload: path.join(appDir, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
@@ -516,6 +525,14 @@ const scheduler = new SchedulerEngine({
           prayerEngine.calculateLocalPrayerTimes(getAppNow()),
         );
     },
+    onCustomReminder: (payload) => {
+      showCustomNotificationPopup({
+        ...payload,
+        id: 'custom:' + payload.id,
+        type: 'custom_reminder',
+        video: payload.lesson ? { videoId: payload.videoId } : undefined,
+      });
+    },
     onNotification: (payload) => {
       showCustomNotificationPopup(payload);
     },
@@ -584,6 +601,7 @@ function createMainWindow() {
     backgroundColor: '#071310',
     autoHideMenuBar: true,
     webPreferences: {
+      devTools: false,
       preload: path.join(appDir, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
@@ -822,6 +840,26 @@ ipcMain.handle('youtube:refresh-feeds', async (_, { contextId }) => {
   return trimFeedForPerformance(await youtubeEngine.refreshFeeds(contextId || 'all'));
 });
 
+ipcMain.handle('youtube:lesson-by-id', (_, id) => youtubeEngine.getLessonById(id));
+ipcMain.handle('youtube:lesson-another', (_, excluded) => youtubeEngine.getAnotherLesson(excluded));
+let lessonSnoozeTimer;
+ipcMain.handle('youtube:lesson-snooze', (_, id) => {
+  if (!youtubeEngine.getLessonById(id)) throw new Error('هذا الدرس غير متاح.');
+  if (storage.getConfig().notifications?.lessons?.enabled === false)
+    throw new Error('تنبيهات الدروس متوقفة.');
+  clearTimeout(lessonSnoozeTimer);
+  lessonSnoozeTimer = setTimeout(() => {
+    const video = youtubeEngine.getLessonById(id);
+    if (video && storage.getConfig().notifications?.lessons?.enabled !== false) {
+      Promise.resolve(showCustomNotificationPopup({
+        type: 'daily_video', title: 'تذكير بالدرس', body: video.title,
+        video, action: 'open_lessons', playAudio: false,
+      })).catch(reportNotificationError);
+    }
+  }, 5 * 60 * 1000);
+  return { scheduled: true };
+});
+
 ipcMain.handle('youtube:open-external', async (_, { url }) => {
   resources.ensure(require('./src/engines/resource-engine').categoryFor(url));
   if (url && (url.startsWith('https://') || url.startsWith('http://'))) {
@@ -915,7 +953,40 @@ ipcMain.handle('quran:get-status', () => {
 });
 
 // 6. Settings and prayer preparation screen.
-async function saveApplicationSettings(newConfig) {
+const LocalSync = require('./src/engines/local-sync-desktop');
+const localSync = new LocalSync({
+  directory: writableDir, safeStorage,
+  onLinkChanged: status => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('app:sync-link-changed', status);
+  },
+  getConfig: () => storage.getConfig(),
+  applyPatch: async patch => {
+    const result = await saveApplicationSettings(patch, true);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('app:sync-applied', {
+        config: result.config,
+        prayerData: patch.location ? result.prayerData : undefined,
+        quranState: patch.quranWird || patch.location ? result.quranState : undefined,
+        youtubeState: patch.youtube ? youtubeEngine.getFeedState() : undefined,
+      });
+    }
+  },
+});
+function syncHandler(method) {
+  return (event, ...args) => {
+    if (event.sender !== mainWindow?.webContents || event.senderFrame !== event.sender.mainFrame)
+      throw Error('نافذة الربط غير مصرح بها.');
+    return localSync[method](...args);
+  };
+}
+ipcMain.handle('sync:status', syncHandler('status'));
+ipcMain.handle('sync:offer', syncHandler('offer'));
+ipcMain.handle('sync:approve', syncHandler('approve'));
+ipcMain.handle('sync:unlink', syncHandler('unlink'));
+
+async function saveApplicationSettings(newConfig, fromSync = false) {
+  if (newConfig.location && localSync.ownsLocation() && !fromSync)
+    throw Error('الموقع يُدار من الهاتف المرتبط. افصل الربط لتعديله هنا.');
   const previous = storage.getConfig();
   let patch = newConfig;
   if (newConfig.location) {
@@ -969,6 +1040,8 @@ async function saveApplicationSettings(newConfig) {
     throw Error('مستوى الأداء غير صالح.');
   if (newConfig.updates && (getUpdateEngine().downloading || getUpdateEngine().ready))
     throw Error('لا يمكن تغيير خيارات التحديث أثناء التنزيل أو بعد تجهيز حزمة للتثبيت.');
+  if (patch.notifications?.customReminders !== undefined)
+    require('./src/engines/custom-reminders').validate(patch.notifications.customReminders);
   const saved = storage.saveConfig(patch);
   if (newConfig.updates) getUpdateEngine().configure();
   if (newConfig.performance) {
@@ -1009,12 +1082,20 @@ async function saveApplicationSettings(newConfig) {
   };
 }
 ipcMain.handle('settings:save', (_, newConfig) => saveApplicationSettings(newConfig));
+ipcMain.handle('reminders:save', (_, rows) => {
+  const reminders = require('./src/engines/custom-reminders');
+  reminders.validate(rows);
+  const unique = reminders.unique(rows);
+  const saved = storage.saveConfig({ notifications: { customReminders: unique } });
+  return saved.notifications.customReminders;
+});
 
 function queueCityVerification() {
   return scheduler.triggerAutomaticOfficialSync(getAppNow());
 }
 let locationUpdateTask=null,lastLocationUpdate=0;
 function updateLocationAutomatically(){
+  if (localSync.ownsLocation()) return;
   const cfg=storage.getConfig();
   if(!cfg.location?.autoUpdate||!networkAllowed(cfg,'location')||locationUpdateTask||Date.now()-lastLocationUpdate<1800000)return;
   lastLocationUpdate=Date.now();
@@ -1169,6 +1250,7 @@ async function toggleMini() {
       skipTaskbar: true,
       backgroundColor: '#0c2019',
       webPreferences: {
+        devTools: false,
         preload: path.join(appDir, 'preload.js'),
         contextIsolation: true,
         nodeIntegration: false,
@@ -1288,6 +1370,7 @@ ipcMain.handle('hadith:copy-image', async (_, key) => {
 });
 
 app.whenReady().then(() => {
+  localSync.load().catch(error => console.warn("[Mihrab local sync]", error.code || error.name));
   resources.attachSession(require('electron').session.defaultSession);
   createMainWindow();
   createSystemTray();

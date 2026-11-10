@@ -151,3 +151,5 @@ function initializeProjectInfo() {
     }
   });
 }
+
+document.querySelectorAll("[data-project-repository]").forEach(link=>link.addEventListener("click",event=>{event.preventDefault();window.mihrabApi.openExternalUrl(link.href).catch(error=>showOperationResultModal({success:false,title:"تعذر فتح المستودع",summary:error.message}));}));

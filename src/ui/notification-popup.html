@@ -219,7 +219,7 @@
           ><div class="popup-actions" id="popup-actions" hidden>
             <button class="popup-action" id="popup-snooze" hidden>تمديد موعد القفل</button>
             <button class="popup-action" id="popup-open-lessons" hidden
-              >مشاهدة المقطع على يوتيوب</button
+              >عرض بطاقة الدرس</button
             >
           </div></div
         >
@@ -386,23 +386,25 @@
         event.stopPropagation();
         performAction('snooze', event.currentTarget);
       });
+      const openAction = () => currentData?.type === 'custom_reminder' ? 'open_reminder' :
+        currentData?.type === 'daily_video' ? 'open_lessons' : null;
       document.getElementById('popup-open-lessons').addEventListener('click', (event) => {
         event.stopPropagation();
-        performAction('open_lessons', event.currentTarget);
+        performAction(openAction(), event.currentTarget);
       });
       const card = document.getElementById('popup-card');
       card.addEventListener('click', (event) => {
-        if (currentData?.type === 'daily_video' && !event.target.closest('button'))
-          performAction('open_lessons');
+        if (openAction() && !event.target.closest('button'))
+          performAction(openAction());
       });
       card.addEventListener('keydown', (event) => {
         if (
           event.target === card &&
-          currentData?.type === 'daily_video' &&
+          openAction() &&
           ['Enter', ' '].includes(event.key)
         ) {
           event.preventDefault();
-          performAction('open_lessons');
+          performAction(openAction());
         }
       });
       window.mihrabApi.onNotificationPopupData((data) => {
@@ -413,19 +415,20 @@
         document.getElementById('popup-body').textContent = data.body || '';
         const lock = data.type === 'lock_warning',
           daily = data.type === 'daily_video',
+          actionable = daily || data.type === 'custom_reminder',
           pre = data.type === 'pre_prayer';
         const image = document.getElementById('popup-video-image');
         image.hidden = true;
         image.removeAttribute('src');
-        if (daily && /^[A-Za-z0-9_-]{11}$/.test(data.video?.videoId || '')) {
+        if (actionable && /^[A-Za-z0-9_-]{11}$/.test(data.video?.videoId || '')) {
           image.hidden = false;
           image.onerror = () => {
             image.hidden = true;
           };
           image.src = 'https://img.youtube.com/vi/' + data.video.videoId + '/mqdefault.jpg';
         }
-        card.tabIndex = daily ? 0 : -1;
-        card.setAttribute('role', daily ? 'button' : 'status');
+        card.tabIndex = actionable ? 0 : -1;
+        card.setAttribute('role', actionable ? 'button' : 'status');
         document.getElementById('popup-icon').textContent = lock
           ? '🔒'
           : daily
@@ -441,12 +444,15 @@
               ? 'معاينة فقط — لا تُفتح شاشة قفل فعلية.'
               : 'التمديد هنا يؤجل هذه الشاشة فقط.'
             : '';
-        document.getElementById('popup-actions').hidden = !(lock || daily);
+        document.getElementById('popup-actions').hidden = !(lock || actionable);
         document.getElementById('popup-snooze').hidden = !lock;
         document.getElementById('popup-snooze').disabled = Boolean(data.cancelled);
         document.getElementById('popup-snooze').textContent =
           `تمديد القفل ${data.snoozeMinutes || 3} دقائق`;
-        document.getElementById('popup-open-lessons').hidden = !daily;
+        const openButton = document.getElementById('popup-open-lessons');
+        openButton.hidden = !actionable;
+        openButton.textContent = daily || data.lesson ? 'عرض بطاقة الدرس' :
+          data.tabId === 'tab-hadith' ? 'فتح الحديث' : 'فتح الأذكار';
         document.getElementById('popup-audio-error').hidden = true;
         const hadithError = document.getElementById('popup-hadith-error');
         hadithError.hidden = !data.hadithError;

@@ -64,7 +64,8 @@ class NotificationCenter {
       playAudio,
       soundEnabled,
       persistent,
-      autoCloseMs: persistent ? null : playAudio ? 14700 : 10500,
+      autoCloseMs: persistent ? null : playAudio ? 14700 :
+        payload.type === 'custom_reminder' ? (payload.durationSeconds ?? 15) * 1000 : 10500,
     };
     if (['pre_prayer', 'lock_warning', 'prayer_time'].includes(data.type) && this.getPrayerHadith) {
       try {
@@ -225,9 +226,11 @@ class NotificationCenter {
       throw new Error('التمديد متاح في تنبيه قفل الشاشة فقط.');
     if (action === 'open_lessons' && entry.data.type !== 'daily_video')
       throw new Error('هذا التنبيه لا يحتوي درساً.');
-    if (!['snooze', 'open_lessons'].includes(action)) throw new Error('إجراء تنبيه غير معروف.');
+    if (action === 'open_reminder' && entry.data.type !== 'custom_reminder')
+      throw new Error('هذا الإجراء خاص بالتذكيرات المخصصة.');
+    if (!['snooze', 'open_lessons', 'open_reminder'].includes(action)) throw new Error('إجراء تنبيه غير معروف.');
     const result = await this.onAction(entry.data, action);
-    if (action === 'open_lessons') this.close(entry.key);
+    if (action === 'open_lessons' || action === 'open_reminder') this.close(entry.key);
     else if (this.entries.get(entry.key) === entry) {
       entry.data = { ...entry.data, ...result, body: result.message || entry.data.body };
       this.send(entry);

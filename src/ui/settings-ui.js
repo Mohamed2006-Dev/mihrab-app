@@ -1,3 +1,14 @@
+let phoneManagesLocation = false;
+function applyPhoneLocationControl(syncStatus) {
+  phoneManagesLocation = Boolean(syncStatus?.ownsLocation);
+  document.getElementById('desktop-location-fields').hidden = phoneManagesLocation;
+  document.getElementById('desktop-location-auto-field').hidden = phoneManagesLocation;
+  for (const note of document.querySelectorAll('[data-phone-location-note]')) note.hidden = !phoneManagesLocation;
+  if (state.config) syncAutomationButtons(state.config);
+}
+async function refreshPhoneLocationControl() {
+  applyPhoneLocationControl(await window.mihrabApi.syncStatus());
+}
 // One live editor per settings group: move it into the popover, never clone its IDs.
 let inlineEditor = null;
 function positionInlineSettings() {
@@ -68,21 +79,26 @@ function collectRegionSettings() {
       lat: Number(value('settings-lat')),
       lng: Number(value('settings-lng')),
     },
-    prayerAdjustments: Object.fromEntries(
-      ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'].map((id) => [
-        id,
-        Number(value('adj-' + id)),
-      ]),
-    ),
+    prayerAdjustments: collectPrayerAdjustments(),
   };
+}
+function collectPrayerAdjustments() {
+  return Object.fromEntries(['fajr','sunrise','dhuhr','asr','maghrib','isha'].map(id =>
+    [id, Number(document.getElementById('adj-' + id).value)]));
 }
 async function saveRegionSettings() {
   const status = document.getElementById('region-settings-status');
-  cancelInlineFeedback(status);
+
   try {
     if (state.locationBusy) throw Error('انتظر اكتمال تحميل المدن.');
     status.textContent = 'جارٍ الحفظ…';
-    const res = await window.mihrabApi.saveSettings(collectRegionSettings());
+    await refreshPhoneLocationControl();
+    let patch;
+    if (phoneManagesLocation) {
+      validateSettingsFields(document.querySelector('#region-general-settings #adj-fajr').closest('details'));
+      patch = { prayerAdjustments: collectPrayerAdjustments() };
+    } else patch = collectRegionSettings();
+    const res = await window.mihrabApi.saveSettings(patch);
     renderSettingsForm(res.config, null);
     renderPrayerTimes(res.prayerData);
     renderQuranState(res.quranState);
@@ -210,7 +226,7 @@ async function saveAllSettings() {
   const status = document.getElementById('settings-save-status'),
     button = document.getElementById('btn-save-settings');
   button.disabled = true;
-  cancelInlineFeedback(status);
+
   try {
     const groups = dirtySettingsGroups();
     if (groups.length) await commitSettingsGroups(groups);
@@ -228,6 +244,16 @@ async function saveAllSettings() {
 }
 function initializeInlineSettings() {
   initializeSettingsSegments();
+  window.mihrabApi.onSyncLinkChanged(applyPhoneLocationControl);
+  refreshPhoneLocationControl().catch(error => console.warn('Link status:', error.message));
+  for (const link of document.querySelectorAll('[data-open-sync-settings]')) {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      closeInlineSettings();
+      activateTabById('tab-settings');
+      document.getElementById('data-settings-section-sync').click();
+    });
+  }
   initializeSettingsLeaveGuard();
   initializeResourceSettings();
   const popup = document.getElementById('inline-settings-popover');
@@ -241,9 +267,11 @@ function initializeInlineSettings() {
   });
   document
     .getElementById('btn-region-settings')
-    .addEventListener('click', (event) =>
-      openInlineSettings(event.currentTarget, 'region-general-settings'),
-    );
+    .addEventListener('click', event => {
+      const button=event.currentTarget;
+      refreshPhoneLocationControl().then(() => openInlineSettings(button, 'region-general-settings'))
+        .catch(error => showOperationResultModal({success:false,title:'تعذر فتح إعدادات المنطقة',summary:error.message}));
+    });
   document.getElementById('btn-save-region').addEventListener('click', saveRegionSettings);
   document.getElementById('btn-save-settings').addEventListener('click', saveAllSettings);
   for (const id of ['settings-lock-enabled', 'settings-lock-mute'])
@@ -273,6 +301,8 @@ function initializeInlineSettings() {
 }
 
 function initializeSettingsSegments() {
+  const other = document.querySelector('[data-settings-section="other"]');
+  if (other) other.parentElement.append(other);
   for(const rail of document.querySelectorAll('.settings-segments')){
     rail.addEventListener('wheel',event=>{
       if(event.ctrlKey||Math.abs(event.deltaX)>Math.abs(event.deltaY))return;
@@ -478,7 +508,7 @@ function settingsGroupSnapshot(group) {
           ...document.querySelectorAll(
             '#notification-settings input:not([data-select-search]),#notification-settings select',
           ),
-        ]
+        ].filter(node => !node.closest('#data-notice-section-panel-custom'))
       : ['settings-lock-enabled', 'settings-lock-mute'].map((id) => document.getElementById(id));
   return JSON.stringify(
     nodes.map((node) => [
@@ -491,10 +521,10 @@ function refreshSettingsDraftStatus() {
   const status = document.getElementById('settings-save-status');
   if (!status) return;
   if (dirtySettingsGroups().length) {
-    cancelInlineFeedback(status);
+
     status.textContent = 'لديك تغييرات لم تُحفظ بعد.';
   } else if (status.textContent === 'لديك تغييرات لم تُحفظ بعد.') {
-    cancelInlineFeedback(status);
+
     status.textContent = '';
   }
 }
@@ -519,7 +549,13 @@ async function commitSettingsGroups(groups) {
       enabled: document.getElementById('settings-lock-enabled').checked,
       muteSystemAudio: document.getElementById('settings-lock-mute').checked,
     };
-  if (groups.includes('other')) patch = { ...patch, ...collectAutomationSettings() };
+  if (groups.includes('other')) {
+    await refreshPhoneLocationControl();
+    const { automation, location } = collectAutomationSettings();
+    patch = { ...patch, automation };
+    if (!phoneManagesLocation && location.autoUpdate !== Boolean(state.config?.location?.autoUpdate))
+      patch.location = location;
+  }
   if (groups.includes('resources')) patch.network = resourcePolicyFromForm();
   if (groups.includes('updates')) patch.updates = updatePreferencesFromForm();
   if (groups.includes('performance')) patch.performance = { level: getPerformanceSelection() };
@@ -1119,5 +1155,5 @@ document.getElementById('automatic-settings').addEventListener('change',refreshS
 
 function syncAutomationButtons(config){
  document.getElementById('btn-sync-habous').hidden = config.automation?.verifyPrayerTimes ?? config.officialSync?.enabled !== false;
- document.getElementById('btn-auto-location').hidden = config.location?.autoUpdate === true;
+ document.getElementById('btn-auto-location').hidden = phoneManagesLocation || config.location?.autoUpdate === true;
 }
