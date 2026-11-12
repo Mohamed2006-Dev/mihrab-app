@@ -153,7 +153,7 @@ new MutationObserver(finishPanelMotions).observe(document.documentElement, {
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', finishPanelMotions);
 
 function installCustomSelect(select) {
-  if (customSelects.has(select) || select.multiple) return;
+  if (customSelects.has(select) || select.multiple || select.hasAttribute('data-native-select')) return;
   const wrap = document.createElement('div');
   wrap.className = 'custom-select';
   const labels = [...select.labels];
@@ -327,7 +327,17 @@ function installCustomSelect(select) {
           fold(option.search || option.textContent).includes(fold(query)),
       )
       .slice(0, 150);
+    let currentGroup = null;
     for (const [index, row] of rows.entries()) {
+      const group = row.parentElement?.closest('optgroup');
+      if (group && group !== currentGroup) {
+        const heading = document.createElement('div');
+        heading.className = 'custom-select-group-label';
+        heading.setAttribute('role', 'presentation');
+        heading.textContent = group.label;
+        pop.append(heading);
+      }
+      currentGroup = group;
       const button = document.createElement('button');
       button.type = 'button';
       button.tabIndex = -1;
@@ -443,11 +453,12 @@ function installCustomSelect(select) {
         ? Math.min(enabled.length - 1, current + 1)
         : current < 0 ? enabled.length - 1 : Math.max(0, current - 1);
       active = enabled[next];
-      [...pop.children].forEach((button, index) =>
+      const options = pop.querySelectorAll('[role=option]');
+      options.forEach((button, index) =>
         button.classList.toggle('highlighted', index === active),
       );
-      input.setAttribute('aria-activedescendant', pop.children[active].id);
-      pop.children[active].scrollIntoView({ block: 'nearest' });
+      input.setAttribute('aria-activedescendant', options[active].id);
+      options[active].scrollIntoView({ block: 'nearest' });
     } else if (event.key === 'Enter') {
       event.preventDefault();
       if (isOpen() && active >= 0) choose(rows[active]);

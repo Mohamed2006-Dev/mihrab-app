@@ -51,22 +51,22 @@
         box-shadow: var(--shadow-glow);
       }
 
-      .test-bypass-box {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--spacing-xs);
-        margin-top: var(--spacing-xs);
-        padding: var(--spacing-md);
-        border-radius: var(--radius-md);
-        background: var(--bg-primary);
-        border: 1px dashed var(--status-warning);
-        width: 100%;
+      #lock-reveal-bypass[hidden], #lock-streak[hidden] { display: none; }
+      .lock-card { max-height: 100%; overflow: auto; }
+      #lock-streak, #lock-bypass-error { margin: 0; }
+      #lock-bypass-dialog {
+        max-width: min(30rem, calc(100vw - 2rem));
+        inset: 0;
+        margin: auto;
+        padding: 1.4rem;
+        color: var(--text-primary);
+        background: var(--bg-surface-elevated);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-lg);
       }
-
-      .test-bypass-box.visible {
-        display: flex;
-      }
+      #lock-bypass-dialog::backdrop { background: #0008; }
+      .lock-bypass-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+      #lock-bypass-error { color: var(--status-error); }
     </style>
   </head>
   <body>
@@ -102,27 +102,24 @@
 
         <div class="lock-timer-pill" id="lock-remaining-timer"> وقت التهيؤ المتبقي: 00:30 </div>
 
-        <!-- Close the preparation screen preview. -->
-        <div class="test-bypass-box" id="test-bypass-container">
-          <button
-            class="btn btn-danger"
-            id="btn-test-bypass-now"
-            style="font-size: var(--font-size-base); padding: var(--spacing-sm) var(--spacing-xl)"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="4" y="11" width="16" height="10" rx="2" />
-              <path d="M8 11V7a4 4 0 0 1 7.8-1.2M12 15v2" />
-            </svg>
-            تجاوز الشاشة
-          </button>
-        </div>
+        <p id="lock-streak" hidden></p>
+        <button class="btn btn-danger" id="lock-reveal-bypass" hidden>تجاوز الشاشة</button>
 
         <div style="font-size: var(--font-size-xs); color: var(--text-muted)">
           تُغلق الشاشة تلقائياً عند انتهاء الوقت.
         </div>
       </div>
     </div>
+
+    <dialog id="lock-bypass-dialog" aria-labelledby="lock-bypass-title">
+      <h2 id="lock-bypass-title">تجاوز شاشة التهيئة؟</h2>
+      <p id="lock-bypass-warning">سيُصفّر التأكيد عداد جلساتك المتتالية ويستهلك تجاوز اليوم. استخدمه عند الضرورة فقط.</p>
+      <p id="lock-bypass-error" role="alert"></p>
+      <form method="dialog" class="lock-bypass-actions">
+        <button class="btn" value="cancel" autofocus>متابعة التهيئة</button>
+        <button class="btn btn-danger" id="lock-confirm-bypass" type="button">تأكيد التجاوز</button>
+      </form>
+    </dialog>
 
     <script>
       function applyThemeVariables(themeState) {
@@ -143,36 +140,37 @@
         if (el) el.textContent = `وقت التهيؤ المتبقي: ${mm}:${ss}`;
       }
 
-      function startAccurateCountdown(seconds) {
-        remainingSec = Math.max(1, Math.round(Number(seconds) || 30));
-        renderTimer();
-
-        if (countdownInterval) clearInterval(countdownInterval);
-        const endTimestamp = Date.now() + remainingSec * 1000;
-
-        countdownInterval = setInterval(() => {
-          const diff = Math.max(0, Math.ceil((endTimestamp - Date.now()) / 1000));
-          remainingSec = diff;
+      function startAccurateCountdown(endsAt) {
+        clearInterval(countdownInterval);
+        const update = () => {
+          remainingSec = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
           renderTimer();
-
-          if (diff <= 0) {
-            clearInterval(countdownInterval);
-            if (window.mihrabApi && window.mihrabApi.forceCloseLockscreen) {
-              window.mihrabApi.forceCloseLockscreen();
-            }
-          }
-        }, 250);
+          if (remainingSec === 0) clearInterval(countdownInterval);
+        };
+        countdownInterval = setInterval(update, 250);
+        update();
       }
 
-      document.getElementById('btn-test-bypass-now').addEventListener('click', () => {
-        if (window.mihrabApi && window.mihrabApi.forceCloseLockscreen) {
-          window.mihrabApi.forceCloseLockscreen();
+      const bypass = document.getElementById('lock-reveal-bypass');
+      const confirmation = document.getElementById('lock-bypass-dialog');
+      const confirm = document.getElementById('lock-confirm-bypass');
+      const bypassError = document.getElementById('lock-bypass-error');
+      let isPreview = false;
+      bypass.addEventListener('click', () => {
+        bypassError.textContent = '';
+        confirmation.showModal();
+      });
+      confirm.addEventListener('click', async () => {
+        confirm.disabled = true;
+        try {
+          if (isPreview) await window.mihrabApi.forceCloseLockscreen();
+          else await window.mihrabApi.bypassPreparation();
+        } catch (error) {
+          bypassError.textContent = 'تعذّر تسجيل تجاوز هذه الجلسة.';
+        } finally {
+          confirm.disabled = false;
         }
       });
-
-      // بدء مؤقت افتراضي احتياطي حتى لو تأخر حدث التهيئة
-      startAccurateCountdown(30);
-
       if (window.mihrabApi) {
         window.mihrabApi.onLockscreenInit((payload) => {
           if (payload.themeState) applyThemeVariables(payload.themeState);
@@ -192,19 +190,23 @@
               `الدرجة: ${payload.hadith.grade || 'صحيح'}`;
           }
 
-          const bypassBox = document.getElementById('test-bypass-container');
-          if (payload.isTestMode) {
-            bypassBox.classList.add('visible');
-          } else {
-            bypassBox.classList.remove('visible');
+          isPreview = Boolean(payload.isTestMode);
+          if (isPreview) {
+            bypass.textContent = 'إنهاء المعاينة';
+            document.getElementById('lock-bypass-title').textContent = 'إنهاء معاينة شاشة التهيئة؟';
+            document.getElementById('lock-bypass-warning').textContent = 'ينهي التأكيد هذه المعاينة فقط.';
+            confirm.textContent = 'إنهاء المعاينة';
           }
 
-          const totalSec =
-            Number(payload.durationSeconds) > 0
-              ? Number(payload.durationSeconds)
-              : Math.max(1, Number(payload.lockDurationMinutes) || 10) * 60;
+          const streak = document.getElementById('lock-streak');
+          streak.hidden = payload.isTestMode;
+          streak.textContent = 'جلسات متتالية حتى الأذان: ' + new Intl.NumberFormat('ar', { numberingSystem: 'arab' }).format(payload.streak);
+          startAccurateCountdown(payload.endsAt);
+        });
 
-          startAccurateCountdown(totalSec);
+        window.mihrabApi.onRevealPreparationBypass(() => {
+          bypass.hidden = false;
+          if (!confirmation.open) bypass.focus();
         });
 
         window.mihrabApi.onLockscreenThemeUpdated((themeState) => {

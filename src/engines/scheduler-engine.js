@@ -4,9 +4,11 @@ const Custom = require('./custom-reminders');
 const Geography = require('./prayer-times-engine');
 /** Scheduling uses the same local minute shown in the prayer cards. */
 class SchedulerEngine {
-  constructor({ storage, prayerEngine, hadithEngine, quranEngine, youtubeEngine, callbacks }) {
+  constructor({ storage, prayerEngine, hadithEngine, quranEngine, youtubeEngine, preparation, callbacks }) {
     Object.assign(this, { storage, prayerEngine, hadithEngine, quranEngine, youtubeEngine });
     this.callbacks = callbacks || {};
+    this.preparation = preparation;
+    this.preparationDelays = new Map();
     this.firedEventsToday = new Set();
     this.lastDateKey = '';
     this.lockPlans = new Map();
@@ -66,6 +68,7 @@ class SchedulerEngine {
     if (this.lastDateKey !== dateKey) {
       this.firedEventsToday.clear();
       this.lockPlans.clear();
+      this.preparationDelays.clear();
       this.lastDateKey = dateKey;
     }
     const config = this.storage.getConfig();
@@ -79,8 +82,9 @@ class SchedulerEngine {
       this.lastLockEnabled = lockEnabled;
       this.invoke('onModeChanged', { lockEnabled });
     }
+    const lockTiming = NoticePolicy.normalizeConfig(config).screenLock;
     const lockTimingKey = JSON.stringify([
-      config.screenLock?.minutesBeforeAdhan,
+      lockTiming.minutesBeforeAdhan,
       config.screenLock?.warningMinutes,
     ]);
     if (this.lastLockTimingKey !== lockTimingKey) {
@@ -142,27 +146,27 @@ class SchedulerEngine {
           });
         }
       } else {
-        const before = Math.max(
-          15,
-          Math.min(120, Number(config.screenLock?.minutesBeforeAdhan) || 15),
-        );
-        const initialAt = at - before * 60000;
+        const { minutesBeforeAdhan } = lockTiming;
+        const initialAt = at - minutesBeforeAdhan * 60000;
+        const preparationId = prayer.id + ':' + at;
+        const recorded = this.preparation?.prayer(preparationId);
+        if (recorded?.ended || this.firedEventsToday.has(`lock_activate_${prayer.id}_${dateKey}`)) continue;
+        const delayedUntil = recorded?.delayedUntil ?? this.preparationDelays.get(preparationId);
         let plan = this.lockPlans.get(id);
         if (!plan || plan.initialAt !== initialAt) {
           plan = {
             id,
-            prayer,
+            preparationId,
             prayerAt: at,
             initialAt,
-            lockAt: initialAt,
-            cancelled: false,
+            lockAt: delayedUntil ? Math.max(initialAt, delayedUntil) : initialAt,
+            canDelay: minutesBeforeAdhan > 10 && !delayedUntil,
             activated: false,
           };
           this.lockPlans.set(id, plan);
         }
         const warningKey = `lock_warn_${prayer.id}_${dateKey}`;
         if (
-          !plan.cancelled &&
           !plan.activated &&
           nowMs >=
             plan.lockAt -
@@ -174,10 +178,10 @@ class SchedulerEngine {
           this.triggerPreLockWarning(prayer, plan);
         }
         if (
-          !plan.cancelled &&
           !plan.activated &&
           nowMs >= plan.lockAt &&
-          nowMs < plan.lockAt + 60000
+          nowMs < plan.lockAt + 60000 &&
+          nowMs <= plan.prayerAt - 5 * 60000 + 1000
         ) {
           plan.activated = true;
           this.firedEventsToday.add(`lock_activate_${prayer.id}_${dateKey}`);
@@ -296,10 +300,8 @@ class SchedulerEngine {
       preview: !plan,
       lockAt: new Date(plan?.lockAt || now.getTime() + previewSeconds * 1000).toISOString(),
       prayerTime: plan ? new Date(plan.prayerAt).toISOString() : null,
-      snoozeMinutes: Math.max(
-        1,
-        Math.min(10, Number(this.storage.getConfig().screenLock?.snoozeMinutes) || 3),
-      ),
+      snoozeMinutes: !plan || plan.canDelay
+        ? NoticePolicy.normalizeConfig(this.storage.getConfig()).screenLock.snoozeMinutes : 0,
       secondsRemaining: plan
         ? Math.max(0, Math.ceil((plan.lockAt - now.getTime()) / 1000))
         : previewSeconds,
@@ -308,25 +310,22 @@ class SchedulerEngine {
 
   snoozeScreenLock(minutes = 3, scheduleId, now = this.lastNow || new Date()) {
     const plan = this.lockPlans.get(scheduleId);
-    if (
-      !this.storage.getConfig().screenLock?.enabled ||
-      !plan ||
-      plan.activated ||
-      now.getTime() >= plan.prayerAt
-    ) {
-      throw new Error('هذا التنبيه لم يعد مرتبطاً بقفل قابل للتمديد.');
-    }
-    const duration = Math.max(1, Math.min(10, Number(minutes) || 3));
-    plan.lockAt = Math.min(plan.prayerAt, Math.max(plan.lockAt, now.getTime()) + duration * 60000);
-    plan.cancelled = plan.lockAt >= plan.prayerAt;
+    const { enabled, minutesBeforeAdhan, snoozeMinutes } =
+      NoticePolicy.normalizeConfig(this.storage.getConfig()).screenLock;
+    if (!enabled || minutesBeforeAdhan <= 10 || !plan?.canDelay || plan.activated || +now >= plan.lockAt)
+      throw new Error('التمديد متاح مرة واحدة قبل ظهور شاشة التهيئة، عندما تُضبط قبل الأذان بأكثر من عشر دقائق.');
+    const requested = Math.trunc(Number(minutes));
+    const duration = Math.max(1, Math.min(snoozeMinutes, requested || snoozeMinutes));
+    const lockAt = Math.min(plan.prayerAt - 5 * 60000, plan.lockAt + duration * 60000);
+    if (this.preparation) this.preparation.record(plan.preparationId, { delayedUntil: lockAt });
+    else this.preparationDelays.set(plan.preparationId, lockAt);
+    plan.lockAt = lockAt;
+    plan.canDelay = false;
     return {
       scheduleId,
-      lockAt: new Date(plan.lockAt).toISOString(),
-      cancelled: plan.cancelled,
-      minutes: duration,
-      message: plan.cancelled
-        ? 'أُجّل القفل حتى الأذان؛ لن تُفتح شاشة التهيئة لهذه الصلاة.'
-        : `تم تمديد موعد القفل ${duration} دقائق.`,
+      lockAt: new Date(lockAt).toISOString(),
+      snoozeMinutes: 0,
+      message: `تأجّل ظهور شاشة التهيئة ${duration} دقائق.`,
     };
   }
 
@@ -339,6 +338,7 @@ class SchedulerEngine {
     this.invoke('onActivateScreenLock', {
       prayerId: prayer?.id,
       scheduleId: plan?.id,
+      preparationId: plan?.preparationId,
       prayerName: prayer?.name || 'صلاة الجماعة',
       prayerTime12: prayer?.time12 || '',
       prayerTime: plan ? new Date(plan.prayerAt).toISOString() : null,

@@ -3781,3 +3781,101 @@ input[type="checkbox"][hidden]{display:none!important}
 .automatic-settings-link:focus-visible{outline:2px solid var(--accent-primary);outline-offset:3px;border-radius:3px}
 
 #tab-settings .settings-segments{touch-action:pan-x;overscroll-behavior-x:contain;box-sizing:border-box}
+
+.custom-select-group-label {
+  padding: 0.45rem 0.75rem 0.2rem;
+  color: var(--accent-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.appearance-family-switch {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  inline-size: fit-content;
+  cursor: pointer;
+}
+#modern-theme-options[hidden] { display: none !important; }
+
+
+.wird-position-editor {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: .4em;
+  color: var(--accent-primary);
+  font: var(--font-size-xl)/1.6 var(--font-family-scripture);
+}
+.wird-surah-picker[hidden], .wird-position-editor input[hidden] { display: none; }
+.wird-surah-picker {
+  inline-size: max-content;
+  min-inline-size: min(6rem, 100%);
+  max-inline-size: 100%;
+}
+.wird-surah-picker::before {
+  content: attr(data-surah-name);
+  display: block;
+  visibility: hidden;
+  block-size: 0;
+  padding-inline: 1rem 42px;
+  white-space: nowrap;
+}
+.wird-surah-picker > :is(.custom-select, select) {
+  contain: inline-size;
+  inline-size: 100%;
+}
+.wird-surah-picker .custom-select-input {
+  font: inherit;
+  text-align: start;
+}
+.wird-position-editor input[type="number"] {
+  box-sizing: border-box;
+  inline-size: max(5ch, 2.6em);
+  flex: none;
+  appearance: textfield;
+  border: 1px solid var(--border-strong);
+  border-radius: .4rem; padding: 0 .25em;
+  color: inherit; background: var(--bg-surface-elevated);
+  text-align: center; font: inherit;
+}
+.wird-position-editor input::-webkit-inner-spin-button,
+.wird-position-editor input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.wird-position-editor output[hidden], .wird-progress-mark[hidden] { display: none; }
+.wird-actions { display: flex; flex-wrap: wrap; align-items: stretch; gap: var(--spacing-sm); }
+.wird-actions [id^="btn-complete-"] { flex: 1; gap: .45em; }
+.wird-progress-track { position: relative; flex: 1; min-inline-size: 0; }
+.wird-progress-range {
+  display: block; inline-size: 100%; block-size: .55rem;
+  appearance: none; border: 0; border-radius: 1rem;
+  overflow: hidden; background: var(--wird-track-empty, #000);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+:root[data-active-color-mode="light"] { --wird-track-empty: #fff; }
+.wird-progress-range::before {
+  content: ''; position: absolute; inset-block: 0;
+  inset-inline-start: var(--wird-range-start, 0%);
+  inline-size: calc(var(--wird-range-end, 0%) - var(--wird-range-start, 0%));
+  background: var(--accent-primary);
+}
+.wird-progress-range { position: relative; }
+.wird-progress-mark {
+  position: absolute; inset-inline-start: clamp(0px, calc(var(--wird-mark) - .45rem), calc(100% - .9rem));
+  inset-block-start: 50%; transform: translateY(-50%);
+  inline-size: .9rem; block-size: 1.4rem; padding: 0;
+  border: 0; background: transparent; color: var(--accent-secondary);
+}
+.wird-progress-mark::before {
+  content: ''; display: block; margin: auto; inline-size: 3px; block-size: 100%;
+  border-radius: 2px; background: currentColor; box-shadow: 0 0 0 1px var(--bg-primary);
+}
+.wird-progress-mark:is(:hover, :focus-visible)::after {
+  content: attr(data-label); position: absolute; z-index: 2;
+  inset-block-end: calc(100% + .3rem); inset-inline-end: -.3rem;
+  inline-size: max-content; max-inline-size: 45vw; padding: .3em .6em;
+  border-radius: .45rem; border: 1px solid var(--border-strong);
+  color: var(--text-primary); background: var(--bg-surface-elevated);
+  font-size: .75rem; text-align: start; white-space: pre-line; line-height: 1.65;
+}
+.wird-progress-mark[data-near-start]:is(:hover, :focus-visible)::after { inset-inline: 0 auto; }

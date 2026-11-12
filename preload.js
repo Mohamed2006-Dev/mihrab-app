@@ -69,7 +69,9 @@ contextBridge.exposeInMainWorld('mihrabApi', {
   toggleQuranNotification: (kind) => ipcRenderer.invoke('quran:toggle-notification', kind),
 
   // Quran portion API.
-  advanceQuranProgress: (type) => ipcRenderer.invoke('quran:advance-progress', { type }),
+  advanceQuranProgress: (type, expected) => ipcRenderer.invoke('quran:advance-progress', { type, expected }),
+  saveQuranBookmark: (kind, mark, migrate) => ipcRenderer.invoke('quran:bookmark', { kind, mark, migrate }),
+  setQuranPosition: (kind, start) => ipcRenderer.invoke('quran:set-position', { kind, start }),
   rollRandomQuranReading: () => ipcRenderer.invoke('quran:roll-random'),
   getQuranStatus: () => ipcRenderer.invoke('quran:get-status'),
 
@@ -89,6 +91,7 @@ contextBridge.exposeInMainWorld('mihrabApi', {
       typeof options === 'number' ? { durationMinutes: options } : options || {},
     ),
   forceCloseLockscreen: () => ipcRenderer.invoke('lockscreen:force-close'),
+  bypassPreparation: () => ipcRenderer.invoke('lockscreen:bypass'),
 
   // In-app notification window API.
   notificationPopupAction: (action) => ipcRenderer.invoke('notification-popup:action', { action }),
@@ -110,6 +113,7 @@ contextBridge.exposeInMainWorld('mihrabApi', {
 
   // Full-screen preparation window events.
   onLockscreenInit: (cb) => ipcRenderer.on('lockscreen:init', (_, data) => cb(data)),
+  onRevealPreparationBypass: (cb) => ipcRenderer.on('lockscreen:reveal-bypass', () => cb()),
   onLockscreenThemeUpdated: (cb) =>
     ipcRenderer.on('lockscreen:theme-updated', (_, data) => cb(data)),
   onLockscreenClosed: (cb) => ipcRenderer.on('lockscreen:closed', (_, result) => cb(result)),

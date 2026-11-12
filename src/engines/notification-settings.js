@@ -44,9 +44,9 @@ function normalizeConfig(config) {
     },
     screenLock: {
       ...lock,
-      minutesBeforeAdhan: number(lock.minutesBeforeAdhan, 15, 15, 120),
+      minutesBeforeAdhan: number(lock.minutesBeforeAdhan, 15, 5, 120),
       warningMinutes: number(lock.warningMinutes, 1, 1, 60),
-      snoozeMinutes: number(lock.snoozeMinutes, 3, 1, 10),
+      snoozeMinutes: number(lock.snoozeMinutes, 3, 1, 5),
     },
   };
 }
@@ -62,9 +62,9 @@ function validateConfig(config) {
   for (const id of PRAYERS)
     if (n.prePrayerOverrides?.[id]?.minutes != null)
       check(n.prePrayerOverrides[id].minutes, 1, 240, 'التنبيه المخصص');
-  check(l.minutesBeforeAdhan, 15, 120, 'موعد شاشة التهيئة');
+  check(l.minutesBeforeAdhan, 5, 120, 'موعد شاشة التهيئة');
   check(l.warningMinutes, 1, 60, 'تنبيه شاشة التهيئة');
-  check(l.snoozeMinutes, 1, 10, 'مدة التمديد');
+  check(l.snoozeMinutes, 1, 5, 'مدة التمديد');
   const lesson = n.lessons;
   if (lesson) {
     if (!['prayer', 'fixed'].includes(lesson.timingMode)) throw Error('اختر طريقة توقيت الدروس.');

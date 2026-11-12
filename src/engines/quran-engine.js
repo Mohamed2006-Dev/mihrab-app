@@ -80,16 +80,8 @@ class QuranEngine {
         (!Number.isInteger(Number(block.amount)) || block.amount < 1 || block.amount > total)
       )
         throw Error('مقدار الورد خارج الحدود المتاحة.');
-      if (kind === 'hifz') {
-        for (const key of ['rangeStart', 'rangeEnd'])
-          if (
-            block[key] != null &&
-            (!Number.isInteger(Number(block[key])) || block[key] < 1 || block[key] > total)
-          )
-            throw Error('نطاق الحفظ خارج حدود الوحدة المختارة.');
-        if (Number(block.rangeEnd) < Number(block.rangeStart))
-          throw Error('يجب ألا تسبق نهاية الحفظ بدايته.');
-      }
+      // Keep a full range on the wire for older linked clients.
+      if (kind === 'hifz') Object.assign(block, { rangeStart: 1, rangeEnd: total });
       const minutes =
         block.afterPrayerMinutes ??
         block[kind === 'reading' ? 'afterIshaMinutes' : 'afterFajrMinutes'];
@@ -123,33 +115,32 @@ class QuranEngine {
       this.geography.normalizeLocation(this.storage.getConfig().location || {}).timeZone,
     );
   }
-  limits(unit, isHifz, block = {}) {
-    const total = this.metadata.units[unit]?.length;
+  limits(unit, metadata = this.metadata) {
+    const total = metadata.units[unit]?.length;
     if (!total) throw Error('وحدة الورد غير مدعومة.');
-    const defaultStart = isHifz ? { juz: 29, hizb: 58, rub: 230, surah: 78, page: 582 }[unit] : 1;
-    const min = isHifz ? clamp(block.rangeStart ?? defaultStart, 1, total) : 1;
-    const max = isHifz ? clamp(block.rangeEnd ?? total, min, total) : total;
-    return { min, max, total };
+    return { min: 1, max: total, total };
   }
-  assignment(unit, start, end) {
+  assignment(unit, start, end, metadata = this.metadata) {
     if (unit === 'surah') {
-      const a = this.getSurahByNumber(start),
-        b = this.getSurahByNumber(end);
+      const a = metadata.surahs[start - 1],
+        b = metadata.surahs[end - 1];
       return start === end ? 'سورة ' + a.name : 'من سورة ' + a.name + ' إلى سورة ' + b.name;
     }
     return start === end
       ? (unit === 'page' ? 'صفحة رقم ' : LABELS[unit] + ' رقم ') + start
       : 'من ' + LABELS[unit] + ' ' + start + ' إلى ' + LABELS[unit] + ' ' + end;
   }
-  formatWirdAssignment(block = {}, isHifz = false) {
-    const unit = block.unit || 'juz',
-      { min, max, total } = this.limits(unit, isHifz, block),
-      amount = clamp(block.amount || 1, 1, total);
+  formatWirdAssignment(block = {}, isHifz = false, metadata = this.metadata) {
+    const unit = block.unit || 'juz';
+    const { min, max, total } = this.limits(unit, metadata);
+    const amount = clamp(block.amount || 1, 1, max - min + 1);
+    const maxStart = max - amount + 1;
+    // Sequential assignments may have a shorter last portion after advancing.
     let start = clamp(block.currentPosition?.[FIELDS[unit]] ?? min, min, max),
       random = null;
     if (!isHifz && block.mode === 'random') {
       const old = block.randomDailyWird,
-        riwaya = this.getSettings().riwaya;
+        riwaya = metadata.riwaya;
       random =
         old &&
         old.date === this.getTodayDateString() &&
@@ -160,62 +151,61 @@ class QuranEngine {
         old.startNumber >= 1 &&
         old.startNumber <= Math.max(1, total - amount + 1)
           ? old
-          : this.generateRandomWirdData(unit, amount);
+          : this.generateRandomWirdData(unit, amount, metadata);
       start = random.startNumber;
-      if (random !== old) {
+      if (random !== old && metadata.riwaya === this.getSettings().riwaya) {
         const qw = this.storage.getConfig().quranWird || {};
         this.storage.saveConfig({
           quranWird: { ...qw, reading: { ...qw.reading, randomDailyWird: random } },
         });
       }
     }
-    const end = Math.min(max, start + amount - 1),
-      rows = this.metadata.units[unit];
-    const rangeDescription = isHifz
-      ? unit === 'surah'
-        ? 'نطاق الحفظ المحدد: من سورة ' +
-          this.getSurahByNumber(min).name +
-          ' إلى سورة ' +
-          this.getSurahByNumber(max).name
-        : 'نطاق الحفظ المحدد: من ' + LABELS[unit] + ' ' + min + ' إلى ' + LABELS[unit] + ' ' + max
-      : random
-        ? 'نمط تجديد يومي عشوائي'
-        : 'ختمة تلاوة مستمرة (القرآن الكريم كاملاً)';
+    const end = Math.min(max, start + amount - 1);
+    const rows = metadata.units[unit];
+    const mark = this.bookmarkPoint(metadata, block.bookmark);
+    const bookmark = mark && mark.verseIndex >= rows[start - 1].start.verseIndex &&
+      mark.verseIndex <= rows[end - 1].end.verseIndex ? mark : null;
+    const markUnit = bookmark ? rows[this.unitAt(metadata, unit, bookmark.verseIndex) - 1] : null;
+    const rangeDescription = isHifz ? 'ورد الحفظ والمراجعة (القرآن الكريم كاملاً)'
+      : random ? 'نمط تجديد يومي عشوائي' : 'ختمة تلاوة مستمرة (القرآن الكريم كاملاً)';
     return {
       unit,
       amount,
       mode: block.mode || 'sequential',
       unitLabel: LABELS[unit],
-      currentAssignment: this.assignment(unit, start, end),
+      currentAssignment: this.assignment(unit, start, end, metadata),
+      maxStart,
+      bookmark,
       rangeDescription,
       position: { ...block.currentPosition, [FIELDS[unit]]: start },
       startNumber: start,
       endNumber: end,
       boundaries: { start: rows[start - 1].start, end: rows[end - 1].end },
-      ...(isHifz && { rangeBoundaries: { start: rows[min - 1].start, end: rows[max - 1].end } }),
-      riwaya: this.metadata.riwaya,
+      riwaya: metadata.riwaya,
       progress: {
         current: start,
         min,
         max,
-        percentage: Math.round(((start - min) / (max - min + 1)) * 100),
+        startPercentage: (start - 1) * 100 / total,
+        endPercentage: end * 100 / total,
+        bookmarkPercentage: markUnit ? (
+          markUnit.number - 1 + (bookmark.verseIndex - markUnit.start.verseIndex + 0.5) /
+            (markUnit.end.verseIndex - markUnit.start.verseIndex + 1)
+        ) * 100 / total : null,
       },
     };
   }
-  generateRandomWirdData(unit = 'juz', amount = 1) {
-    const { total } = this.limits(unit, false);
+  generateRandomWirdData(unit = 'juz', amount = 1, metadata = this.metadata) {
+    const { total } = this.limits(unit, metadata);
     amount = clamp(amount, 1, total);
-    const startNumber = Math.floor(Math.random() * Math.max(1, total - amount + 1)) + 1,
-      endNumber = Math.min(total, startNumber + amount - 1);
+    const start = Math.floor(Math.random() * (total - amount + 1)) + 1;
+    return this.randomAssignment(unit, amount, start, metadata);
+  }
+  randomAssignment(unit, amount, startNumber, metadata = this.metadata) {
+    const endNumber = startNumber + amount - 1;
     return {
-      date: this.getTodayDateString(),
-      riwaya: this.metadata.riwaya,
-      unit,
-      amount,
-      startNumber,
-      endNumber,
-      unitLabel: LABELS[unit],
-      assignment: this.assignment(unit, startNumber, endNumber),
+      date: this.getTodayDateString(), riwaya: metadata.riwaya, unit, amount, startNumber, endNumber,
+      unitLabel: LABELS[unit], assignment: this.assignment(unit, startNumber, endNumber, metadata),
     };
   }
   rollRandomReadingWird() {
@@ -227,20 +217,118 @@ class QuranEngine {
     });
     return this.getFullStatus();
   }
-  advanceWirdProgress(type = 'reading') {
+  advanceWirdProgress(type = 'reading', expected = null) {
     if (!['reading', 'hifz'].includes(type)) throw Error('نوع الورد غير صالح.');
     const qw = structuredClone(this.storage.getConfig().quranWird || {}),
       target = qw[type] || {};
-    if (type === 'reading' && target.mode === 'random') return this.rollRandomReadingWird();
-    const summary = this.formatWirdAssignment(target, type === 'hifz'),
-      { min, max } = this.limits(summary.unit, type === 'hifz', target);
+    const summary = this.formatWirdAssignment(target, type === 'hifz');
+    if (expected && ['unit', 'startNumber', 'endNumber', 'riwaya'].some(key => expected[key] !== summary[key]))
+      throw Error('تغيّر نطاق الورد. أغلق المصحف وافتح الورد الحالي من جديد.');
+    if (type === 'reading' && target.mode === 'random') {
+      this.storage.saveConfig({ quranWird: { reading: { bookmark: null,
+        randomDailyWird: this.generateRandomWirdData(summary.unit, summary.amount) } } });
+      return this.getFullStatus();
+    }
+    const { min, max } = this.limits(summary.unit);
     const next = summary.endNumber >= max ? min : summary.endNumber + 1;
     qw[type] = {
       ...target,
+      bookmark: summary.endNumber >= max ? null : target.bookmark,
       currentPosition: { ...target.currentPosition, [FIELDS[summary.unit]]: next },
     };
     this.storage.saveConfig({ quranWird: qw });
     return this.getFullStatus();
+  }
+
+
+  unitAt(metadata, unit, verseIndex) {
+    return metadata.units[unit].find(row => row.start.verseIndex <= verseIndex &&
+      row.end.verseIndex >= verseIndex)?.number;
+  }
+
+  bookmarkPoint(metadata, bookmark) {
+    if (bookmark?.riwaya !== metadata.riwaya) return null;
+    const surah = metadata.units.surah[bookmark.surah - 1];
+    if (!surah || !Number.isInteger(bookmark.ayah) || bookmark.ayah < 1) return null;
+    const verseIndex = surah.start.verseIndex + bookmark.ayah - 1;
+    if (verseIndex > surah.end.verseIndex) return null;
+    return { ...bookmark, verseIndex, surahName: surah.start.surahName };
+  }
+
+  convertSettings(previous, next) {
+    const before = this.getSettings(previous);
+    const after = this.getSettings(next);
+    const source = this.getMetadata(before.riwaya);
+    const target = this.getMetadata(after.riwaya);
+    const rank = { juz: 0, hizb: 1, rub: 2, page: 3 };
+    const translate = index => {
+      if (source === target) return index;
+      const number = this.unitAt(source, 'surah', index);
+      const oldSurah = source.units.surah[number - 1];
+      const newSurah = target.units.surah[number - 1];
+      return Math.min(newSurah.end.verseIndex, newSurah.start.verseIndex + index - oldSurah.start.verseIndex);
+    };
+    for (const kind of ['reading', 'hifz']) {
+      const old = before[kind];
+      const block = after[kind];
+      const oldUnit = old.unit || 'juz';
+      const newUnit = block.unit || 'juz';
+      if (!target.units[newUnit]) throw Error('وحدة الورد غير مدعومة.');
+      const isHifz = kind === 'hifz';
+      if (oldUnit === newUnit) {
+        const limitsChanged = block.amount !== old.amount;
+        if (limitsChanged) {
+          const { min, max } = this.limits(newUnit, target);
+          const amount = clamp(block.amount, 1, max - min + 1);
+          const start = clamp(block.currentPosition?.[FIELDS[newUnit]] ?? min, min, max - amount + 1);
+          block.currentPosition = { ...block.currentPosition, [FIELDS[newUnit]]: start };
+        }
+        continue;
+      }
+      const summary = this.formatWirdAssignment(old, isHifz, source);
+      const useBookmark = oldUnit === 'surah' || newUnit === 'surah' || rank[newUnit] > rank[oldUnit];
+      const anchor = useBookmark && summary.bookmark ? summary.bookmark.verseIndex : summary.boundaries.start.verseIndex;
+      const { min, max } = this.limits(newUnit, target);
+      block.amount = clamp(block.amount, 1, max - min + 1);
+      const start = clamp(this.unitAt(target, newUnit, translate(anchor)), min, max - block.amount + 1);
+      block.currentPosition = { ...block.currentPosition, [FIELDS[newUnit]]: start };
+      if (kind === 'reading' && block.mode === 'random') {
+        block.randomDailyWird = this.randomAssignment(newUnit, block.amount, start, target);
+      }
+    }
+    return after;
+  }
+
+  saveBookmark(kind, bookmark, migrate = false) {
+    if (!['reading', 'hifz'].includes(kind)) throw Error('نوع الورد غير صالح.');
+    const settings = this.getSettings();
+    if (migrate && settings[kind].bookmark !== undefined) return;
+    const { riwaya, surah, ayah, rangeStart, rangeEnd, spreadStart } = bookmark || {};
+    const metadata = this.getMetadata(riwaya);
+    if (!['hafs', 'warsh'].includes(riwaya) ||
+        !this.bookmarkPoint(metadata, { riwaya, surah, ayah }))
+      throw Error('موضع الآية غير صالح.');
+    const number = value => Number.isInteger(value) && value >= 0 && value < 6236 ? value : null;
+    this.storage.saveConfig({ quranWird: { [kind]: {
+      bookmark: { riwaya, surah: Number(surah), ayah, rangeStart: number(rangeStart),
+        rangeEnd: number(rangeEnd), spreadStart: number(spreadStart) },
+    } } });
+  }
+
+  setPosition(kind, requested) {
+    if (!['reading', 'hifz'].includes(kind)) throw Error('نوع الورد غير صالح.');
+    const settings = this.getSettings();
+    const block = settings[kind];
+    const summary = this.formatWirdAssignment(block, kind === 'hifz');
+    const { min, max } = summary.progress;
+    if (!Number.isInteger(requested) || requested < min || requested > max)
+      throw Error(`أدخل رقمًا صحيحًا بين ${min} و${max}.`);
+    const start = Math.min(requested, summary.maxStart);
+    const patch = { currentPosition: { [FIELDS[summary.unit]]: start } };
+    if (kind === 'reading' && block.mode === 'random')
+      patch.randomDailyWird = this.randomAssignment(summary.unit, summary.amount, start);
+    this.storage.saveConfig({ quranWird: { [kind]: patch } });
+    return start !== requested ? `الحد الأعلى للبداية هو ${start}. قلّل مقدار الورد لتبدأ بعده.` : '';
   }
 
   computeNotificationSchedules(prayerData) {

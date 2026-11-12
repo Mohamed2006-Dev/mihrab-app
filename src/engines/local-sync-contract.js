@@ -20,6 +20,18 @@ function block(row, hifz) {
   if (row.afterPrayerMinutes !== undefined) assert(within(row.afterPrayerMinutes,0,240));
   if (row.customTimeEnabled !== undefined) assert(typeof row.customTimeEnabled==='boolean');
   if (row.customTime !== undefined) assert(clock(row.customTime));
+  if (row.bookmark !== undefined) {
+    const mark = row.bookmark;
+    if (mark === null) result.bookmark = null;
+    else {
+      assert(['hafs', 'warsh'].includes(mark.riwaya) && within(mark.surah, 1, 114) && within(mark.ayah, 1, 286));
+      result.bookmark = pick(mark, ['riwaya', 'surah', 'ayah', 'rangeStart', 'rangeEnd', 'spreadStart']);
+      for (const key of ['rangeStart', 'rangeEnd', 'spreadStart']) {
+        const value = mark[key];
+        assert(value == null || within(value, 0, 6235));
+      }
+    }
+  }
   const pos=row.currentPosition;
   if(pos){
     result.currentPosition=pick(pos,['juzNumber','hizbNumber','rubNumber','surahNumber','pageNumber']);

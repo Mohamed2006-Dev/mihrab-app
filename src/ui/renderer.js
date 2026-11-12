@@ -345,6 +345,7 @@ function initializeNavigation() {
 function applyThemeStateToDom(themeState) {
   document.documentElement.dataset.theme = themeState?.activeTheme || '';
   if (!themeState) return;
+  document.documentElement.dataset.activeColorMode = themeState.activeMode;
   state.themeState = themeState;
 
   const root = document.documentElement;
@@ -354,16 +355,15 @@ function applyThemeStateToDom(themeState) {
   }
 
   const selector = document.getElementById('theme-selector');
-  if (selector && Array.isArray(themeState.availableThemes)) {
-    selector.innerHTML = '';
-    for (const t of themeState.availableThemes) {
-      const opt = document.createElement('option');
-      opt.value = t.id;
-      opt.textContent = t.name;
-      if (t.id === themeState.activeTheme) opt.selected = true;
-      selector.appendChild(opt);
-    }
+  const modernEnabled = themeState.activeTheme !== 'classic-monochrome';
+  document.getElementById('theme-modern-enabled').checked = modernEnabled;
+  document.getElementById('modern-theme-options').hidden = !modernEnabled;
+  const modernThemes = (themeState.availableThemes || []).filter(theme => theme.family !== 'classic');
+  if (modernEnabled && modernThemes.some(theme => theme.id === themeState.activeTheme)) {
+    localStorage.setItem('mihrab.lastModernTheme', themeState.activeTheme);
   }
+  selector.replaceChildren(...modernThemes.map(theme => new Option(theme.name, theme.id)));
+  if (modernEnabled) selector.value = themeState.activeTheme;
 
   document.querySelectorAll('[data-color-mode]').forEach((button) => {
     const active = button.dataset.colorMode === themeState.activeMode;
@@ -1384,6 +1384,52 @@ async function completeQuranWithTurn(kind, random = false) {
   }
 }
 
+function bindWirdPositionEditors() {
+  for (const kind of ['reading', 'hifz']) {
+    const form = document.getElementById(kind + '-current-assignment');
+    const input = document.getElementById(kind + '-position-input');
+    const surah = document.getElementById(kind + '-position-surah');
+    let busy = false;
+    const save = async () => {
+      if (busy) return;
+      busy = true;
+      const entered = surah.disabled ? input.valueAsNumber : Number(surah.value);
+      try {
+        await quranSaveQueue;
+        const summary = state.quranState?.[kind + 'Summary'];
+        if (!summary) return;
+        if (!Number.isInteger(entered)) {
+          throw Error('أدخل رقمًا صحيحًا بين ' + summary.progress.min + ' و' + summary.progress.max + '.');
+        }
+        const value = entered;
+        if (value === summary.startNumber) {
+          input.value = value;
+          return;
+        }
+        const result = await window.mihrabApi.setQuranPosition(kind, value);
+        renderQuranState(result.quranState);
+        if (result.message) showSuccessFeedback(result.message);
+      } catch (error) {
+        const current = state.quranState?.[kind + 'Summary']?.startNumber ?? '';
+        input.value = current;
+        surah.value = current;
+        showSuccessFeedback(error.message);
+      } finally {
+        busy = false;
+      }
+    };
+    form.addEventListener('submit', event => { event.preventDefault(); save(); });
+    input.addEventListener('change', save);
+    surah.addEventListener('change', save);
+    input.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      input.value = state.quranState?.[kind + 'Summary']?.startNumber ?? '';
+      input.blur();
+    });
+  }
+  window.addEventListener('mihrab:quran-state', event => renderQuranState(event.detail));
+}
+
 function renderQuranSummaries(data) {
   // Validate both sides of every incoming summary before changing any visible content.
   const prepared = [];
@@ -1391,7 +1437,7 @@ function renderQuranSummaries(data) {
     const summary = data?.[kind + 'Summary'];
     if (!summary) continue;
     const points = ['start', 'end'].map((side) => {
-      const point = (summary.rangeBoundaries || summary.boundaries)?.[side];
+      const point = summary.boundaries?.[side];
       if (
         !point ||
         typeof point.text !== 'string' ||
@@ -1471,11 +1517,56 @@ function renderQuranSummaries(data) {
           page.append(ornament);
         }
     }
-    document.getElementById(kind + '-current-assignment').textContent = summary.currentAssignment;
+    const input = document.getElementById(kind + '-position-input');
+    const unit = summary.unitLabel;
+    const end = document.getElementById(kind + '-position-end');
+    const label = document.getElementById(kind + '-position-label');
+    const surah = document.getElementById(kind + '-position-surah');
+    const bySurah = summary.unit === 'surah';
+    label.htmlFor = bySurah ? surah.id : input.id;
+    label.textContent = bySurah ? (summary.amount > 1 ? 'من سورة' : 'سورة')
+      : (summary.amount > 1 ? 'من ' + unit : unit + ' رقم');
+    surah.closest('.wird-surah-picker').hidden = !bySurah;
+    surah.disabled = !bySurah;
+    input.hidden = bySurah;
+    if (bySurah) {
+      const options = data.surahs
+        .filter(row => row.number >= summary.progress.min && row.number <= summary.maxStart)
+        .map(row => new Option(row.name, row.number));
+      if (summary.startNumber > summary.maxStart) {
+        const current = new Option(data.surahs[summary.startNumber - 1].name, summary.startNumber);
+        current.disabled = true;
+        options.push(current);
+      }
+      surah.replaceChildren(...options);
+      surah.value = summary.startNumber;
+      surah.closest('.wird-surah-picker').dataset.surahName = surah.selectedOptions[0]?.textContent || '';
+    }
+    input.min = summary.progress.min;
+    input.max = summary.progress.max;
+    input.value = summary.startNumber;
+    input.disabled = bySurah;
+    input.title = summary.currentAssignment;
+    end.hidden = summary.amount <= 1;
+    const endName = bySurah ? data.surahs[summary.endNumber - 1].name : summary.endNumber;
+    end.textContent = 'إلى ' + unit + ' ' + endName;
+    const marker = document.getElementById(kind + '-progress-mark');
+    marker.hidden = !summary.bookmark;
+    if (summary.bookmark) {
+      const title = 'الموضع المحفوظ: ' + summary.bookmark.surahName + '، الآية ' + summary.bookmark.ayah;
+      marker.style.setProperty('--wird-mark', summary.progress.bookmarkPercentage + '%');
+      marker.setAttribute('aria-label', title);
+      marker.dataset.label = title;
+      marker.toggleAttribute('data-near-start', summary.progress.bookmarkPercentage < 40);
+    }
     document.getElementById(kind + '-range-desc').textContent = summary.rangeDescription;
-    document.getElementById(kind + '-progress').value = summary.progress?.percentage || 0;
+    const track = document.getElementById(kind + '-progress');
+    track.style.setProperty('--wird-range-start', summary.progress.startPercentage + '%');
+    track.style.setProperty('--wird-range-end', summary.progress.endPercentage + '%');
     document.getElementById(kind + '-progress-label').textContent =
-      'موضع الورد: ' + summary.startNumber + ' من ' + summary.progress?.max;
+      'موضع الورد: ' + summary.startNumber +
+      (summary.endNumber === summary.startNumber ? '' : '–' + summary.endNumber) +
+      ' من ' + summary.progress.max;
     document.getElementById(kind + '-schedule-badge').textContent =
       data.schedules?.[kind + 'TimingDescription'] || '';
   }
@@ -1499,130 +1590,6 @@ function updateQuranTiming(kind) {
   }
 }
 
-function refreshHifzEndOptions(unit, preferredEnd = null) {
-  const startSelect = document.getElementById('hifz-range-start');
-  const endSelect = document.getElementById('hifz-range-end');
-  if (!startSelect || !endSelect) return;
-
-  const startVal = Number(startSelect.value) || 1;
-  const currentEndVal = preferredEnd != null ? Number(preferredEnd) : Number(endSelect.value);
-
-  endSelect.innerHTML = '';
-
-  const maxVal =
-    unit === 'juz'
-      ? 30
-      : unit === 'surah'
-        ? 114
-        : unit === 'hizb'
-          ? 60
-          : unit === 'rub'
-            ? 240
-            : state.quranState?.totalPages || 604;
-  const surahs = state.quranState?.surahs || [];
-
-  for (let i = startVal; i <= maxVal; i++) {
-    let label = '';
-    if (unit === 'juz') {
-      label = 'الجزء ' + i;
-    } else if (unit === 'hizb') {
-      label = `الحزب ${i}`;
-    } else if (unit === 'rub') {
-      const hizbNum = Math.ceil(i / 4);
-      label = `الربع ${i} (حزب ${hizbNum})`;
-    } else if (unit === 'surah') {
-      const s = surahs.find((item) => item.number === i) || { number: i, name: `سورة ${i}` };
-      label = `${s.number}. سورة ${s.name}`;
-    } else if (unit === 'page') {
-      label = `صفحة ${i}`;
-    }
-    endSelect.appendChild(new Option(label, i));
-  }
-
-  // Maintain the range invariant: end >= start.
-  if (currentEndVal >= startVal && currentEndVal <= maxVal) {
-    endSelect.value = currentEndVal;
-  } else {
-    endSelect.value = startVal;
-  }
-}
-
-function updateHifzRangeSelects(unit, selStart, selEnd) {
-  const startSelect = document.getElementById('hifz-range-start');
-  const endSelect = document.getElementById('hifz-range-end');
-  const startLbl = document.getElementById('lbl-hifz-range-start');
-  const endLbl = document.getElementById('lbl-hifz-range-end');
-  if (!startSelect || !endSelect) return;
-
-  startSelect.innerHTML = '';
-
-  const maxVal =
-    unit === 'juz'
-      ? 30
-      : unit === 'surah'
-        ? 114
-        : unit === 'hizb'
-          ? 60
-          : unit === 'rub'
-            ? 240
-            : state.quranState?.totalPages || 604;
-  const surahs = state.quranState?.surahs || [];
-
-  if (unit === 'juz') {
-    if (startLbl) startLbl.textContent = 'بداية نطاق الحفظ (الجزء):';
-    if (endLbl) endLbl.textContent = 'نهاية نطاق الحفظ (الجزء):';
-    for (let i = 1; i <= 30; i++) startSelect.appendChild(new Option('الجزء ' + i, i));
-  } else if (unit === 'hizb') {
-    if (startLbl) startLbl.textContent = 'بداية نطاق الحفظ (الحزب):';
-    if (endLbl) endLbl.textContent = 'نهاية نطاق الحفظ (الحزب):';
-    for (let i = 1; i <= 60; i++) {
-      startSelect.appendChild(new Option(`الحزب ${i}`, i));
-    }
-  } else if (unit === 'rub') {
-    if (startLbl) startLbl.textContent = 'بداية نطاق الحفظ (الربع):';
-    if (endLbl) endLbl.textContent = 'نهاية نطاق الحفظ (الربع):';
-    for (let i = 1; i <= 240; i++) {
-      const hizbNum = Math.ceil(i / 4);
-      startSelect.appendChild(new Option(`الربع ${i} (حزب ${hizbNum})`, i));
-    }
-  } else if (unit === 'surah') {
-    if (startLbl) startLbl.textContent = 'بداية نطاق الحفظ (السورة):';
-    if (endLbl) endLbl.textContent = 'نهاية نطاق الحفظ (السورة):';
-    for (let i = 1; i <= 114; i++) {
-      const s = surahs.find((item) => item.number === i) || { number: i, name: `سورة ${i}` };
-      startSelect.appendChild(new Option(`${s.number}. سورة ${s.name}`, s.number));
-    }
-  } else if (unit === 'page') {
-    if (startLbl) startLbl.textContent = 'بداية نطاق الحفظ (الصفحة):';
-    if (endLbl) endLbl.textContent = 'نهاية نطاق الحفظ (الصفحة):';
-    for (let i = 1; i <= 604; i++) {
-      startSelect.appendChild(new Option(`صفحة ${i}`, i));
-    }
-  }
-
-  // Apply defaults.
-  const defaultStart =
-    unit === 'juz' ? 29 : unit === 'surah' ? 78 : unit === 'hizb' ? 58 : unit === 'rub' ? 230 : 582;
-  const defaultEnd =
-    unit === 'juz'
-      ? 30
-      : unit === 'surah'
-        ? 114
-        : unit === 'hizb'
-          ? 60
-          : unit === 'rub'
-            ? 240
-            : state.quranState?.totalPages || 604;
-
-  const validStart =
-    selStart != null && Number(selStart) > 0 && Number(selStart) <= maxVal
-      ? Number(selStart)
-      : defaultStart;
-  startSelect.value = validStart;
-
-  refreshHifzEndOptions(unit, selEnd != null ? Number(selEnd) : defaultEnd);
-}
-
 /** Switch reading reminders between fixed and prayer-relative timing. */
 function updateReadingTimeToggle() {
   updateQuranTiming('reading');
@@ -1633,43 +1600,54 @@ function updateHifzTimeToggle() {
   updateQuranTiming('hifz');
 }
 
+function wirdAmountLimit(kind, unit, status = state.quranState) {
+  const current = status?.[kind + 'Summary'];
+  if (current?.unit === unit) return current.progress.max - current.progress.min + 1;
+  return { juz: 30, hizb: 60, rub: 240, surah: 114, page: status?.totalPages || 604 }[unit];
+}
+
 /** Queue Quran setting saves when fields change. */
 async function autoSaveQuranSettings() {
-  const startSelect = document.getElementById('hifz-range-start');
-  const endSelect = document.getElementById('hifz-range-end');
-  const startVal = Number(startSelect?.value) || 1;
-  let endVal = Number(endSelect?.value) || startVal;
-  if (endVal < startVal) endVal = startVal;
-
-  const readingAmount = Math.max(1, Number(document.getElementById('reading-amount')?.value) || 1);
+  const amounts = {};
+  for (const kind of ['reading', 'hifz']) {
+    const field = document.getElementById(kind + '-amount');
+    const unit = document.getElementById(kind + '-unit').value;
+    const limit = wirdAmountLimit(kind, unit);
+    field.max = limit;
+    const amount = field.valueAsNumber;
+    if (!Number.isInteger(amount) || amount < 1) {
+      field.value = state.quranState?.[kind + 'Summary']?.amount ?? 1;
+      showSuccessFeedback('أدخل مقدارًا صحيحًا بين 1 و' + limit + '.');
+      return false;
+    }
+    amounts[kind] = Math.min(amount, limit);
+    if (amount > limit) {
+      field.value = limit;
+      showSuccessFeedback('الحد الأعلى لمقدار الورد في النطاق المختار هو ' + limit + '.');
+    }
+  }
   const readingUnit = document.getElementById('reading-unit')?.value || 'hizb';
   const readingMode = document.getElementById('reading-mode')?.value || 'sequential';
 
   const updatedQuranWird = {
     riwaya: document.getElementById('quran-riwaya').value,
-    reading: { mode: readingMode, unit: readingUnit, amount: readingAmount },
+    reading: { mode: readingMode, unit: readingUnit, amount: amounts.reading },
     hifz: {
-      rangeStart: startVal,
-      rangeEnd: endVal,
       unit: document.getElementById('hifz-unit').value,
-      amount: Math.max(1, Number(document.getElementById('hifz-amount').value) || 1),
+      amount: amounts.hifz,
     },
   };
 
   const job = quranSaveQueue.then(async () => {
     try {
+      await window.migrateQuranBookmarks?.(state.quranState);
       const res = await window.mihrabApi.saveSettings({ quranWird: updatedQuranWird });
       if (!res?.quranState) throw new Error('لم تصل حالة الورد بعد الحفظ.');
-      renderQuranSummaries(res.quranState);
-      state.quranState = res.quranState;
       state.config = res.config;
+      renderQuranState(res.quranState);
       return res;
     } catch (error) {
-      showOperationResultModal({
-        success: false,
-        title: 'تعذر حفظ إعدادات القرآن',
-        summary: error.message,
-      });
+      showSuccessFeedback(error.message || 'تعذر حفظ إعدادات القرآن.');
       return false;
     }
   });
@@ -1681,6 +1659,7 @@ function renderQuranState(quranState) {
   if (!quranState) return;
   renderQuranSummaries(quranState);
   state.quranState = quranState;
+  window.migrateQuranBookmarks?.(quranState).catch(() => {});
   renderQuranNotificationShortcuts();
   const qw = quranState.settings;
   document.getElementById('quran-riwaya').value = qw.riwaya || 'hafs';
@@ -1698,7 +1677,9 @@ function renderQuranState(quranState) {
     )
       document.getElementById('reading-unit').add(new Option('صفحة (إعداد سابق)', 'page'));
     document.getElementById('reading-unit').value = qw.reading?.unit || 'juz';
-    document.getElementById('reading-amount').value = qw.reading?.amount || 1;
+    const readingAmount = document.getElementById('reading-amount');
+    readingAmount.max = wirdAmountLimit('reading', qw.reading?.unit || 'juz', quranState);
+    readingAmount.value = quranState.readingSummary?.amount || 1;
     document.getElementById('reading-after-isha').value =
       qw.reading?.afterPrayerMinutes ?? qw.reading?.afterIshaMinutes ?? 30;
     document.getElementById('reading-custom-enabled').checked = Boolean(
@@ -1723,31 +1704,17 @@ function renderQuranState(quranState) {
       )
         document.getElementById(kind + '-unit').add(new Option('صفحة (إعداد سابق)', 'page'));
     document.getElementById('hifz-unit').value = hUnit;
-    document.getElementById('hifz-amount').value = qw.hifz?.amount || 1;
+    const hifzAmount = document.getElementById('hifz-amount');
+    hifzAmount.max = wirdAmountLimit('hifz', hUnit, quranState);
+    hifzAmount.value = quranState.hifzSummary?.amount || 1;
     document.getElementById('hifz-after-fajr').value =
       qw.hifz?.afterPrayerMinutes ?? qw.hifz?.afterFajrMinutes ?? 30;
     document.getElementById('hifz-custom-enabled').checked = Boolean(qw.hifz?.customTimeEnabled);
     document.getElementById('hifz-custom-time').value = qw.hifz?.customTime || '05:45';
 
-    updateHifzRangeSelects(hUnit, qw.hifz?.rangeStart, qw.hifz?.rangeEnd);
-
     // Enable only the selected fixed or relative timing fields.
     updateReadingTimeToggle();
     updateHifzTimeToggle();
-  }
-
-  if (quranState.readingSummary) {
-    document.getElementById('reading-current-assignment').textContent =
-      quranState.readingSummary.currentAssignment;
-    document.getElementById('reading-range-desc').textContent =
-      quranState.readingSummary.rangeDescription;
-  }
-
-  if (quranState.hifzSummary) {
-    document.getElementById('hifz-current-assignment').textContent =
-      quranState.hifzSummary.currentAssignment;
-    document.getElementById('hifz-range-desc').textContent =
-      quranState.hifzSummary.rangeDescription;
   }
 
   if (quranState.schedules) {
@@ -2004,6 +1971,29 @@ function bindEvents() {
     });
   });
 
+  document.getElementById('theme-modern-enabled').addEventListener('change', async (event) => {
+    const toggle = event.currentTarget;
+    const previousTheme = state.themeState?.activeTheme;
+    const remembered = localStorage.getItem('mihrab.lastModernTheme');
+    const available = state.themeState?.availableThemes || [];
+    const lastModern = available.find(theme => theme.id === remembered && theme.family !== 'classic');
+    const themeId = toggle.checked ? (lastModern?.id || 'emerald-sanctuary') : 'classic-monochrome';
+    toggle.disabled = true;
+    try {
+      applyThemeStateToDom(
+        await window.mihrabApi.setTheme(themeId, state.themeState?.activeMode || 'dark'),
+      );
+    } catch (error) {
+      toggle.checked = previousTheme !== 'classic-monochrome';
+      showOperationResultModal({
+        success: false,
+        title: 'تعذر تغيير المظهر',
+        summary: error.message,
+      });
+    } finally {
+      toggle.disabled = false;
+    }
+  });
   document.getElementById('theme-selector').addEventListener('change', async (event) => {
     try {
       applyThemeStateToDom(
@@ -2246,6 +2236,7 @@ function bindEvents() {
   });
 
   // Save Quran preferences when their controls change.
+  bindWirdPositionEditors();
   document
     .getElementById('btn-complete-reading')
     .addEventListener('click', () => completeQuranWithTurn('reading', false));
@@ -2306,20 +2297,7 @@ function bindEvents() {
     updateReadingTimeToggle();
   });
 
-  document.getElementById('hifz-unit').addEventListener('change', (e) => {
-    updateHifzRangeSelects(e.target.value);
-    autoSaveQuranSettings();
-  });
-
-  document.getElementById('hifz-range-start').addEventListener('change', () => {
-    const curUnit = document.getElementById('hifz-unit').value || 'hizb';
-    refreshHifzEndOptions(curUnit);
-    autoSaveQuranSettings();
-  });
-
-  document
-    .getElementById('hifz-range-end')
-    .addEventListener('change', () => autoSaveQuranSettings());
+  document.getElementById('hifz-unit').addEventListener('change', autoSaveQuranSettings);
   document.getElementById('hifz-amount').addEventListener('change', () => autoSaveQuranSettings());
 
   document.getElementById('hifz-custom-enabled').addEventListener('change', () => {

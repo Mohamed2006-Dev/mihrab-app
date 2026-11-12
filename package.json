@@ -1,7 +1,7 @@
 {
   "name": "mihrab-desktop",
-  "version": "1.0.1",
-  "description": "تطبيق مكتبي حديث وعصري لمواقيت الصلاة والأحاديث وورد القرآن والدروس الدينية مع عزل كامل للقوالب الجمالية",
+  "version": "1.0.2",
+  "description": "محراب لتنظيم الصلاة وقراءة أوراد القرآن بحفص وورش ومتابعة الأذكار والأحاديث والدروس، مع شاشة التهيئة للصلاة وقوالب عصرية وتقليدية.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -45,7 +45,6 @@
       "package.json",
       "src/**/*",
       "themes/**/*",
-      "data/**/*",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/node_modules/*/{test,__tests__,tests,powertests,example,examples}",
       "!**/*.map",
@@ -54,15 +53,17 @@
       "!test-youtube-rss.js",
       "!Project_Assets/**/*",
       "LICENSE",
-      "!data/personal-data(*).json",
-      "!data/user-config.json",
-      "!data/network-usage.json",
-      "!data/city-prayer-cache.json",
-      "!data/youtube-cache.json",
-      "!data/hadith-cache.json",
-      "!data/bank-acc-qr.*",
-      "!data/habous-horaires-*.json",
-      "!themes/active-theme.json"
+      "!themes/active-theme.json",
+      "data/geography/**/*",
+      "data/cities.json",
+      "data/local-hadith-sharh.json",
+      "data/quran-meta-hafs.json",
+      "data/quran-meta-warsh.json",
+      "data/quran-metadata.json",
+      "data/quran-partitions-LICENSE.txt",
+      "data/quran-sources.md",
+      "data/seed-hadiths.json",
+      "data/youtube-contexts.json"
     ],
     "extraResources": [
       {
@@ -77,15 +78,16 @@
         "from": "data",
         "to": "data",
         "filter": [
-          "**/*",
-          "!personal-data(*).json",
-          "!user-config.json",
-          "!network-usage.json",
-          "!city-prayer-cache.json",
-          "!youtube-cache.json",
-          "!hadith-cache.json",
-          "!bank-acc-qr.*",
-          "!habous-horaires-*.json"
+          "geography/**/*",
+          "cities.json",
+          "local-hadith-sharh.json",
+          "quran-meta-hafs.json",
+          "quran-meta-warsh.json",
+          "quran-metadata.json",
+          "quran-partitions-LICENSE.txt",
+          "quran-sources.md",
+          "seed-hadiths.json",
+          "youtube-contexts.json"
         ]
       }
     ],
@@ -108,13 +110,13 @@
     "portable": {
       "artifactName": "${productName}-Portable.${ext}"
     },
-    "beforePack": "scripts/prepare-project-public-info.cjs",
     "publish": [
       {
         "provider": "github",
         "owner": "Mohamed2006-Dev",
         "repo": "mihrab-app"
       }
-    ]
+    ],
+    "afterPack": "scripts/prepare-project-public-info.cjs"
   }
 }

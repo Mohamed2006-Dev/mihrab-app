@@ -13,10 +13,10 @@ const {
   globalShortcut,
   dialog,
   clipboard,
+  powerMonitor,
 } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const { exec } = require('child_process');
 
 // ============================================================================
 // 1. Single-instance lock.
@@ -29,6 +29,7 @@ if (!gotTheLock) {
 
 // Focus the existing window when another instance starts.
 app.on('second-instance', () => {
+  if (preparationSession && !preparationSession.preview) return;
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     if (!mainWindow.isVisible()) mainWindow.show();
@@ -40,6 +41,7 @@ app.on('second-instance', () => {
 // 2. Application identity, writable data paths and graphics compatibility.
 // ============================================================================
 app.name = 'mihrab-desktop';
+if (process.platform === 'win32') app.setAppUserModelId('com.mihrab.desktop');
 try {
   if (!app.commandLine.hasSwitch('user-data-dir'))
     app.setPath('userData', path.join(app.getPath('appData'), 'mihrab-desktop'));
@@ -99,7 +101,15 @@ function trimFeedForPerformance(feed) {
 let mainWindow = null;
 let lockWindow = null;
 let lockReleaseTimer = null;
-let lockKeepAliveInterval = null;
+const preparationWindows = new Map();
+let preparationSession = null;
+let preparationSuspended = false;
+const PreparationProgress = require('./src/engines/preparation-progress');
+const preparationDirectory = process.platform === 'win32' && process.env.LOCALAPPDATA &&
+  !app.commandLine.hasSwitch('user-data-dir')
+  ? path.join(process.env.LOCALAPPDATA, 'Mihrab', 'Preparation')
+  : app.getPath('userData');
+const preparation = new PreparationProgress(path.join(preparationDirectory, 'preparation-progress.json'));
 const audioManager = new AudioManager();
 let previousAppAudioMuted = null;
 let quitAudioPending = false;
@@ -128,10 +138,13 @@ const notificationCenter = new NotificationCenter({
           Math.max(new Date(data.lockAt).getTime(), getAppNow().getTime()) +
             data.snoozeMinutes * 60000,
         ).toISOString();
-        return { lockAt, message: 'معاينة: تم تمديد عداد هذا الإشعار فقط، دون جدولة قفل فعلي.' };
+        if (!data.snoozeMinutes) throw new Error('استُخدم التمديد لهذه المعاينة.');
+        return { lockAt, snoozeMinutes: 0, message: 'تأجّل موعد الظهور في المعاينة.' };
       }
       return scheduler.snoozeScreenLock(data.snoozeMinutes, data.scheduleId, getAppNow());
     }
+    if (preparationSession && !preparationSession.preview)
+      throw new Error('يمكن فتح محراب بعد انتهاء شاشة التهيئة.');
     if (!mainWindow || mainWindow.isDestroyed()) createMainWindow();
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.show();
@@ -183,30 +196,6 @@ function restorePrayerLockAudio() {
       reportNotificationError(error);
       return { audioRestored: false, error: error.message };
     });
-}
-
-/** Temporarily show or hide the Windows taskbar through Win32 ShowWindow. */
-function setWindowsTaskbarVisibility(visible) {
-  if (process.platform !== 'win32') return;
-  const cmdFlag = visible ? 5 : 0; // SW_SHOW = 5, SW_HIDE = 0
-  const psScript = `
-Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-public class Win32Taskbar {
-  [DllImport("user32.dll")]
-  public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-  [DllImport("user32.dll")]
-  public static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
-}
-"@
-$h1 = [Win32Taskbar]::FindWindow("Shell_TrayWnd", $null)
-if ($h1 -ne [IntPtr]::Zero) { [Win32Taskbar]::ShowWindow($h1, ${cmdFlag}) | Out-Null }
-$h2 = [Win32Taskbar]::FindWindow("Shell_SecondaryTrayWnd", $null)
-if ($h2 -ne [IntPtr]::Zero) { [Win32Taskbar]::ShowWindow($h2, ${cmdFlag}) | Out-Null }
-`.replace(/\r?\n/g, '; ');
-
-  exec(`powershell -NoProfile -WindowStyle Hidden -Command "${psScript}"`, () => {});
 }
 
 let lastNotificationHadithId = null;
@@ -266,6 +255,7 @@ function createSystemTray() {
   updateTrayContextMenu();
 
   tray.on('click', () => {
+    if (preparationSession && !preparationSession.preview) return;
     if (mainWindow) {
       if (mainWindow.isVisible()) {
         mainWindow.focus();
@@ -285,7 +275,9 @@ function updateTrayContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '🕌 فتح واجهة محراب الرئيسية',
+      enabled: !preparationSession || preparationSession.preview,
       click: () => {
+        if (preparationSession && !preparationSession.preview) return;
         if (mainWindow) {
           mainWindow.show();
           mainWindow.focus();
@@ -312,7 +304,9 @@ function updateTrayContextMenu() {
     { type: 'separator' },
     {
       label: '❌ إغلاق التطبيق نهائياً',
+      enabled: !preparationSession || preparationSession.preview,
       click: () => {
+        if (preparationSession && !preparationSession.preview) return;
         app.isQuitting = true;
         clearInterval(miniTimer);
         clearTimeout(miniHideTimer);
@@ -329,76 +323,79 @@ function updateTrayContextMenu() {
   tray.setContextMenu(contextMenu);
 }
 
-/** Close the preparation screen and restore the taskbar and original audio state. */
+function samplePreparationActivity(now = Date.now()) {
+  if (preparationSuspended) return;
+  const idle = powerMonitor.getSystemIdleTime();
+  const state = powerMonitor.getSystemIdleState(60);
+  const locked = state === 'locked' || state === 'unknown';
+  preparation.observe(now, idle, locked);
+  const session = preparationSession;
+  if (session && !session.preview && session.shownAt && !locked &&
+      now < session.endsAt && now - session.shownAt > (idle + 1) * 1000)
+    session.active = true;
+}
+
 function closePrayerLockWindow() {
-  if (lockReleaseTimer) {
-    clearTimeout(lockReleaseTimer);
-    lockReleaseTimer = null;
-  }
-  if (lockKeepAliveInterval) {
-    clearInterval(lockKeepAliveInterval);
-    lockKeepAliveInterval = null;
-  }
-
-  setWindowsTaskbarVisibility(true);
-
-  const audioRestored = restorePrayerLockAudio();
-
-  const closingWindow = lockWindow;
+  const session = preparationSession;
+  preparationSession = null;
   lockWindow = null;
-  if (closingWindow && !closingWindow.isDestroyed()) {
-    closingWindow.allowProgrammaticClose = true;
-    try {
-      closingWindow.setAlwaysOnTop(false);
-      closingWindow.setKiosk(false);
-      closingWindow.setFullScreen(false);
-    } catch (err) {
-      console.error('[LockWindow] Error leaving kiosk mode:', err.message);
-    } finally {
-      closingWindow.destroy();
-    }
+  clearTimeout(lockReleaseTimer);
+  lockReleaseTimer = null;
+  for (const window of preparationWindows.values()) {
+    if (!window.isDestroyed()) window.destroy();
   }
-
-  if (mainWindow && !mainWindow.isDestroyed() && !app.isQuitting) {
-    mainWindow.focus();
-    audioRestored.then((result) => {
-      if (mainWindow && !mainWindow.isDestroyed() && !app.isQuitting)
-        mainWindow.webContents.send('lockscreen:closed', result);
-    });
+  preparationWindows.clear();
+  const audioRestored = restorePrayerLockAudio();
+  if (!app.isQuitting) {
+    updateTrayContextMenu();
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      if (session?.restoreMain) {
+        mainWindow.setSkipTaskbar(false);
+        if (session.restoreMain.visible) {
+          if (session.restoreMain.minimized) {
+            mainWindow.showInactive();
+            mainWindow.minimize();
+          } else mainWindow.show();
+        }
+      }
+      audioRestored.then(result => {
+        if (mainWindow && !mainWindow.isDestroyed() && !app.isQuitting)
+          mainWindow.webContents.send('lockscreen:closed', result);
+      });
+    }
   }
   return audioRestored;
 }
 
-/** Create the prayer preparation screen. */
-function createPrayerLockWindow(lockPayload = {}) {
-  if (miniWindow && !miniWindow.isDestroyed()) miniWindow.hide();
-  if (lockWindow && !lockWindow.isDestroyed()) {
-    closePrayerLockWindow();
+async function finishPrayerPreparation() {
+  const session = preparationSession;
+  if (!session || Date.now() < session.endsAt) return;
+  let streak = null;
+  if (!session.preview && !preparationSuspended && session.shownAt) {
+    try {
+      streak = preparation.complete(session.prayer, session.active);
+    } catch (error) {
+      reportNotificationError(error);
+    }
   }
-
-  const isTestMode = Boolean(lockPayload.isTestMode);
-  const untilAdhan = lockPayload.prayerTime
-    ? (new Date(lockPayload.prayerTime).getTime() - getAppNow().getTime()) / 1000
-    : NaN;
-  if (!isTestMode && (!Number.isFinite(untilAdhan) || untilAdhan <= 0)) {
-    throw new Error('تعذر فتح شاشة التهيئة: يلزم موعد أذان قادم وصحيح.');
+  await closePrayerLockWindow();
+  if (streak !== null && !app.isQuitting) {
+    showCustomNotificationPopup({
+      type: 'preparation_streak',
+      title: 'أحسنت، أبقيت شاشة التهيئة حتى الأذان',
+      body: 'عدد جلساتك المتتالية: ' + new Intl.NumberFormat('ar', { numberingSystem: 'arab' }).format(streak) +
+        '. استغل وقت شاشة التهيئة في القيام والاستعداد للصلاة.',
+      playAudio: false,
+    });
   }
-  // Real preparation always lasts until adhan; duration controls are preview-only.
-  const totalSeconds = isTestMode
-    ? Math.max(1, Math.round(Number(lockPayload.durationSeconds) || 30))
-    : untilAdhan;
+}
 
-  const primaryDisplay = screen.getPrimaryDisplay();
-  const { x, y, width, height } = primaryDisplay.bounds;
-
-  lockWindow = new BrowserWindow({
-    x,
-    y,
-    width,
-    height,
-    fullscreen: true,
-    kiosk: true,
+function createPreparationDisplay(display, session) {
+  const window = new BrowserWindow({
+    ...display.bounds,
+    show: false,
     frame: false,
+    thickFrame: false,
     alwaysOnTop: true,
     skipTaskbar: true,
     movable: false,
@@ -406,7 +403,6 @@ function createPrayerLockWindow(lockPayload = {}) {
     minimizable: false,
     maximizable: false,
     closable: false,
-    focusable: true,
     webPreferences: {
       devTools: false,
       preload: path.join(appDir, 'preload.js'),
@@ -414,99 +410,111 @@ function createPrayerLockWindow(lockPayload = {}) {
       nodeIntegration: false,
     },
   });
-
-  const createdWindow = lockWindow;
-  createdWindow.isPrayerLockPreview = isTestMode;
-  createdWindow.on('closed', () => {
-    if (lockWindow === createdWindow) {
-      lockWindow = null;
-      closePrayerLockWindow();
+  preparationWindows.set(display.id, window);
+  window.setAlwaysOnTop(true, 'screen-saver', 1);
+  window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  window.on('close', event => event.preventDefault());
+  window.on('closed', () => {
+    if (preparationWindows.get(display.id) === window) {
+      preparationWindows.delete(display.id);
+      if (preparationSession === session) closePrayerLockWindow();
     }
   });
-  createdWindow.webContents.on('render-process-gone', () => {
-    if (lockWindow === createdWindow) closePrayerLockWindow();
+  window.on('blur', () => {
+    if (preparationSession === session && !window.isDestroyed())
+      window.setAlwaysOnTop(true, 'screen-saver', 1);
   });
-  muteSystemAudioIfNeeded(lockPayload.muteSystemAudio);
-  setWindowsTaskbarVisibility(false);
-
-  lockWindow.setAlwaysOnTop(true, 'screen-saver', 1);
-  lockWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-  lockWindow.setFullScreen(true);
-  lockWindow.setKiosk(true);
-  lockWindow.setBounds({ x, y, width, height });
-
-  lockWindow.on('blur', () => {
-    if (lockWindow && !lockWindow.isDestroyed() && !lockWindow.allowProgrammaticClose) {
-      lockWindow.setAlwaysOnTop(true, 'screen-saver', 1);
-      lockWindow.focus();
-      lockWindow.moveTop();
-      lockWindow.setFullScreen(true);
-      lockWindow.setKiosk(true);
-    }
+  window.webContents.on('render-process-gone', () => {
+    if (preparationSession === session) closePrayerLockWindow();
   });
-
-  lockKeepAliveInterval = setInterval(() => {
-    if (lockWindow && !lockWindow.isDestroyed() && !lockWindow.allowProgrammaticClose) {
-      if (!lockWindow.isFocused()) {
-        lockWindow.focus();
-      }
-      lockWindow.setAlwaysOnTop(true, 'screen-saver', 1);
-      lockWindow.moveTop();
-    }
-  }, 400);
-
-  lockWindow.on('close', (e) => {
-    if (lockWindow && !lockWindow.allowProgrammaticClose) {
-      e.preventDefault();
-    }
-  });
-
-  lockWindow.webContents.on('before-input-event', (event, input) => {
-    const key = (input.key || '').toLowerCase();
-    if (
-      (input.alt && key === 'f4') ||
-      (input.alt && key === 'tab') ||
-      (input.control && key === 'w') ||
-      (input.control && key === 'escape') ||
-      key === 'escape' ||
-      key === 'f11' ||
-      key === 'meta' ||
-      key === 'super' ||
-      key === 'os'
-    ) {
+  window.webContents.on('before-input-event', (event, input) => {
+    if (preparationSession !== session || input.type !== 'keyDown') return;
+    if (input.alt && input.shift && !input.control && !input.meta && input.code === 'KeyS') {
       event.preventDefault();
+      if (input.isAutoRepeat || Date.now() >= session.endsAt ||
+          (!session.preview && !preparation.canBypass(Date.now()))) return;
+      session.bypassRevealed = true;
+      window.webContents.send('lockscreen:reveal-bypass');
     }
   });
-
-  lockWindow.loadFile(path.join(appDir, 'src', 'ui', 'lockscreen.html')).catch((error) => {
-    console.error('[LockWindow] Could not load the lock screen:', error.message);
-    if (lockWindow === createdWindow) closePrayerLockWindow();
-  });
-
-  lockWindow.webContents.on('did-finish-load', () => {
-    if (!lockWindow || lockWindow.isDestroyed()) return;
-    const themeState = themeEngine.getActiveThemeState();
-    lockWindow.webContents.send('lockscreen:init', {
-      ...lockPayload,
-      durationSeconds: totalSeconds,
-      isTestMode,
-      themeState,
+  window.webContents.on('did-finish-load', () => {
+    if (preparationSession !== session || window.isDestroyed()) return;
+    if (Date.now() >= session.endsAt) {
+      finishPrayerPreparation();
+      return;
+    }
+    const initialDisplay = !session.shownAt;
+    if (initialDisplay) {
+      samplePreparationActivity();
+      session.active = preparation.wasWorking(Date.now());
+    }
+    window.webContents.send('lockscreen:init', {
+      ...session.payload,
+      endsAt: session.endsAt,
+      streak: preparation.streak,
+      isTestMode: session.preview,
+      themeState: themeEngine.getActiveThemeState(),
     });
+    if (initialDisplay) session.shownAt = Date.now();
+    if (display.id === screen.getPrimaryDisplay().id) window.show();
+    else window.showInactive();
+    window.setSkipTaskbar(true);
+    window.setBounds(display.bounds);
   });
-
-  if (lockReleaseTimer) clearTimeout(lockReleaseTimer);
-  lockReleaseTimer = setTimeout(() => {
-    closePrayerLockWindow();
-  }, totalSeconds * 1000);
-
-  return {
-    started: true,
-    durationSeconds: totalSeconds,
-    isTestMode,
-  };
+  window.loadFile(path.join(appDir, 'src', 'ui', 'lockscreen.html')).catch(error => {
+    reportNotificationError(error);
+    if (preparationSession === session) closePrayerLockWindow();
+  });
 }
 
+function syncPreparationDisplays() {
+  const session = preparationSession;
+  if (!session) return;
+  const primary = screen.getPrimaryDisplay();
+  const displays = session.preview ? [primary] : screen.getAllDisplays();
+  const ids = new Set(displays.map(display => display.id));
+  for (const [id, window] of preparationWindows) {
+    if (!ids.has(id)) {
+      preparationWindows.delete(id);
+      if (!window.isDestroyed()) window.destroy();
+    }
+  }
+  for (const display of displays) {
+    const window = preparationWindows.get(display.id);
+    if (window) window.setBounds(display.bounds);
+    else createPreparationDisplay(display, session);
+  }
+  lockWindow = preparationWindows.get(primary.id) || null;
+}
+
+function createPrayerLockWindow(payload = {}) {
+  const preview = Boolean(payload.isTestMode);
+  if (preparationSession && !preparationSession.preview)
+    return { started: false, isTestMode: preview };
+  const now = Date.now();
+  const endsAt = preview ? now + payload.durationSeconds * 1000 : Date.parse(payload.prayerTime);
+  const prayer = payload.preparationId;
+  if (!preview && (preparationSuspended || !prayer || preparation.prayer(prayer)?.ended || !(endsAt > now)))
+    return { started: false, isTestMode: preview };
+  if (preparationSession) closePrayerLockWindow();
+  const session = { preview, prayer, endsAt, payload, active: false };
+  preparationSession = session;
+  if (miniWindow && !miniWindow.isDestroyed()) miniWindow.hide();
+  if (!preview && mainWindow && !mainWindow.isDestroyed()) {
+    session.restoreMain = { visible: mainWindow.isVisible(), minimized: mainWindow.isMinimized() };
+    mainWindow.setSkipTaskbar(true);
+    mainWindow.hide();
+  }
+  updateTrayContextMenu();
+  muteSystemAudioIfNeeded(payload.muteSystemAudio);
+  syncPreparationDisplays();
+  lockReleaseTimer = setTimeout(finishPrayerPreparation, endsAt - now);
+  return { started: true, durationSeconds: Math.ceil((endsAt - now) / 1000), isTestMode: preview };
+}
+
+
 const scheduler = new SchedulerEngine({
+  preparation,
   storage,
   prayerEngine,
   hadithEngine,
@@ -544,7 +552,7 @@ const scheduler = new SchedulerEngine({
       notificationCenter.closeWhere(
         (data) => data.type === (lockEnabled ? 'pre_prayer' : 'lock_warning'),
       );
-      if (!lockEnabled && lockWindow && !lockWindow.isPrayerLockPreview) closePrayerLockWindow();
+      if (!lockEnabled && preparationSession && !preparationSession.preview) closePrayerLockWindow();
     },
     onPreLockWarning: (warning) => {
       showCustomNotificationPopup({
@@ -553,7 +561,9 @@ const scheduler = new SchedulerEngine({
         persistent: true,
         playAudio: false,
         title: `التهيؤ لـ${warning.prayerName}: قفل الشاشة قريباً`,
-        body: 'احفظ عملك الآن. يمكنك تمديد موعد القفل مباشرة من هذا الإشعار.',
+        body: warning.snoozeMinutes
+          ? 'احفظ عملك الآن. يمكنك تأجيل ظهور الشاشة مرة واحدة من هذا التنبيه.'
+          : 'احفظ عملك الآن استعدادًا لظهور شاشة التهيئة.',
       });
     },
     onActivateScreenLock: (payload) => {
@@ -569,7 +579,8 @@ const scheduler = new SchedulerEngine({
           ['pre_prayer', 'lock_warning'].includes(data.type) &&
           (!data.prayerId || data.prayerId === prayer.id),
       );
-      if (lockWindow || audioManager.needsRestore) await closePrayerLockWindow();
+      if (preparationSession?.endsAt <= Date.now()) await finishPrayerPreparation();
+      else if (!preparationSession && audioManager.needsRestore) await restorePrayerLockAudio();
       if (app.isQuitting) return;
       const prayerData = prayerEngine.calculateLocalPrayerTimes(getAppNow());
       if (notify)
@@ -689,8 +700,8 @@ ipcMain.handle('accessibility:set', (_, value) => {
 });
 function updateAuxiliaryWindowThemes(themeState) {
   if (!themeState) return;
-  if (lockWindow && !lockWindow.isDestroyed()) {
-    lockWindow.webContents.send('lockscreen:theme-updated', themeState);
+  for (const window of preparationWindows.values()) {
+    if (!window.isDestroyed()) window.webContents.send('lockscreen:theme-updated', themeState);
   }
   if (miniWindow && !miniWindow.isDestroyed()) {
     miniWindow.webContents.send('theme:live-reloaded', themeState);
@@ -944,15 +955,25 @@ ipcMain.handle('quran:toggle-notification', (_, kind) => {
   return { config, quranState: quranEngine.getFullStatus(prayerData) };
 });
 
-ipcMain.handle('quran:advance-progress', (_, { type }) => {
+ipcMain.handle('quran:advance-progress', (_, { type, expected }) => {
   const prayerData = prayerEngine.calculateLocalPrayerTimes(getAppNow());
-  quranEngine.advanceWirdProgress(type);
+  quranEngine.advanceWirdProgress(type, expected);
   return quranEngine.getFullStatus(prayerData);
 });
 
 ipcMain.handle('quran:roll-random', () => {
   quranEngine.rollRandomReadingWird();
   return quranEngine.getFullStatus(prayerEngine.calculateLocalPrayerTimes(getAppNow()));
+});
+
+ipcMain.handle('quran:bookmark', (_, { kind, mark, migrate }) => {
+  quranEngine.saveBookmark(kind, mark, migrate);
+  return quranEngine.getFullStatus(prayerEngine.calculateLocalPrayerTimes(getAppNow()));
+});
+
+ipcMain.handle('quran:set-position', (_, { kind, start }) => {
+  const message = quranEngine.setPosition(kind, start);
+  return { message, quranState: quranEngine.getFullStatus(prayerEngine.calculateLocalPrayerTimes(getAppNow())) };
 });
 
 ipcMain.handle('quran:get-status', () => {
@@ -1010,6 +1031,8 @@ ipcMain.handle('sync:approve', syncHandler('approve'));
 ipcMain.handle('sync:unlink', syncHandler('unlink'));
 
 async function saveApplicationSettings(newConfig, fromSync = false) {
+  if (preparationSession && !preparationSession.preview && newConfig.screenLock?.enabled === false)
+    throw new Error('يمكن إيقاف شاشة التهيئة من الإعدادات بعد انتهاء الجلسة.');
   if (newConfig.location && localSync.ownsLocation() && !fromSync)
     throw Error('الموقع يُدار من الهاتف المرتبط. افصل الربط لتعديله هنا.');
   const previous = storage.getConfig();
@@ -1051,13 +1074,14 @@ async function saveApplicationSettings(newConfig, fromSync = false) {
       notificationCenter.closeWhere((data) => ['pre_prayer', 'lock_warning'].includes(data.type));
     }
   }
-  if (newConfig.quranWird)
+  if (newConfig.quranWird) {
+    const merged = storage.deepMerge(previous.quranWird || {}, newConfig.quranWird);
     patch = {
       ...patch,
-      quranWird: quranEngine.validateSettings(
-        storage.deepMerge(previous.quranWird || {}, newConfig.quranWird),
-      ),
+      quranWird: quranEngine.validateSettings(fromSync ? merged :
+        quranEngine.convertSettings(previous.quranWird || {}, merged)),
     };
+  }
   if (
     newConfig.performance &&
     !['auto', 'eco', 'balanced', 'full'].includes(newConfig.performance.level)
@@ -1168,7 +1192,9 @@ ipcMain.handle('lockscreen:preview-warning', () => {
   return { triggered: true };
 });
 
-ipcMain.handle('lockscreen:preview-lock', (_, { durationMinutes, durationSeconds, isTestMode }) => {
+ipcMain.handle('lockscreen:preview-lock', (event, { durationSeconds }) => {
+  if (event.sender !== mainWindow?.webContents || event.senderFrame !== event.sender.mainFrame)
+    throw new Error('المعاينة متاحة من نافذة الإعدادات.');
   const prayerData = prayerEngine.calculateLocalPrayerTimes(getAppNow());
   const hadithState = hadithEngine.getHadithForPrayer(`preview_${Date.now()}`, true);
   return createPrayerLockWindow({
@@ -1176,16 +1202,32 @@ ipcMain.handle('lockscreen:preview-lock', (_, { durationMinutes, durationSeconds
     prayerTime12: prayerData.nextPrayer?.time12 || '',
     hadith: hadithState.hadith,
     motivationalQuote: scheduler.getRandomMotivationalQuote(),
-    lockDurationMinutes: Number(durationMinutes) || 1,
-    durationSeconds: Number(durationSeconds) || 0,
-    isTestMode: Boolean(isTestMode),
+    durationSeconds: Math.max(1, Math.min(60, Number(durationSeconds) || 30)),
+    isTestMode: true,
     muteSystemAudio: Boolean(storage.getConfig().screenLock?.muteSystemAudio),
   });
 });
 
-ipcMain.handle('lockscreen:force-close', async () => {
+function isPreparationSender(event) {
+  return [...preparationWindows.values()].some(window =>
+    !window.isDestroyed() && event.sender === window.webContents &&
+    event.senderFrame === event.sender.mainFrame);
+}
+
+ipcMain.handle('lockscreen:force-close', async (event) => {
+  if (!preparationSession?.preview || !preparationSession.bypassRevealed || !isPreparationSender(event))
+    throw new Error('إغلاق المعاينة متاح من شاشة المعاينة فقط.');
   const result = await closePrayerLockWindow();
   return { closed: true, ...result };
+});
+
+ipcMain.handle('lockscreen:bypass', async (event) => {
+  const session = preparationSession;
+  const now = Date.now();
+  if (!session || session.preview || !session.bypassRevealed || !isPreparationSender(event) ||
+      now >= session.endsAt || !preparation.bypass(session.prayer, now))
+    throw new Error('التجاوز غير متاح لهذه الجلسة.');
+  return closePrayerLockWindow();
 });
 
 ipcMain.on('notification-popup:audio-status', (event, data) =>
@@ -1376,7 +1418,7 @@ async function getHadithPreview(key) {
   imagePreviewTask = renderHadithImage({
     BrowserWindow,
     hadith: hadithEngine.getExportHadith(key),
-    baseDir: resourcesDir,
+    baseDir: app.getAppPath(),
   });
   try {
     const png = await imagePreviewTask;
@@ -1418,9 +1460,30 @@ app.whenReady().then(() => {
     console.warn('[Startup] LoginItemSettings warning:', startupErr.message);
   }
 
-  scheduler.tick(getAppNow());
-  schedulerTimer = setInterval(() => {scheduler.tick(getAppNow());updateLocationAutomatically();}, 1000);
-  screen.on('display-metrics-changed', () => notificationCenter.reflow());
+  const tick = () => {
+    samplePreparationActivity();
+    scheduler.tick(getAppNow());
+  };
+  tick();
+  schedulerTimer = setInterval(() => { tick(); updateLocationAutomatically(); }, 1000);
+  powerMonitor.on('suspend', () => {
+    preparationSuspended = true;
+    preparation.observe(Date.now(), Infinity, true);
+  });
+  powerMonitor.on('resume', () => {
+    const now = Date.now();
+    preparationSuspended = false;
+    preparation.observe(now, Infinity, true);
+    if (!preparationSession) return;
+    if (now >= preparationSession.endsAt) closePrayerLockWindow();
+    else if (!preparationSession.preview && preparationSession.shownAt) preparationSession.active = true;
+  });
+  for (const event of ['display-added', 'display-removed', 'display-metrics-changed']) {
+    screen.on(event, () => {
+      notificationCenter.reflow();
+      syncPreparationDisplays();
+    });
+  }
 
   setTimeout(()=>queueCityVerification(),3000);
   updateLocationAutomatically();
@@ -1438,6 +1501,10 @@ app.whenReady().then(() => {
 });
 
 app.on('before-quit', (event) => {
+  if (preparationSession && !preparationSession.preview) {
+    event.preventDefault();
+    return;
+  }
   app.isQuitting = true;
   if (schedulerTimer) {
     clearInterval(schedulerTimer);
@@ -1455,7 +1522,6 @@ app.on('before-quit', (event) => {
     return;
   }
   closePrayerLockWindow();
-  setWindowsTaskbarVisibility(true);
   closeNotificationPopup();
   if (tray) {
     tray.destroy();
@@ -1472,7 +1538,6 @@ app.on('will-quit', () => {
 app.on('window-all-closed', () => {
   // Keep the tray process alive after all windows close.
   if (app.isQuitting) {
-    setWindowsTaskbarVisibility(true);
     closeNotificationPopup();
     if (process.platform !== 'darwin') {
       app.quit();

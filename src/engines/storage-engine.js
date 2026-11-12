@@ -111,7 +111,7 @@ class StorageEngine {
       },
       screenLock: {
         enabled: false,
-        minutesBeforeAdhan: 15, // The preparation screen requires at least 15 minutes of lead time.
+        minutesBeforeAdhan: 15,
         warningMinutes: 1,
         snoozeMinutes: 3, // Emergency postponement interval.
         muteSystemAudio: true,

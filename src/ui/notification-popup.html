@@ -356,10 +356,6 @@
           return;
         }
         el.hidden = false;
-        if (currentData.cancelled) {
-          el.textContent = 'تم تأجيل القفل لهذه الصلاة حتى الأذان.';
-          return;
-        }
         const seconds = Math.max(
           0,
           Math.ceil((new Date(currentData.lockAt).getTime() - Date.now()) / 1000),
@@ -442,13 +438,12 @@
           : lock
             ? data.preview
               ? 'معاينة فقط — لا تُفتح شاشة قفل فعلية.'
-              : 'التمديد هنا يؤجل هذه الشاشة فقط.'
+              : data.snoozeMinutes ? 'يتاح تأجيل ظهور هذه الشاشة مرة واحدة.' : ''
             : '';
-        document.getElementById('popup-actions').hidden = !(lock || actionable);
-        document.getElementById('popup-snooze').hidden = !lock;
-        document.getElementById('popup-snooze').disabled = Boolean(data.cancelled);
+        document.getElementById('popup-actions').hidden = !((lock && data.snoozeMinutes) || actionable);
+        document.getElementById('popup-snooze').hidden = !lock || !data.snoozeMinutes;
         document.getElementById('popup-snooze').textContent =
-          `تمديد القفل ${data.snoozeMinutes || 3} دقائق`;
+          `تأجيل الظهور ${data.snoozeMinutes} دقائق`;
         const openButton = document.getElementById('popup-open-lessons');
         openButton.hidden = !actionable;
         openButton.textContent = daily || data.lesson ? 'عرض بطاقة الدرس' :
@@ -460,7 +455,7 @@
         clearInterval(countdownTimer);
         countdownTimer = null;
         updateCountdown();
-        if (lock && !data.cancelled) countdownTimer = setInterval(updateCountdown, 1000);
+        if (lock) countdownTimer = setInterval(updateCountdown, 1000);
         startProgress(data.persistent ? null : data.autoCloseMs);
         if (data.type === 'prayer_time' && data.playAudio === true && data.soundEnabled !== false)
           playAdhanAudio();

@@ -40,6 +40,7 @@ class ThemeEngine {
         return {
           id: content.id || path.basename(file, '.json'),
           name: content.name || path.basename(file, '.json'),
+          family: content.family === 'classic' ? 'classic' : 'modern',
           author: content.author || 'User Custom',
           fileName: file,
         };

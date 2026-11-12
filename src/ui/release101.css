@@ -173,3 +173,98 @@
 .sync-qr-button svg { inline-size:1.45rem; block-size:1.45rem; }
 
 #desktop-location-auto-field[hidden], #desktop-location-fields[hidden], [data-phone-location-note][hidden] { display:none; }
+
+@property --adhkar-progress {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+.adhkar-reading-card .adhkar-counter {
+  transition: --adhkar-progress 320ms cubic-bezier(.2, .7, .3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .adhkar-reading-card .adhkar-counter { transition: none; }
+}
+
+/* Adhkar reading card */
+#adhkar-content:has(.adhkar-reading-card) { position: relative; overflow: clip; }
+.adhkar-reading-card {
+  position: relative;
+  z-index: 1;
+  min-inline-size: 0;
+  padding: clamp(.8rem, 2.5vw, 1.6rem);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  scroll-margin-block-start: 4rem;
+}
+.adhkar-reading-card--outgoing { position: absolute; inset: 0 0 auto; z-index: 0; pointer-events: none; }
+.adhkar-reading-card .meta-pill { inline-size: fit-content; margin: 0 0 .65rem; }
+.adhkar-text { display: grid; gap: .32rem; line-height: 1.95; }
+.adhkar-text > p { margin: 0; }
+.adhkar-text:has(.adhkar-quran) > p { font-size: .76em; color: var(--text-secondary); }
+.adhkar-quran {
+  font-family: QuranHafs, Amiri, serif;
+  padding: .35em .6em;
+  background: var(--bg-glass);
+  border-inline-start: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.adhkar-verse-divider { color: var(--accent-primary); padding-inline: .32em; font-size: .7em; white-space: nowrap; }
+.adhkar-reading-card .adhkar-actions, .adhkar-counter-row {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .65rem;
+}
+.adhkar-reading-card .adhkar-actions { margin-block: .9rem .45rem; }
+.adhkar-actions .adhkar-counter {
+  inline-size: 7.5rem; block-size: 7.5rem; flex: 0 0 7.5rem; font-size: 1rem; border-width: 6px;
+}
+.adhkar-reading-card .adhkar-source-line {
+  display: flex; flex-direction: column; align-items: flex-start; gap: .45rem; margin: 0;
+}
+.adhkar-counter-row .adhkar-reset-current {
+  display: inline-grid; place-items: center; flex: 0 0 44px;
+  inline-size: 44px; block-size: 44px; padding: 0;
+}
+.adhkar-reset-current[hidden], .adhkar-reset-chapter[hidden] { display: none !important; }
+#adhkar-reset-message { color: var(--text-secondary); }
+.adhkar-reset-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .6rem; margin-block-start: 1rem; }
+
+
+.adhkar-header { align-items: center; gap: clamp(.4rem, 1.5vw, 1rem); }
+.adhkar-header #adhkar-back { flex: none; }
+.adhkar-header #adhkar-back[hidden], .adhkar-breadcrumb li[hidden] { display: none; }
+.adhkar-breadcrumb {
+  flex: 1; min-inline-size: 0; position: relative; direction: rtl;
+  font-size: clamp(.82rem, .7rem + .55vw, 1.12rem);
+}
+.adhkar-breadcrumb ol {
+  display: flex; align-items: center; list-style: none;
+  padding: 0; margin: 0; min-inline-size: 0;
+}
+.adhkar-breadcrumb li { display: flex; align-items: center; flex: none; white-space: nowrap; }
+.adhkar-breadcrumb li:not(:last-child)::after {
+  content: ''; inline-size: .35em; block-size: .35em; flex: none;
+  margin-inline: .45em; border: solid var(--text-muted); border-width: 0 0 1px 1px;
+  rotate: 45deg;
+}
+.adhkar-breadcrumb .adhkar-crumb-current {
+  display: block; min-inline-size: 0; flex: 0 1 auto;
+  overflow: hidden; text-overflow: ellipsis; font-weight: 700;
+}
+.adhkar-crumb-link, .adhkar-crumb-overflow > summary {
+  display: block; padding: .25em .4em; border: 0; border-radius: .35em;
+  color: var(--text-primary); background: transparent; font: inherit;
+  cursor: pointer; list-style: none;
+}
+.adhkar-crumb-overflow > summary::-webkit-details-marker { display: none; }
+.adhkar-crumb-link:hover, .adhkar-crumb-overflow > summary:hover { background: var(--bg-glass); }
+.adhkar-crumb-menu {
+  position: absolute; z-index: 5; inset-inline-start: 0; inset-block-start: 100%;
+  inline-size: max-content; max-inline-size: min(20rem, 88vw);
+  padding: .35rem; border: 1px solid var(--border-strong); border-radius: .55rem;
+  background: var(--bg-surface-elevated); box-shadow: var(--shadow-card);
+}
+.adhkar-crumb-menu .adhkar-crumb-link { inline-size: 100%; text-align: start; white-space: normal; }
+
+.adhkar-reading-card { touch-action: pan-y pinch-zoom; }
+.adhkar-swipe-hint { margin-inline-start: .6em; font-size: .8rem; color: var(--text-muted); }
