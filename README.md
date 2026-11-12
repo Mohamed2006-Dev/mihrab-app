@@ -20,7 +20,7 @@
 التطبيق متاح حالياً لويندوز 64 بت:
 
 - [تحميل ملف التثبيت](https://github.com/Mohamed2006-Dev/mihrab-app/releases/latest/download/Mihrab-Setup.exe)
-- [تحميل النسخة المحمولة 1.0.1](https://github.com/Mohamed2006-Dev/mihrab-app/releases/download/v1.0.1/Mihrab-Portable.exe)
+- [تحميل النسخة المحمولة 1.0.2](https://github.com/Mohamed2006-Dev/mihrab-app/releases/download/v1.0.2/Mihrab-Portable.exe)
 - [كل الإصدارات وملاحظات التحديث](https://github.com/Mohamed2006-Dev/mihrab-app/releases)
 
 اختر ملف التثبيت إن أردت تثبيت محراب والحصول على التحديثات من داخل التطبيق. النسخة المحمولة تعمل دون تثبيت، لكن التحديث الداخلي غير متاح فيها. الملفات يستضيفها GitHub مباشرة، ويمكنك الرجوع إلى صفحة الإصدارات لتحميل إصدار أقدم دون حذف الإصدارات الأخرى.
