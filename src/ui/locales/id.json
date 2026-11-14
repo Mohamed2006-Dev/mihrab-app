@@ -1644,12 +1644,8 @@
   "feedback.section.ui-ux-simplification": "Penyederhanaan dan Organisasi Antarmuka",
   "feedback.prompt.ui-ux-simplification": "Layar atau tindakan mana yang perlu disederhanakan? Bagaimana Anda menyarankan untuk menyajikannya?",
   "update.release103.title": "Apa yang baru dari 1.0.2 ke 1.0.3?",
-  "update.release103.sync": "Menambahkan sinkronisasi lokal antara ponsel dan komputer, dengan pemilihan sumber data pada sinkronisasi pertama dan verifikasi kompatibilitas protokol.",
-  "update.release103.reader": "Meningkatkan tampilan Wird Mushaf dan perataan baris, memperbaiki pemotongan halaman dalam beberapa bahasa, serta mempercepat penyiapan halaman yang berdampingan.",
-  "update.release103.feedback": "Menambahkan formulir pelaporan masalah berkategori yang menyiapkan detail untuk Google Forms dan GitHub.",
-  "update.release103.locales": "Meninjau terjemahan antarmuka, terminologi agama, dan nama surah, serta menyembunyikan kolom Muhadis ketika tidak ada di sumber.",
-  "update.release103.lessons": "Memperbaiki tampilan nama saluran, penomoran pelajaran, dan tata letak tombol navigasi batch.",
-  "update.release103.performance": "Mengurangi efek dalam mode Hemat, serta meningkatkan caching dan pemrosesan batch UI.",
-  "update.release103.notifications": "Menyelesaikan penjadwalan pemberitahuan duplikat dan meningkatkan tampilan pesan kegagalan sinkronisasi.",
-  "update.release103.windows": "Mengaktifkan kembali akselerasi grafis secara default di Windows, dan memperbaiki pintasan membalik halaman Mushaf."
+  "update.release103.locales": "Antarmuka tersedia dalam tujuh bahasa. Ubah bahasa melalui Pengaturan.",
+  "update.release103.translation": "Baca terjemahan makna Al-Qur’an di mushaf dengan riwayat Hafs dari Asim.",
+  "update.release103.adhkar": "Antarmuka lebih sederhana dan tampilan zikir lebih ringan dalam mode Hemat.",
+  "update.release103.sync": "Sinkronisasi antara ponsel dan komputer ditingkatkan. Pilih perangkat sumber saat pertama kali menyinkronkan."
 }

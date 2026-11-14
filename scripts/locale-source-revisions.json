@@ -1644,15 +1644,11 @@
     "feedback.prompt.feature-improvement": "15e636a7bac6d21e8d1d396fbc8bdcee47cf1867f9b15e2483bdb18ab535c752",
     "feedback.section.ui-ux-simplification": "aeb9c79bdbecb797834bd3a5128996865ad9be51c25ca57ff80b8e889b7e45e6",
     "feedback.prompt.ui-ux-simplification": "0531a5188aba4e83a81cbf244e0327d761aa0a7467c3bca584f6b75d96a4ab12",
-    "update.release103.feedback": "308d65e8db5c9fcd1fc7da8e7d82672d00bb8631455f52b4168dfcd513a5a1b5",
-    "update.release103.lessons": "ba814a5d22496162664086fd082d15967ff435163df51598a061b21a4cfb3ca5",
-    "update.release103.locales": "ecd6e8d1823894d9f3c3582fe51ab25eaaf2536e1438c326860f355676560754",
-    "update.release103.notifications": "e17b1fa66468dc60a7a9ca4335e699eb74c0b7cd468fbe81f239632ccf1c871c",
-    "update.release103.performance": "65e17051d35acef5a33aa8745d617e14df0b37ca5b864e285b274511c0ce4f1b",
-    "update.release103.reader": "179cc40f03f445110820e68d717e02c173f0b5dc160f003258617c7f8be970eb",
-    "update.release103.sync": "d1f1a2ae3afa9e87200fdc8dfb8bf07dbd4fe0e94f8efe71d18a20dabfa5d038",
     "update.release103.title": "21be4dd9aec44a415ada69fb89edadd997c986f0c4f3e17bf57f70fe8cd035ac",
-    "update.release103.windows": "6793606b7ca424bdfc56c3b8e53f26ae29185ab433404f5e29f363caa590afef"
+    "update.release103.locales": "d792ee1e2270c64c487c687da66bd901152e4f76ca0a857415a3a9a0ddfd847b",
+    "update.release103.translation": "12dc3a7d0299eb6c8f43db247bd0441701026126140ab0d48a94489933ba0c24",
+    "update.release103.adhkar": "ddb64d511f9c6f4b161a862df5d4bacdffcb4458357c003bd9a75d068e9f9ba6",
+    "update.release103.sync": "ea7c9bcd76a8b321ed15ee1ad582c062795146acb74f57c127dce4aae8b6709f"
   },
   "id": {
     "nav.prayers": "f6bede49b704a8400ad4fa48c2fe6c5e4579ef894aff091ac15138cc56b78ef5",
@@ -3300,14 +3296,10 @@
     "feedback.section.ui-ux-simplification": "aeb9c79bdbecb797834bd3a5128996865ad9be51c25ca57ff80b8e889b7e45e6",
     "feedback.prompt.ui-ux-simplification": "0531a5188aba4e83a81cbf244e0327d761aa0a7467c3bca584f6b75d96a4ab12",
     "update.release103.title": "21be4dd9aec44a415ada69fb89edadd997c986f0c4f3e17bf57f70fe8cd035ac",
-    "update.release103.sync": "d1f1a2ae3afa9e87200fdc8dfb8bf07dbd4fe0e94f8efe71d18a20dabfa5d038",
-    "update.release103.reader": "179cc40f03f445110820e68d717e02c173f0b5dc160f003258617c7f8be970eb",
-    "update.release103.feedback": "308d65e8db5c9fcd1fc7da8e7d82672d00bb8631455f52b4168dfcd513a5a1b5",
-    "update.release103.locales": "ecd6e8d1823894d9f3c3582fe51ab25eaaf2536e1438c326860f355676560754",
-    "update.release103.lessons": "ba814a5d22496162664086fd082d15967ff435163df51598a061b21a4cfb3ca5",
-    "update.release103.performance": "65e17051d35acef5a33aa8745d617e14df0b37ca5b864e285b274511c0ce4f1b",
-    "update.release103.notifications": "e17b1fa66468dc60a7a9ca4335e699eb74c0b7cd468fbe81f239632ccf1c871c",
-    "update.release103.windows": "6793606b7ca424bdfc56c3b8e53f26ae29185ab433404f5e29f363caa590afef"
+    "update.release103.locales": "d792ee1e2270c64c487c687da66bd901152e4f76ca0a857415a3a9a0ddfd847b",
+    "update.release103.translation": "12dc3a7d0299eb6c8f43db247bd0441701026126140ab0d48a94489933ba0c24",
+    "update.release103.adhkar": "ddb64d511f9c6f4b161a862df5d4bacdffcb4458357c003bd9a75d068e9f9ba6",
+    "update.release103.sync": "ea7c9bcd76a8b321ed15ee1ad582c062795146acb74f57c127dce4aae8b6709f"
   },
   "ur": {
     "nav.prayers": "f6bede49b704a8400ad4fa48c2fe6c5e4579ef894aff091ac15138cc56b78ef5",
@@ -4955,14 +4947,10 @@
     "feedback.section.ui-ux-simplification": "aeb9c79bdbecb797834bd3a5128996865ad9be51c25ca57ff80b8e889b7e45e6",
     "feedback.prompt.ui-ux-simplification": "0531a5188aba4e83a81cbf244e0327d761aa0a7467c3bca584f6b75d96a4ab12",
     "update.release103.title": "21be4dd9aec44a415ada69fb89edadd997c986f0c4f3e17bf57f70fe8cd035ac",
-    "update.release103.sync": "d1f1a2ae3afa9e87200fdc8dfb8bf07dbd4fe0e94f8efe71d18a20dabfa5d038",
-    "update.release103.reader": "179cc40f03f445110820e68d717e02c173f0b5dc160f003258617c7f8be970eb",
-    "update.release103.feedback": "308d65e8db5c9fcd1fc7da8e7d82672d00bb8631455f52b4168dfcd513a5a1b5",
-    "update.release103.locales": "ecd6e8d1823894d9f3c3582fe51ab25eaaf2536e1438c326860f355676560754",
-    "update.release103.lessons": "ba814a5d22496162664086fd082d15967ff435163df51598a061b21a4cfb3ca5",
-    "update.release103.performance": "65e17051d35acef5a33aa8745d617e14df0b37ca5b864e285b274511c0ce4f1b",
-    "update.release103.notifications": "e17b1fa66468dc60a7a9ca4335e699eb74c0b7cd468fbe81f239632ccf1c871c",
-    "update.release103.windows": "6793606b7ca424bdfc56c3b8e53f26ae29185ab433404f5e29f363caa590afef"
+    "update.release103.locales": "d792ee1e2270c64c487c687da66bd901152e4f76ca0a857415a3a9a0ddfd847b",
+    "update.release103.translation": "12dc3a7d0299eb6c8f43db247bd0441701026126140ab0d48a94489933ba0c24",
+    "update.release103.adhkar": "ddb64d511f9c6f4b161a862df5d4bacdffcb4458357c003bd9a75d068e9f9ba6",
+    "update.release103.sync": "ea7c9bcd76a8b321ed15ee1ad582c062795146acb74f57c127dce4aae8b6709f"
   },
   "bn": {
     "nav.prayers": "f6bede49b704a8400ad4fa48c2fe6c5e4579ef894aff091ac15138cc56b78ef5",
@@ -6610,14 +6598,10 @@
     "feedback.section.ui-ux-simplification": "aeb9c79bdbecb797834bd3a5128996865ad9be51c25ca57ff80b8e889b7e45e6",
     "feedback.prompt.ui-ux-simplification": "0531a5188aba4e83a81cbf244e0327d761aa0a7467c3bca584f6b75d96a4ab12",
     "update.release103.title": "21be4dd9aec44a415ada69fb89edadd997c986f0c4f3e17bf57f70fe8cd035ac",
-    "update.release103.sync": "d1f1a2ae3afa9e87200fdc8dfb8bf07dbd4fe0e94f8efe71d18a20dabfa5d038",
-    "update.release103.reader": "179cc40f03f445110820e68d717e02c173f0b5dc160f003258617c7f8be970eb",
-    "update.release103.feedback": "308d65e8db5c9fcd1fc7da8e7d82672d00bb8631455f52b4168dfcd513a5a1b5",
-    "update.release103.locales": "ecd6e8d1823894d9f3c3582fe51ab25eaaf2536e1438c326860f355676560754",
-    "update.release103.lessons": "ba814a5d22496162664086fd082d15967ff435163df51598a061b21a4cfb3ca5",
-    "update.release103.performance": "65e17051d35acef5a33aa8745d617e14df0b37ca5b864e285b274511c0ce4f1b",
-    "update.release103.notifications": "e17b1fa66468dc60a7a9ca4335e699eb74c0b7cd468fbe81f239632ccf1c871c",
-    "update.release103.windows": "6793606b7ca424bdfc56c3b8e53f26ae29185ab433404f5e29f363caa590afef"
+    "update.release103.locales": "d792ee1e2270c64c487c687da66bd901152e4f76ca0a857415a3a9a0ddfd847b",
+    "update.release103.translation": "12dc3a7d0299eb6c8f43db247bd0441701026126140ab0d48a94489933ba0c24",
+    "update.release103.adhkar": "ddb64d511f9c6f4b161a862df5d4bacdffcb4458357c003bd9a75d068e9f9ba6",
+    "update.release103.sync": "ea7c9bcd76a8b321ed15ee1ad582c062795146acb74f57c127dce4aae8b6709f"
   },
   "fr": {
     "nav.prayers": "f6bede49b704a8400ad4fa48c2fe6c5e4579ef894aff091ac15138cc56b78ef5",
@@ -8265,14 +8249,10 @@
     "feedback.section.ui-ux-simplification": "aeb9c79bdbecb797834bd3a5128996865ad9be51c25ca57ff80b8e889b7e45e6",
     "feedback.prompt.ui-ux-simplification": "0531a5188aba4e83a81cbf244e0327d761aa0a7467c3bca584f6b75d96a4ab12",
     "update.release103.title": "21be4dd9aec44a415ada69fb89edadd997c986f0c4f3e17bf57f70fe8cd035ac",
-    "update.release103.sync": "d1f1a2ae3afa9e87200fdc8dfb8bf07dbd4fe0e94f8efe71d18a20dabfa5d038",
-    "update.release103.reader": "179cc40f03f445110820e68d717e02c173f0b5dc160f003258617c7f8be970eb",
-    "update.release103.feedback": "308d65e8db5c9fcd1fc7da8e7d82672d00bb8631455f52b4168dfcd513a5a1b5",
-    "update.release103.locales": "ecd6e8d1823894d9f3c3582fe51ab25eaaf2536e1438c326860f355676560754",
-    "update.release103.lessons": "ba814a5d22496162664086fd082d15967ff435163df51598a061b21a4cfb3ca5",
-    "update.release103.performance": "65e17051d35acef5a33aa8745d617e14df0b37ca5b864e285b274511c0ce4f1b",
-    "update.release103.notifications": "e17b1fa66468dc60a7a9ca4335e699eb74c0b7cd468fbe81f239632ccf1c871c",
-    "update.release103.windows": "6793606b7ca424bdfc56c3b8e53f26ae29185ab433404f5e29f363caa590afef"
+    "update.release103.locales": "d792ee1e2270c64c487c687da66bd901152e4f76ca0a857415a3a9a0ddfd847b",
+    "update.release103.translation": "12dc3a7d0299eb6c8f43db247bd0441701026126140ab0d48a94489933ba0c24",
+    "update.release103.adhkar": "ddb64d511f9c6f4b161a862df5d4bacdffcb4458357c003bd9a75d068e9f9ba6",
+    "update.release103.sync": "ea7c9bcd76a8b321ed15ee1ad582c062795146acb74f57c127dce4aae8b6709f"
   },
   "tr": {
     "nav.prayers": "f6bede49b704a8400ad4fa48c2fe6c5e4579ef894aff091ac15138cc56b78ef5",
@@ -9920,13 +9900,9 @@
     "feedback.section.ui-ux-simplification": "aeb9c79bdbecb797834bd3a5128996865ad9be51c25ca57ff80b8e889b7e45e6",
     "feedback.prompt.ui-ux-simplification": "0531a5188aba4e83a81cbf244e0327d761aa0a7467c3bca584f6b75d96a4ab12",
     "update.release103.title": "21be4dd9aec44a415ada69fb89edadd997c986f0c4f3e17bf57f70fe8cd035ac",
-    "update.release103.sync": "d1f1a2ae3afa9e87200fdc8dfb8bf07dbd4fe0e94f8efe71d18a20dabfa5d038",
-    "update.release103.reader": "179cc40f03f445110820e68d717e02c173f0b5dc160f003258617c7f8be970eb",
-    "update.release103.feedback": "308d65e8db5c9fcd1fc7da8e7d82672d00bb8631455f52b4168dfcd513a5a1b5",
-    "update.release103.locales": "ecd6e8d1823894d9f3c3582fe51ab25eaaf2536e1438c326860f355676560754",
-    "update.release103.lessons": "ba814a5d22496162664086fd082d15967ff435163df51598a061b21a4cfb3ca5",
-    "update.release103.performance": "65e17051d35acef5a33aa8745d617e14df0b37ca5b864e285b274511c0ce4f1b",
-    "update.release103.notifications": "e17b1fa66468dc60a7a9ca4335e699eb74c0b7cd468fbe81f239632ccf1c871c",
-    "update.release103.windows": "6793606b7ca424bdfc56c3b8e53f26ae29185ab433404f5e29f363caa590afef"
+    "update.release103.locales": "d792ee1e2270c64c487c687da66bd901152e4f76ca0a857415a3a9a0ddfd847b",
+    "update.release103.translation": "12dc3a7d0299eb6c8f43db247bd0441701026126140ab0d48a94489933ba0c24",
+    "update.release103.adhkar": "ddb64d511f9c6f4b161a862df5d4bacdffcb4458357c003bd9a75d068e9f9ba6",
+    "update.release103.sync": "ea7c9bcd76a8b321ed15ee1ad582c062795146acb74f57c127dce4aae8b6709f"
   }
 }

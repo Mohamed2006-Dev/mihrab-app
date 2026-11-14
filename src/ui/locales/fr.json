@@ -1644,12 +1644,8 @@
   "feedback.section.ui-ux-simplification": "Simplification et organisation de l'interface",
   "feedback.prompt.ui-ux-simplification": "Quel écran ou quelle action nécessite une simplification ? Comment suggérez-vous de le présenter ?",
   "update.release103.title": "Quoi de neuf de la version 1.0.2 à 1.0.3 ?",
-  "update.release103.sync": "Ajout de la synchronisation locale entre le téléphone et l'ordinateur, avec sélection de la source de données lors de la première synchronisation et vérification de la compatibilité du protocole.",
-  "update.release103.reader": "Amélioration de l'affichage du Wird Mushaf et de la justification des lignes, correction du rognage des pages dans certaines langues et accélération de la préparation des pages adjacentes.",
-  "update.release103.feedback": "Ajout d'un formulaire de signalement de problème catégorisé qui prépare les détails pour Google Forms et GitHub.",
-  "update.release103.locales": "Révision des traductions de l'interface, de la terminologie religieuse et des noms de sourates, et masquage du champ Muhaddith lorsqu'il est absent de la source.",
-  "update.release103.lessons": "Correction de l'affichage du nom de la chaîne, de la numérotation des leçons et de la disposition des boutons de navigation par lots.",
-  "update.release103.performance": "Réduction des effets en mode Économie et amélioration de la mise en cache et du traitement par lots de l'interface utilisateur.",
-  "update.release103.notifications": "Résolution de la planification de notifications en double et amélioration de l'affichage des messages d'échec de synchronisation.",
-  "update.release103.windows": "Réactivation de l'accélération graphique par défaut sous Windows et correction des raccourcis de tournage de page du Mushaf."
+  "update.release103.locales": "L’interface est disponible en sept langues. Changez de langue dans les paramètres.",
+  "update.release103.translation": "Lisez la traduction du sens du Coran dans le Mushaf avec la récitation Hafs d’après Asim.",
+  "update.release103.adhkar": "Une interface plus simple et un affichage des adhkar allégé en mode Économique.",
+  "update.release103.sync": "Synchronisation améliorée entre le téléphone et l’ordinateur, avec le choix de l’appareil source au premier échange."
 }
