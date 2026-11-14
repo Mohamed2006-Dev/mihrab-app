@@ -191,3 +191,21 @@ function initializeAccessibility(initial) {
       activeObserver.observe(node, { attributes: true, attributeFilter: ['class'] }),
     );
 }
+
+
+function updateAccessibilityPositionLabels() {
+  const labels = {
+    'top-left': 'settings.topLeft', 'top-right': 'settings.topRight',
+    'bottom-left': 'settings.bottomLeft', 'bottom-right': 'settings.bottomRight',
+  };
+  const mirrored = document.documentElement.dir === 'ltr';
+  for (const option of document.querySelectorAll('#a11y-position option')) {
+    const position = mirrored ? option.value.replace(/left|right$/, side => side === 'left' ? 'right' : 'left') : option.value;
+    if (labels[position]) option.textContent = window.mihrabLocale.t(labels[position]);
+  }
+  positionAccessibilityPanel();
+}
+window.addEventListener('mihrab:interface-language-changed', updateAccessibilityPositionLabels);
+window.addEventListener('DOMContentLoaded', () => {
+  window.mihrabLocale.ready.then(updateAccessibilityPositionLabels);
+});

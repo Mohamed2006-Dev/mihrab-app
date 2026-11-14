@@ -156,9 +156,10 @@ class StorageEngine {
     return NotificationSettings.normalizeConfig(this.deepMerge(defaults, saved));
   }
 
-  saveConfig(partialOrFullConfig) {
+  saveConfig(partialOrFullConfig, fromSync = false, previousSettings) {
     const current = this.getConfig();
     const updated = this.deepMerge(current, partialOrFullConfig);
+    updated.syncClocks = require('./local-sync-contract').recordEdits(previousSettings ? {...current,sharedSettings:previousSettings} : current,updated,undefined,fromSync ? null : Date.now());
     delete updated.screenLock.lockDurationMinutes;
     NotificationSettings.validateConfig(updated);
     if (!this.writeJsonSafe(this.userConfigPath, updated))

@@ -10,10 +10,33 @@ const QRCode=require('qrcode');
 const Contract=require('./local-sync-contract');
 const MAX=256*1024;
 const PORT=17777;
+// Temporary override for testing version mismatch on an unpackaged desktop.
+const protocolVersion=process.env.MIHRAB_SYNC_TEST_VERSION==='3'?3:Contract.PROTOCOL_VERSION;
 const privateIp=ip=>/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
 const secret=()=>randomBytes(32).toString('base64url');
 const digest=value=>createHash('sha256').update(value).digest();
 const match=(value,stored)=>typeof value==='string'&&typeof stored==='string'&&timingSafeEqual(digest(value),digest(stored));
+
+function higherWird(desktop,phone,side){
+  const chosen=side==='desktop'?desktop:phone;
+  if(desktop.riwaya!==phone.riwaya)return chosen;
+  const metadata=require('../../data/quran-meta-'+chosen.riwaya+'.json');
+  const fields={juz:'juzNumber',hizb:'hizbNumber',rub:'rubNumber',surah:'surahNumber',page:'pageNumber'};
+  function position(block){
+    const number=block.currentPosition?.[fields[block.unit]]??block.rangeStart??1;
+    const start=metadata.units[block.unit]?.[number-1]?.start;
+    const mark=block.bookmark?.riwaya===chosen.riwaya?block.bookmark:null;
+    const markedStart=mark && metadata.units.surah[mark.surah-1]?.start.verseIndex;
+    return Math.max(start?.verseIndex??0, markedStart==null?0:markedStart+mark.ayah-1);
+  }
+  function highest(a,b,preferred){
+    const left=position(a),right=position(b);
+    const difference=left-right;
+    return difference>0?a:difference<0?b:preferred;
+  }
+  return {...chosen,reading:highest(desktop.reading,phone.reading,chosen.reading),
+    hifz:highest(desktop.hifz,phone.hifz,chosen.hifz)};
+}
 
 class LocalSync {
   constructor({ directory, safeStorage, getConfig, applyPatch, resolveLocation, onLinkChanged }) {
@@ -53,7 +76,7 @@ class LocalSync {
   }
   status(){
     return {ownsLocation:this.ownsLocation(),addresses:this.addresses(),host:this.state?.host||null,linked:Boolean(this.state?.link),
-      online:Boolean(this.server), awaitingPhone:Boolean(this.state?.pairReceipt),link:this.state?.link?{...this.state.link,token:undefined}:null,
+      online:Boolean(this.server), protocolMismatch:this.protocolMismatch===true, awaitingPhone:Boolean(this.state?.pairReceipt),link:this.state?.link?{...this.state.link,token:undefined}:null,
       candidate:this.ticket?.candidate&&this.ticket.until>Date.now()&&!this.state?.link
         ? {code:this.ticket.candidate.code,direction:this.ticket.candidate.link.direction,groups:this.ticket.candidate.link.groups}:null};
   }
@@ -75,7 +98,7 @@ class LocalSync {
     const invitation=secret();
     this.ticket={invitation,until:Date.now()+120000,candidate:null};
     const fingerprint=new X509Certificate(this.state.cert).fingerprint256.replaceAll(':','').toLowerCase();
-    const qr=JSON.stringify({version:1,host,port:PORT,desktopId:this.state.id,pin:fingerprint,invitation});
+    const qr=JSON.stringify({version:Contract.LINK_VERSION,protocolVersion,host,port:PORT,desktopId:this.state.id,pin:fingerprint,invitation});
     return {image:await QRCode.toDataURL(qr,{errorCorrectionLevel:'M',width:420,margin:4}),qr};
   }
   async approve(code){
@@ -84,6 +107,7 @@ class LocalSync {
       throw Error('انتهت دعوة الربط أو تغيّرت.');
     this.state.link={...ticket.candidate.link,token:secret()};
     this.state.pairReceipt={invitation:ticket.invitation,until:Date.now()+10*60*1000};
+    delete this.state.transaction;
     this.state.baseline={};
     this.state.pending={};
     this.state.sequence=0;
@@ -97,21 +121,27 @@ class LocalSync {
     const unlink=this.queue.then(async()=>{
       if(this.state){
         const previous=this.state;
-        this.state={...previous,link:null,pairReceipt:null,baseline:{},pending:{},sequence:0,lastResponse:null,lastRequestHash:null};
+        this.state={...previous,link:null,pairReceipt:null,transaction:undefined,baseline:{},pending:{},sequence:0,lastResponse:null,lastRequestHash:null};
         try{await this.persist();}
         catch(error){this.state=previous;throw error;}
       }
       this.ticket=null;
+      this.protocolMismatch=false;
       this.onLinkChanged?.(this.status());
       return this.status();
     });
     this.queue=unlink.catch(()=>{});
     return unlink;
   }
+  setProtocolMismatch(blocked){
+    if(Boolean(this.protocolMismatch)===blocked)return;
+    this.protocolMismatch=blocked;
+    this.onLinkChanged?.(this.status());
+  }
   async handle(req,res){
     const send=(status,data)=>{
       res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store','Connection':'close'});
-      res.end(JSON.stringify(data));
+      res.end(JSON.stringify({...data,protocolVersion}));
     };
     if(req.method!=='POST'||!privateIp(req.socket.remoteAddress||''))return send(403,{error:'local_only'});
     try{
@@ -123,7 +153,8 @@ class LocalSync {
         chunks.push(chunk);
       }
       const data=JSON.parse(Buffer.concat(chunks).toString('utf8'));
-      if(data.version!==1)return send(400,{error:'protocol_version'});
+      if(data?.version!==Contract.LINK_VERSION)return send(409,{error:'link_version'});
+      const compatible=data.protocolVersion===protocolVersion;
       const process=async()=>{
         const ticket=this.ticket;
         if(req.url==='/pair'||req.url==='/pair-status'){
@@ -143,6 +174,18 @@ class LocalSync {
         }
         const link=this.state.link;
         if(!link||!match(req.headers.authorization,'Bearer '+link.token))return [403,{error:'unpaired'}];
+        this.setProtocolMismatch(!compatible);
+        if(req.url==='/unlink'){
+          const previous=this.state;
+          this.state={...previous,link:null,pairReceipt:null,transaction:undefined,baseline:{},pending:{},sequence:0,lastResponse:null,lastRequestHash:null};
+          try{await this.persist();}
+          catch(error){this.state=previous;throw error;}
+          this.ticket=null;
+          this.protocolMismatch=false;
+          this.onLinkChanged?.(this.status());
+          return [200,{unlinked:true}];
+        }
+        if(req.url==='/exchange'&&!compatible)return [409,{error:'protocol_version'}];
         if(this.state.pairReceipt){
           const receipt=this.state.pairReceipt;
           delete this.state.pairReceipt;
@@ -152,13 +195,9 @@ class LocalSync {
           this.onLinkChanged?.(this.status());
         }
         if(req.url==='/status')return [200,{linked:true}];
-        if(req.url==='/unlink'){
-          this.ticket=null;this.state.link=null;this.state.baseline={};this.state.pending={};
-          await this.persist();
-          this.onLinkChanged?.(this.status());
-          return [200,{unlinked:true}];
-        }
         if(req.url==='/configure'){
+          if(this.state.transaction&&!compatible)return [409,{error:'protocol_version'}];
+          if(this.state.transaction)await this.finishExchange();
           const next=Contract.validateLink({...link,direction:data.direction,groups:data.groups});
           const current={direction:link.direction,groups:link.groups};
           if(!Contract.same(current,{direction:next.direction,groups:next.groups})){
@@ -199,11 +238,12 @@ class LocalSync {
     }
   }
   async exchange(link,data){
+    if(this.state.transaction)await this.finishExchange();
     if(!Number.isSafeInteger(data.sequence)||data.sequence<1)throw Error('invalid_sequence');
     if(data.sequence<(this.state.sequence||0))throw Error('stale_sequence');
     const scope=data.scope??'all';
     if(scope!=='all'&&(scope!=='location'||!Contract.locationAllowed(link)))throw Error('invalid_scope');
-    const requestHash=digest(JSON.stringify([scope,data.groups])).toString('hex');
+    const requestHash=digest(JSON.stringify(data.applied||data.resolution||data.clocks?[scope,data.groups,data.applied??null,data.resolution??null,...(data.clocks?[data.clocks]:[])]:[scope,data.groups])).toString('hex');
     if(data.sequence===this.state.sequence){
       if(requestHash!==this.state.lastRequestHash)throw Error('sequence_payload_mismatch');
       return this.state.lastResponse;
@@ -212,7 +252,9 @@ class LocalSync {
     try {
       const changes={};
       const conflicts=[];
+      const details=[];
       const desktopPatch={};
+      const expected={};
       const config=this.getConfig();
       for(const group of scope==='location'?['location']:link.groups){
         if(group==='location'){
@@ -222,6 +264,7 @@ class LocalSync {
               const location=this.resolveLocation(value);
               if(location){
                 desktopPatch.location=location;
+                expected.location=Contract.sanitize(group,config.location);
                 this.state.baseline.location=value;
               }else conflicts.push(group);
             }
@@ -229,36 +272,105 @@ class LocalSync {
           continue;
         }
         const desktop=Contract.project(config,group);
+        if(group==='settings'&&!Object.hasOwn(data.groups||{},group))continue;
         const phone=Contract.sanitize(group,data.groups?.[group]);
         const pending=this.state.pending[group];
         const base=this.state.baseline[group];
-        if(pending&&Contract.same(pending.value,desktop)){
-          if(Contract.same(phone,pending.value)){
-            this.state.baseline[group]=desktop;
+        if(pending){
+          const applied=(pending.sequence!==undefined && data.applied?.[group]===pending.sequence) || Contract.same(phone,pending.value);
+          if(applied){
+            this.state.baseline[group]=pending.baseline ?? pending.value;
             delete this.state.pending[group];
+          }else if(Contract.same(phone,pending.phone)&&Contract.same(desktop,pending.desktop ?? pending.value)&&!data.resolution){
+            changes[group]=pending.value;
+            pending.sequence=data.sequence;
+            details.push(...(pending.details||[]));
+            if(pending.details?.length)conflicts.push(group);
             continue;
           }
-          if(Contract.same(phone,pending.phone)){changes[group]=pending.value;continue;}
         }
-        const result=Contract.reconcile(group,base,desktop,phone,link.direction,base===undefined);
-        if(result.conflict){conflicts.push(group);continue;}
-        if(!Contract.same(result.value,desktop))Object.assign(desktopPatch,Contract.patch(group,result.value));
-        if(!Contract.same(result.value,phone)){
-          changes[group]=result.value;
-          this.state.pending[group]={value:result.value,phone};
+        const agreed=this.state.baseline[group];
+        const initial=agreed===undefined&&link.direction==='two-way';
+        const resultWithoutChoice=initial&&!Contract.same(desktop,phone)
+          ? {conflict:true,items:[{id:'all',desktop,phone}]}
+          : Contract.reconcile(group,agreed,desktop,phone,link.direction,agreed===undefined,{},config.syncClocks?.[group],data.clocks?.[group]||{});
+        const makeDetails=result=>{
+          const items=initial&&result.conflict&&!result.items?.length
+            ? [{id:'all',desktop,phone}] : result.items||[];
+          return items.map(item=>({...item,group,initial,
+            version:digest(JSON.stringify([group,item])).toString('hex')}));
+        };
+        const requested=data.resolution;
+        const currentDetails=makeDetails(resultWithoutChoice);
+        const selected=currentDetails.find(item=>requested?.version===item.version);
+        const validSide=['desktop','phone'].includes(requested?.side);
+        const initialChoice=initial&&validSide&&Array.isArray(requested?.versions)&&currentDetails.length&&
+          currentDetails.every(item=>requested.versions.includes(item.version));
+        let result=resultWithoutChoice;
+        if(initialChoice){
+          result={value:group==='wird'?higherWird(desktop,phone,requested.side):
+            requested.side==='desktop'?desktop:phone};
+        }else if(selected&&validSide){
+          result=Contract.reconcile(group,agreed,desktop,phone,link.direction,initial,
+            {[selected.id]:requested.side},config.syncClocks?.[group],data.clocks?.[group]||{});
+        }
+        const groupDetails=makeDetails(result);
+        details.push(...groupDetails);
+        if(result.conflict||groupDetails.length)conflicts.push(group);
+        if(result.conflict)continue;
+        const desktopValue=result.desktopValue ?? result.value;
+        const phoneValue=result.phoneValue ?? result.value;
+        const baseline=result.baseline ?? result.value;
+        if(!Contract.same(desktopValue,desktop)){
+          expected[group]=desktop;
+          Object.assign(desktopPatch,Contract.patch(group,desktopValue));
+        }
+        if(!Contract.same(phoneValue,phone)){
+          changes[group]=phoneValue;
+          this.state.pending[group]={value:phoneValue,phone,desktop:desktopValue,baseline,sequence:data.sequence,details:groupDetails};
         }else{
-          this.state.baseline[group]=result.value;
+          this.state.baseline[group]=baseline;
           delete this.state.pending[group];
         }
       }
-      if(Object.keys(desktopPatch).length)await this.applyPatch(desktopPatch);
-      this.state.sequence=data.sequence;
-      this.state.lastRequestHash=requestHash;
-      this.state.lastResponse={changes,conflicts,ack:data.sequence};
+      const next={
+        baseline:this.state.baseline,pending:this.state.pending,sequence:data.sequence,
+        lastRequestHash:requestHash,lastResponse:{changes,conflicts,details,ack:data.sequence},
+      };
+      this.state={...previous,transaction:{expected,desktopPatch,next}};
       await this.persist();
-      return this.state.lastResponse;
     }catch(error){this.state=previous;throw error;}
+    await this.finishExchange();
+    return this.state.lastResponse;
   }
+
+  async finishExchange(){
+    const transaction=this.state.transaction;
+    if(!transaction)return;
+    const {expected,desktopPatch,next}=transaction;
+    const config=this.getConfig();
+    for(const [group,value] of Object.entries(expected)){
+      const current=group==='location'?Contract.sanitize(group,config.location):Contract.project(config,group);
+      const proposed=group==='location'?Contract.sanitize(group,desktopPatch.location):Contract.project(desktopPatch,group);
+      if(!Contract.same(current,value)&&!Contract.same(current,proposed)){
+        // A local edit after a crash supersedes the uncommitted transaction.
+        delete this.state.transaction;
+        try{await this.persist();}catch(error){this.state.transaction=transaction;throw error;}
+        return;
+      }
+    }
+    const needsPatch=Object.entries(expected).some(([group])=>{
+      const current=group==='location'?Contract.sanitize(group,config.location):Contract.project(config,group);
+      const proposed=group==='location'?Contract.sanitize(group,desktopPatch.location):Contract.project(desktopPatch,group);
+      return !Contract.same(current,proposed);
+    });
+    if(needsPatch)await this.applyPatch(desktopPatch);
+    const previous=this.state;
+    this.state={...previous,...next};
+    delete this.state.transaction;
+    try{await this.persist();}catch(error){this.state=previous;throw error;}
+  }
+
 }
 module.exports=LocalSync;
 

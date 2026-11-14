@@ -75,9 +75,9 @@ function bindDesktopShortcuts() {
       const button = host.querySelector('[data-shortcut-action="' + action[0] + '"]');
       if (!button) continue;
       const listening = action[0] === editing;
-      button.dir = listening ? 'rtl' : 'ltr';
-      button.textContent = listening ? 'استماع…' : binding(action);
-      button.setAttribute('aria-label', action[1] + ' — ' + button.textContent);
+      button.dir = listening ? 'auto' : 'ltr';
+      button.textContent = listening ? window.mihrabLocale.localize('استماع…') : binding(action);
+      button.setAttribute('aria-label', window.mihrabLocale.localize(action[1]) + ' — ' + button.textContent);
       button.setAttribute('aria-pressed', String(listening));
     }
   }
@@ -105,6 +105,8 @@ function bindDesktopShortcuts() {
     }
     updateButtons();
   }
+  window.addEventListener('mihrab:interface-language-changed', updateButtons);
+  window.mihrabLocale.ready.then(updateButtons);
   recordShortcutTab(document.querySelector('.tab-section.active')?.id || 'tab-prayers');
   render();
   document.getElementById('shortcut-reset').addEventListener('click', () => {

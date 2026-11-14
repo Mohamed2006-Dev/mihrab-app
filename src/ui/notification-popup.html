@@ -205,7 +205,7 @@
         <header class="popup-header"
           ><div class="popup-title-wrap"
             ><div class="popup-icon-badge" id="popup-icon">🔔</div
-            ><h1 class="popup-title" id="popup-title">تنبيه محراب</h1></div
+            ><h1 class="popup-title" id="popup-title"><!--i18n:notice.title-->تنبيه محراب</h1></div
           ><button class="popup-close-btn" id="popup-close-btn" aria-label="إغلاق التنبيه"
             >✖</button
           ></header
@@ -217,9 +217,9 @@
         <div class="popup-footer"
           ><span class="popup-hint" id="popup-hint"></span
           ><div class="popup-actions" id="popup-actions" hidden>
-            <button class="popup-action" id="popup-snooze" hidden>تمديد موعد القفل</button>
+            <button class="popup-action" id="popup-snooze" hidden><!--i18n:ui.5e016f333ddbc811-->تمديد موعد القفل</button>
             <button class="popup-action" id="popup-open-lessons" hidden
-              >عرض بطاقة الدرس</button
+              ><!--i18n:lessons.showCard-->عرض بطاقة الدرس</button
             >
           </div></div
         >
@@ -230,11 +230,17 @@
         ></div> </section
     ></div>
     <script src="./icons.js"></script>
+    <script src="./interface-language.js"></script>
     <script>
       function renderTitle(data) {
         const title = document.getElementById('popup-title'),
           text = data.title || 'تنبيه محراب';
         title.replaceChildren();
+        const localized = window.mihrabLocale.localize(text);
+        if (localized !== text) {
+          title.textContent = localized;
+          return;
+        }
         const prayerNotice = ['pre_prayer', 'prayer_time', 'lock_warning'].includes(data.type);
         const keyword = prayerNotice
           ? data.prayerName && text.includes(data.prayerName)
@@ -260,10 +266,12 @@
         el.replaceChildren();
         if (data.hadith?.text) {
           const text = document.createElement('span');
+          text.dir = 'rtl';
+          text.setAttribute('data-no-ui-translation', '');
           text.textContent = data.hadith.text;
           const source = document.createElement('small');
           source.className = 'hadith-source';
-          source.textContent = [data.hadith.source, data.hadith.grade].filter(Boolean).join(' • ');
+          source.textContent = [data.hadith.source, window.mihrabLocale.localize(data.hadith.grade)].filter(Boolean).join(' • ');
           el.append(text, source);
           el.hidden = false;
         } else {
@@ -403,12 +411,17 @@
           performAction(openAction());
         }
       });
-      window.mihrabApi.onNotificationPopupData((data) => {
+      window.mihrabApi.onNotificationPopupData(async (data) => {
+        await window.mihrabLocale.ready;
         currentData = data;
         applyTheme(data.themeState);
         card.dataset.type = data.type || 'notice';
         renderTitle(data);
-        document.getElementById('popup-body').textContent = data.body || '';
+        const body = document.getElementById('popup-body');
+        const externalTitle = data.type === 'daily_video' || Boolean(data.lesson);
+        body.toggleAttribute('data-no-ui-translation', externalTitle);
+        body.dir = externalTitle ? 'auto' : document.documentElement.dir;
+        body.textContent = externalTitle ? data.body || '' : window.mihrabLocale.localize(data.body || '');
         const lock = data.type === 'lock_warning',
           daily = data.type === 'daily_video',
           actionable = daily || data.type === 'custom_reminder',

@@ -9,6 +9,8 @@ const FIELDS = {
   page: 'pageNumber',
 };
 const LABELS = { juz: 'الجزء', hizb: 'الحزب', rub: 'الربع', surah: 'سورة', page: 'صفحة' };
+const newCycleId = () => Array.from(globalThis.crypto.getRandomValues(new Uint8Array(16)),
+  byte => byte.toString(16).padStart(2, '0')).join('');
 const clamp = (n, min, max) => Math.min(max, Math.max(min, Math.trunc(Number(n)) || min));
 class QuranEngine {
   constructor(storage, baseDir) {
@@ -233,6 +235,7 @@ class QuranEngine {
     const next = summary.endNumber >= max ? min : summary.endNumber + 1;
     qw[type] = {
       ...target,
+      ...(summary.endNumber >= max ? { cycleId: newCycleId() } : {}),
       bookmark: summary.endNumber >= max ? null : target.bookmark,
       currentPosition: { ...target.currentPosition, [FIELDS[summary.unit]]: next },
     };
@@ -324,7 +327,7 @@ class QuranEngine {
     if (!Number.isInteger(requested) || requested < min || requested > max)
       throw Error(`أدخل رقمًا صحيحًا بين ${min} و${max}.`);
     const start = Math.min(requested, summary.maxStart);
-    const patch = { currentPosition: { [FIELDS[summary.unit]]: start } };
+    const patch = { cycleId: newCycleId(), currentPosition: { [FIELDS[summary.unit]]: start } };
     if (kind === 'reading' && block.mode === 'random')
       patch.randomDailyWird = this.randomAssignment(summary.unit, summary.amount, start);
     this.storage.saveConfig({ quranWird: { [kind]: patch } });
@@ -368,6 +371,7 @@ class QuranEngine {
           : null;
       result[kind + 'Enabled'] =
         (mode === 'both' || mode === kind + '_only') && (fixed || due != null);
+      result[kind + 'Timing'] = { fixed, prayerId, offset };
       result[kind + 'NotificationTime'] = clock;
       result[kind + 'NotificationAt'] = due;
       result[kind + 'TimingDescription'] = !result[kind + 'Enabled']

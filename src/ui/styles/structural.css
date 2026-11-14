@@ -42,7 +42,7 @@ body {
   font-size: var(--font-size-base);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  direction: rtl;
+  direction: inherit;
   overflow: hidden;
   height: 100vh;
   transition:
@@ -78,7 +78,7 @@ body {
 .sidebar {
   background: var(--bg-glass);
 
-  border-left: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -141,7 +141,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
-  text-align: right;
+  text-align: start;
 }
 
 .nav-btn:hover {
@@ -869,7 +869,7 @@ body {
   width: var(--sidebar-width);
   min-height: 0;
   overflow-y: auto;
-  transform: translateX(105%);
+  transform: translateX(var(--sidebar-exit-x, 105%));
   opacity: 0;
   visibility: hidden;
   transition:
@@ -1123,10 +1123,10 @@ body {
   background: var(--bg-surface-elevated);
 }
 .layout-toggle {
-  right: 26px;
+  inset-inline-start: 26px;
 }
 .settings-toggle {
-  left: 26px;
+  inset-inline-end: 26px;
 }
 .control-tooltip {
   position: absolute;
@@ -1243,10 +1243,10 @@ body {
     top: 24px;
   }
   .layout-toggle {
-    right: 16px;
+    inset-inline-start: 16px;
   }
   .settings-toggle {
-    left: 16px;
+    inset-inline-end: 16px;
   }
 }
 @keyframes dock-slide-in {
@@ -1365,7 +1365,7 @@ body {
   font-size: var(--font-size-xs);
   overflow-wrap: anywhere;
   unicode-bidi: isolate;
-  text-align: right;
+  text-align: start;
 }
 .channel-row > .btn {
   min-width: 76px;
@@ -1391,4 +1391,16 @@ body {
 .channel-row > .channel-id {
   grid-area: identifier;
   width: 100%;
+}
+
+:root[dir="ltr"] { --sidebar-exit-x: -105%; }
+
+.tab-section.tab-preparing:not(.active) {
+  display: flex;
+  position: absolute;
+  inline-size: 100%;
+  visibility: hidden;
+  pointer-events: none;
+  animation: none;
+  contain: layout paint;
 }

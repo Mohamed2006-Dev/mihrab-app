@@ -46,7 +46,7 @@ try {
   if (!app.commandLine.hasSwitch('user-data-dir'))
     app.setPath('userData', path.join(app.getPath('appData'), 'mihrab-desktop'));
 } catch (_) {}
-app.disableHardwareAcceleration();
+if (process.argv.includes('--mihrab-software-rendering')) app.disableHardwareAcceleration();
 
 const StorageEngine = require('./src/engines/storage-engine');
 const ThemeEngine = require('./src/engines/theme-engine');
@@ -86,7 +86,8 @@ const youtubeEngine = new YouTubeRssEngine(storage, resourcesDir, netFetch, {
 const quranEngine = new QuranWirdEngine(storage, resourcesDir);
 const PerformanceEngine = require('./src/engines/performance-engine');
 const deviceHardware = PerformanceEngine.detectHardware();
-const currentPerformance = () => PerformanceEngine.resolve(storage.getConfig(), deviceHardware);
+let performanceSignals;
+const currentPerformance = () => PerformanceEngine.resolve(storage.getConfig(), deviceHardware, performanceSignals);
 youtubeEngine.performancePaged = currentPerformance().profile.paged;
 youtubeEngine.maxAttempts = currentPerformance().profile.requestAttempts;
 function trimFeedForPerformance(feed) {
@@ -663,6 +664,39 @@ function createMainWindow() {
 
 // ============================================================================
 
+const interfaceLanguages = new Set(['ar', 'en', 'id', 'ur', 'bn', 'fr', 'tr']);
+const interfaceLanguageFile = () => path.join(app.getPath('userData'), 'interface-language');
+function readInterfaceLanguage() {
+  try {
+    const code = fs.readFileSync(interfaceLanguageFile(), 'utf8').trim();
+    return interfaceLanguages.has(code) ? code : 'ar';
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return 'ar';
+  }
+}
+ipcMain.handle('interface-language:get', readInterfaceLanguage);
+function writeInterfaceLanguage(code) {
+  const file = interfaceLanguageFile();
+  fs.writeFileSync(file + '.tmp', code, 'utf8');
+  fs.renameSync(file + '.tmp', file);
+}
+function sharedSettings() {
+  const {activeTheme:theme,activeMode:mode}=themeEngine.getActiveThemeState();
+  return {language:readInterfaceLanguage(),theme,mode};
+}
+ipcMain.handle('interface-language:set', (event, code) => {
+  if (event.sender !== mainWindow?.webContents || !interfaceLanguages.has(code)) {
+    throw new Error('Invalid interface language request');
+  }
+  storage.saveConfig({sharedSettings:{...sharedSettings(),language:code}},false,sharedSettings());
+  writeInterfaceLanguage(code);
+});
+ipcMain.handle('interface-language:catalog', (_, code) => {
+  if (!interfaceLanguages.has(code)) throw new Error('Invalid interface language');
+  return JSON.parse(fs.readFileSync(path.join(appDir, 'src', 'ui', 'locales', code + '.json'), 'utf8'));
+});
+
 ipcMain.handle('app:get-bootstrap-data', async () => {
   const config = storage.getConfig();
   const now = getAppNow();
@@ -710,6 +744,10 @@ function updateAuxiliaryWindowThemes(themeState) {
 
 ipcMain.handle('theme:get-state', () => themeEngine.getActiveThemeState());
 ipcMain.handle('theme:set', (_, { themeId, mode }) => {
+  const before=sharedSettings();
+  const next={...before,theme:themeId||before.theme,mode:mode||before.mode};
+  require('./src/engines/local-sync-contract').sanitize('settings',next);
+  storage.saveConfig({sharedSettings:next},false,before);
   const newState = themeEngine.setTheme(themeId, mode);
   updateAuxiliaryWindowThemes(newState);
   return newState;
@@ -780,6 +818,17 @@ ipcMain.handle('hadith:sync-hadeethenc', async (_, { topic }) => {
 });
 
 // 4. YouTube channels and RSS feeds.
+ipcMain.handle('performance:signals', (event, signals) => {
+  if (event.sender !== mainWindow?.webContents) return currentPerformance();
+  performanceSignals = {
+    ...signals,
+    onBattery: powerMonitor.isOnBatteryPower(),
+  };
+  const result = currentPerformance();
+  youtubeEngine.maxAttempts = result.profile.requestAttempts;
+  youtubeEngine.performancePaged = result.profile.paged;
+  return result;
+});
 ipcMain.handle('performance:set', (_, level) => {
   if (!['auto', 'full', 'balanced', 'eco'].includes(level)) throw Error('مستوى الأداء غير صالح.');
   storage.saveConfig({ performance: { level } });
@@ -891,14 +940,26 @@ ipcMain.handle('youtube:open-external', async (_, { url }) => {
 // 5. Quran portions.
 // Contact data stays local; banking information is requested only by its dialog.
 // User-confirmed browser drafts; no report is submitted by the application.
+function feedbackContext(payload) {
+  if (payload?.includeContext !== true) return undefined;
+  return {
+    AppVersion: app.getVersion(),
+    Platform: process.platform === 'win32' ? 'Windows' : process.platform,
+    OS: require('node:os').release(),
+    Language: /^[a-z]{2}$/.test(payload.language) ? payload.language : '',
+    Recitation: storage.getConfig().quranWird?.riwaya || 'hafs',
+  };
+}
+ipcMain.handle('report:preview', (_, payload) => {
+  const { buildReport } = require('./src/engines/bug-report-engine');
+  const context = feedbackContext(payload);
+  return { ...buildReport(payload, undefined, context), context };
+});
 ipcMain.handle('report:open-draft', async (_, payload) => {
   const { buildReport } = require('./src/engines/bug-report-engine');
-  const issues =
-    payload?.channel === 'github' ? projectInfoEngine.readSource()?.['git-issues'] : undefined;
-  const draft = buildReport(payload, issues);
-  if (draft.copyRequired) clipboard.writeText(draft.text);
-  await shell.openExternal(draft.url);
-  return { opened: true, copyRequired: draft.copyRequired };
+  const issues = payload?.channel === 'github' ? projectInfoEngine.readSource()?.['git-issues'] : undefined;
+  await shell.openExternal(buildReport(payload, issues, feedbackContext(payload)).url);
+  return { opened: true };
 });
 let updateEngine = null,
   updateTimer = null;
@@ -988,7 +1049,7 @@ const localSync = new LocalSync({
   onLinkChanged: status => {
     if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('app:sync-link-changed', status);
   },
-  getConfig: () => storage.getConfig(),
+  getConfig: () => ({...storage.getConfig(),sharedSettings:sharedSettings()}),
   resolveLocation: ({ country, city }) => {
     const geography = prayerEngine.geography;
     const entry = geography.country(country);
@@ -1007,10 +1068,19 @@ const localSync = new LocalSync({
     };
   },
   applyPatch: async patch => {
+    if(patch.sharedSettings){
+      const {language,theme,mode}=patch.sharedSettings;
+      writeInterfaceLanguage(language);
+      const nextTheme=themeEngine.setTheme(theme,mode);
+      if(nextTheme.activeTheme!==theme||nextTheme.activeMode!==mode)throw Error('theme_save_failed');
+      updateAuxiliaryWindowThemes(nextTheme);
+      mainWindow?.webContents.send('theme:live-reloaded',nextTheme);
+    }
     const result = await saveApplicationSettings(patch, true);
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('app:sync-applied', {
         config: result.config,
+        interfaceLanguage: patch.sharedSettings?.language,
         prayerData: patch.location ? result.prayerData : undefined,
         quranState: patch.quranWird || patch.location ? result.quranState : undefined,
         youtubeState: patch.youtube ? youtubeEngine.getFeedState() : undefined,
@@ -1091,7 +1161,7 @@ async function saveApplicationSettings(newConfig, fromSync = false) {
     throw Error('لا يمكن تغيير خيارات التحديث أثناء التنزيل أو بعد تجهيز حزمة للتثبيت.');
   if (patch.notifications?.customReminders !== undefined)
     require('./src/engines/custom-reminders').validate(patch.notifications.customReminders);
-  const saved = storage.saveConfig(patch);
+  const saved = storage.saveConfig(patch, fromSync);
   if (newConfig.updates) getUpdateEngine().configure();
   if (newConfig.performance) {
     const p = currentPerformance().profile;
@@ -1393,9 +1463,15 @@ const avatarTasks = new Map();
 ipcMain.handle('youtube:avatar', (_, id) => {
   if (!/^UC[\w-]{22}$/.test(id) || !youtubeEngine.getChannels().some((c) => c.channelId === id))
     throw Error('قناة غير موجودة.');
+  const profile = currentPerformance().profile;
+  if (!profile.images) {
+    avatarTasks.clear();
+    return null;
+  }
   resources.ensure('youtube');
   if (!avatarTasks.has(id)) {
-    if (avatarTasks.size > 100) avatarTasks.clear();
+    const limit = profile.id === 'balanced' ? 32 : 100;
+    while (avatarTasks.size >= limit) avatarTasks.delete(avatarTasks.keys().next().value);
     avatarTasks.set(
       id,
       youtubeEngine

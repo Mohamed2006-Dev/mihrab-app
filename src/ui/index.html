@@ -9,7 +9,7 @@
     <link href="./styles/structural.css" rel="stylesheet" />
     <link href="./style.css" rel="stylesheet" />
   <link rel="stylesheet" href="./release101.css"><link rel="stylesheet" href="./quran-reader.css"></head>
-  <body data-navigation="dock"><div id="app-boot" role="status" aria-live="polite"><div class="boot-brand"><img class="boot-logo" src="./assets/app-icon.png" alt="" width="106" height="106"><p class="boot-name">محراب</p><p class="boot-status" id="boot-status">جارٍ تهيئة التطبيق…</p><button id="boot-retry" class="boot-retry" type="button" hidden>إعادة المحاولة</button></div><div class="boot-progress" role="progressbar" aria-label="جارٍ تحميل التطبيق"></div></div><script src="./boot.js"></script>
+  <body data-navigation="dock"><div id="app-boot" role="status" aria-live="polite"><div class="boot-brand"><img class="boot-logo" src="./assets/app-icon.png" alt="" width="106" height="106"><p class="boot-name"><!--i18n:ui.f54552d733efa914-->محراب</p><p class="boot-status" id="boot-status"><!--i18n:ui.f83b3d2aeacd64b4-->جارٍ تهيئة التطبيق…</p><button id="boot-retry" class="boot-retry" type="button" hidden><!--i18n:action.retry-->إعادة المحاولة</button></div><div class="boot-progress" role="progressbar" aria-label="جارٍ تحميل التطبيق"></div></div><script src="./boot.js"></script>
     <div class="app-shell" data-navigation="dock">
       <!-- Sidebar. -->
       <aside
@@ -42,8 +42,8 @@
                 <path d="M34 2a4 4 0 1 0 4 5 4 4 0 0 1-4-5" fill="#d6b45e"></path></svg
             ></div>
             <div class="brand-copy"
-              ><div class="brand-title">مِحْراب</div
-              ><div class="brand-subtitle">مواقيت الصلاة والأوراد </div></div
+              ><div class="brand-title"><!--i18n:ui.b0dbc039c4c2aa46-->مِحْراب</div
+              ><div class="brand-subtitle"><!--i18n:ui.db2e0c99a0c3cb82-->مواقيت الصلاة والأوراد </div></div
             >
             <div class="brand-layout-slot" id="sidebar-layout-slot"></div
           ></div>
@@ -66,7 +66,7 @@
                   class="icon-detail"
                   d="M8 22V12c0-3 2-4 4-6 2 2 4 3 4 6v10M10 17h4"
                 ></path></svg
-              ><span>مواقيت الصلاة</span></button
+              ><span><!--i18n:nav.prayers-->مواقيت الصلاة</span></button
             >
             <button class="nav-btn" data-tab="tab-hadith"
               ><svg
@@ -88,9 +88,9 @@
                   class="icon-detail"
                   d="m12 10 1-4 6-5 3 3-6 5-4 1Zm0 0-2 3m4-7 3 3"
                 ></path></svg
-              ><span>حديث اليوم والصلوات</span></button
+              ><span><!--i18n:hadith.todayAndPrayers-->حديث اليوم والصلوات</span></button
             >
-            <button class="nav-btn" data-tab="tab-adhkar" type="button"><svg class="ui-icon nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 19v2m-1 1h2"/><circle cx="12" cy="4" r="1.65"/><circle cx="7" cy="6" r="1.65"/><circle cx="6" cy="11" r="1.65"/><circle cx="8" cy="15" r="1.65"/><circle cx="12" cy="17" r="1.65"/><circle cx="16" cy="15" r="1.65"/><circle cx="18" cy="11" r="1.65"/><circle cx="17" cy="6" r="1.65"/></svg><span>الأذكار</span></button>
+            <button class="nav-btn" data-tab="tab-adhkar" type="button"><svg class="ui-icon nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 19v2m-1 1h2"/><circle cx="12" cy="4" r="1.65"/><circle cx="7" cy="6" r="1.65"/><circle cx="6" cy="11" r="1.65"/><circle cx="8" cy="15" r="1.65"/><circle cx="12" cy="17" r="1.65"/><circle cx="16" cy="15" r="1.65"/><circle cx="18" cy="11" r="1.65"/><circle cx="17" cy="6" r="1.65"/></svg><span><!--i18n:nav.adhkar-->الأذكار</span></button>
 <button class="nav-btn" data-tab="tab-youtube"
               ><svg
                 aria-hidden="true"
@@ -107,7 +107,7 @@
                 <rect height="14" rx="3" width="20" x="2" y="6"></rect>
                 <path d="m8 2 4 4 4-4M8 23h8"></path>
                 <path class="icon-detail" d="m10 10 5 3-5 3v-6Z"></path></svg
-              ><span>الدروس والقنوات</span></button
+              ><span><!--i18n:nav.lessons-->الدروس والقنوات</span></button
             >
             <button class="nav-btn" data-tab="tab-quran"
               ><svg
@@ -129,11 +129,11 @@
                   class="icon-detail"
                   d="m6 18 12 5M18 18 6 23M5 6l4 1M5 9l4 1m6-3 4-1m-4 4 4-1"
                 ></path></svg
-              ><span>ورد القرآن الكريم</span></button
+              ><span><!--i18n:nav.wird-->ورد القرآن الكريم</span></button
             >
           </nav>
         </div>
-        <p class="sidebar-hint">لإخفاء القائمة الجانبية، قم بالنقر على الزر أعلاه.</p>
+        <p class="sidebar-hint"><!--i18n:ui.b5ab59ff97162050-->لإخفاء القائمة الجانبية، قم بالنقر على الزر أعلاه.</p>
       </aside>
       <!-- Main content. -->
       <main class="main-content">
@@ -142,7 +142,7 @@
           <div class="location-badge">
             <span class="status-dot" id="sync-status-dot"></span>
             <div>
-              <strong id="top-city-name">مكة المكرمة، المملكة العربية السعودية</strong>
+              <strong id="top-city-name"><!--i18n:ui.6de3e0929861a5cf-->مكة المكرمة، المملكة العربية السعودية</strong>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: var(--spacing-md)">
@@ -155,8 +155,8 @@
           <div class="hero-prayer-card">
             <div aria-hidden="true" class="hero-sun-art" id="hero-sun-art"></div>
             <div class="hero-prayer-main">
-              <div class="next-prayer-label" id="hero-next-label">الصلاة القادمة</div>
-              <div class="next-prayer-title" id="hero-next-name">صلاة الفجر</div>
+              <div class="next-prayer-label" id="hero-next-label"><!--i18n:prayer.next-->الصلاة القادمة</div>
+              <div class="next-prayer-title" id="hero-next-name"><!--i18n:ui.1ff28bdafa89935f-->صلاة الفجر</div>
               <div class="countdown-box" id="hero-countdown">00:00:00</div>
               <div
                 id="hero-pre-alert-info"
@@ -165,7 +165,7 @@
                   font-size: var(--font-size-sm);
                   color: var(--text-secondary);
                 "
-              >
+              ><!--i18n:ui.a1e43e2005f43ddf-->
                 التنبيه المسبق مفعل قبل الأذان بـ 15 دقيقة
               </div>
             </div>
@@ -192,7 +192,7 @@
                   <path
                     d="M6 3h12a3 3 0 0 1 3 3v3h-5V6a3 3 0 0 0-6 0v12a3 3 0 0 1-6 0v-3h6M6 3a3 3 0 0 0-3 3v2h7M7 21h11a3 3 0 0 0 3-3v-2h-5"
                   ></path>
-                </svg>
+                </svg><!--i18n:hadith.prayer-->
                 حديث هذه الصلاة
               </div>
               <div
@@ -202,11 +202,11 @@
                   font-size: var(--font-size-lg);
                   line-height: 1.8;
                 "
-              >
+              ><!--i18n:ui.a272e6208bc94ff4-->
                 جاري تحميل الحديث النبوي الشريف...
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center">
-                <span class="meta-pill" id="hero-hadith-grade">صحيح</span>
+                <span class="meta-pill" id="hero-hadith-grade"><!--i18n:ui.01172d06786b3778-->صحيح</span>
                 <button
                   class="btn"
                   id="hero-rotate-hadith-btn"
@@ -225,7 +225,7 @@
                   >
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
                   </svg>
-                  <span>حديث آخر</span>
+                  <span><!--i18n:hadith.another-->حديث آخر</span>
                 </button>
               </div>
             </div>
@@ -254,14 +254,7 @@
                 <path
                   d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
                 ></path></svg
-              >إعدادات المنطقة</button
-            ><button
-              aria-keyshortcuts="Control+Shift+Space"
-              class="btn btn-secondary"
-              id="btn-open-mini-prayer"
-              title="Ctrl+Shift+Space"
-              type="button"
-              >عرض مصغّر</button
+              ><!--i18n:settings.region-->إعدادات المنطقة</button
             ></div
           >
           <!-- Daily prayer grid. -->
@@ -270,9 +263,9 @@
           <div class="card-panel">
             <div class="card-header">
               <div>
-                <h3 class="card-title">التحقق من أوقات الصلاة</h3>
-                <p style="font-size: var(--font-size-xs); color: var(--text-muted)">
-                  التحديث يتم تلقائياً. يمكنك الذهاب إلى الإعدادات للتحكم بالعمليات يدوياً. <a class="automatic-settings-link" id="link-automatic-settings" href="#data-settings-section-panel-other">فتح إعدادات أخرى <span aria-hidden="true">←</span></a>
+                <h3 class="card-title"><!--i18n:prayer.verifyTimes-->التحقق من أوقات الصلاة</h3>
+                <p style="font-size: var(--font-size-xs); color: var(--text-muted)"><!--i18n:ui.f55ca27e53342e4a-->
+                  التحديث يتم تلقائياً. يمكنك الذهاب إلى الإعدادات للتحكم بالعمليات يدوياً. <a class="automatic-settings-link" id="link-automatic-settings" href="#data-settings-section-panel-other"><!--i18n:ui.1c04da44db752f17-->فتح إعدادات أخرى <span aria-hidden="true">←</span></a>
                 </p>
               </div>
               <div style="display: flex; gap: var(--spacing-sm)">
@@ -295,7 +288,7 @@
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
-                  <span>إعادة ضبط الموقع</span>
+                  <span><!--i18n:prayer.resetLocation-->إعادة ضبط الموقع</span>
                 </button>
                 <!-- Timetable verification action. -->
                 <button hidden
@@ -315,7 +308,7 @@
                   >
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
                   </svg>
-                  <span>التحقق من أوقات الصلاة</span>
+                  <span><!--i18n:prayer.verifyTimes-->التحقق من أوقات الصلاة</span>
                 </button>
               </div>
             </div>
@@ -339,7 +332,7 @@
                   viewbox="0 0 24 24"
                 >
                   <path d="M3 7l9-5 9 5v10l-9 5-9-5Zm0 0 9 5 9-5M12 12v10"></path></svg
-                ><span>الأحاديث المخزنة: </span><strong id="stat-hadith-total">0</strong></span
+                ><span><!--i18n:ui.6a550a55335f0526-->الأحاديث المخزنة: </span><strong id="stat-hadith-total">0</strong></span
               ><span class="meta-pill"
                 ><svg
                   aria-hidden="true"
@@ -354,7 +347,7 @@
                   <path
                     d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Zm10-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6"
                   ></path></svg
-                ><span>تم عرضه (مسجلة): </span><strong id="stat-hadith-shown">0</strong></span
+                ><span><!--i18n:ui.384ab93a22b0fa28-->تم عرضه (مسجلة): </span><strong id="stat-hadith-shown">0</strong></span
               ><span class="meta-pill"
                 ><svg
                   aria-hidden="true"
@@ -367,15 +360,15 @@
                   viewbox="0 0 24 24"
                 >
                   <path d="M12 8v5l3 2M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0"></path></svg
-                ><span>متبقٍ قبل إعادة الدورة: </span
+                ><span><!--i18n:ui.3c69348c24ceb02e-->متبقٍ قبل إعادة الدورة: </span
                 ><strong id="stat-hadith-remaining">0</strong></span
               ></div
             >
             <div class="card-header">
               <div>
-                <h2 class="card-title">حديث اليوم والصلوات</h2>
+                <h2 class="card-title"><!--i18n:hadith.todayAndPrayers-->حديث اليوم والصلوات</h2>
                 <p style="font-size: var(--font-size-xs); color: var(--text-muted)"
-                  >اختر حديثاً من مكتبتك، واقرأ معانيه وفوائده عند توفر الشرح.</p
+                  ><!--i18n:ui.c02ab2dda1cec453-->اختر حديثاً من مكتبتك، واقرأ معانيه وفوائده عند توفر الشرح.</p
                 >
               </div>
               
@@ -383,16 +376,13 @@
             <div class="hadith-quote-box" id="main-hadith-text"> ... </div>
             <dl aria-label="تخريج الحديث" class="hadith-details-grid">
               <div class="hadith-detail hadith-grade-detail"
-                ><dt>درجة الحديث</dt><dd id="main-hadith-grade">جارٍ تحميل البيانات…</dd></div
+                ><dt><!--i18n:hadith.grade-->درجة الحديث</dt><dd id="main-hadith-grade"><!--i18n:status.loadingData-->جارٍ تحميل البيانات…</dd></div
               >
               <div class="hadith-detail"
-                ><dt>الراوي</dt><dd id="main-hadith-rawi">جارٍ تحميل البيانات…</dd></div
+                ><dt><!--i18n:hadith.narrator-->الراوي</dt><dd id="main-hadith-rawi"><!--i18n:status.loadingData-->جارٍ تحميل البيانات…</dd></div
               >
               <div class="hadith-detail"
-                ><dt>المحدّث</dt><dd id="main-hadith-mohdith">جارٍ تحميل البيانات…</dd></div
-              >
-              <div class="hadith-detail"
-                ><dt>التخريج</dt><dd id="main-hadith-book">جارٍ تحميل البيانات…</dd
+                ><dt><!--i18n:ui.21b256189ada8c93-->التخريج</dt><dd id="main-hadith-book"><!--i18n:status.loadingData-->جارٍ تحميل البيانات…</dd
                 ><small id="main-hadith-page"></small
               ></div>
               <span aria-hidden="true" hidden="" id="main-hadith-fingerprint"></span> </dl
@@ -412,7 +402,7 @@
                   <path
                     d="M12 5C8 3 5 3 2 4v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"
                   ></path></svg
-                ><span>فقه الحديث ومعانيه</span
+                ><span><!--i18n:ui.193cd66c9ee55d2f-->فقه الحديث ومعانيه</span
                 ><svg
                   aria-hidden="true"
                   class="hadith-chevron ui-icon"
@@ -424,19 +414,19 @@
                   <path d="m6 9 6 6 6-6"></path></svg></summary
               ><div class="hadith-sharh-content">
                 <section hidden="" id="hadith-vocabulary-section"
-                  ><h3>معاني الكلمات</h3><div class="hadith-vocabulary" id="hadith-vocabulary"></div
+                  ><h3><!--i18n:hadith.wordMeanings-->معاني الكلمات</h3><div class="hadith-vocabulary" id="hadith-vocabulary"></div
                 ></section>
                 <section hidden="" id="hadith-explanation-section"
-                  ><h3>الشرح والمعنى الإجمالي</h3><p id="hadith-explanation"></p
+                  ><h3><!--i18n:hadith.explanation-->الشرح والمعنى الإجمالي</h3><p id="hadith-explanation"></p
                 ></section>
                 <section hidden="" id="hadith-benefits-section"
-                  ><h3>الفوائد الإرشادية</h3><ul id="hadith-benefits"></ul
+                  ><h3><!--i18n:ui.ebe54c1635d68165-->الفوائد الإرشادية</h3><ul id="hadith-benefits"></ul
                 ></section> </div
             ></details>
             <p class="hadith-source-label" id="hadith-sharh-source"></p>
             <p class="hadith-error" hidden="" id="hadith-sharh-warning" role="status"></p>
             <div class="hadith-quick-actions"
-              ><button class="btn btn-secondary hadith-next-action" id="btn-next-hadith" type="button"><svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h15m-4-4 4 4-4 4M20 17H5m4-4-4 4 4 4"/></svg><span>عرض حديث آخر</span></button><button class="btn btn-secondary" id="btn-copy-hadith"
+              ><button class="btn btn-secondary hadith-next-action" id="btn-next-hadith" type="button"><svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h15m-4-4 4 4-4 4M20 17H5m4-4-4 4 4 4"/></svg><span><!--i18n:hadith.showAnother-->عرض حديث آخر</span></button><button class="btn btn-secondary" id="btn-copy-hadith"
                 ><svg
                   aria-hidden="true"
                   class="ui-icon"
@@ -448,7 +438,7 @@
                   viewbox="0 0 24 24"
                 >
                   <path d="M8 8h13v13H8ZM16 8V3H3v13h5"></path>
-                </svg>
+                </svg><!--i18n:hadith.copy-->
                 نسخ الحديث</button
               ><button class="btn btn-secondary" id="btn-export-hadith"
                 ><svg
@@ -462,7 +452,7 @@
                   viewbox="0 0 24 24"
                 >
                   <path d="M12 3v12m-4-4 4 4 4-4M3 16v5h18v-5"></path>
-                </svg>
+                </svg><!--i18n:ui.d5a4150ef5c9624a-->
                 تحميل صورة</button
               ><button class="btn btn-secondary" id="btn-refresh-hadith-details"
                 ><svg
@@ -474,7 +464,7 @@
                   viewbox="0 0 24 24"
                 >
                   <path d="M20 7V3l-3 3a8 8 0 1 0 3 6M20 3h-5"></path>
-                </svg>
+                </svg><!--i18n:ui.019c0239f9b82a85-->
                 تحديث بيانات الحديث</button
               ><span id="hadith-action-status" role="status"></span></div
           ></div>
@@ -491,7 +481,7 @@
                 viewbox="0 0 24 24"
               >
                 <path d="M3 7l9-5 9 5v10l-9 5-9-5Zm0 0 9 5 9-5M12 12v10"></path></svg
-              ><span>مكتبة الأحاديث</span
+              ><span><!--i18n:hadith.library-->مكتبة الأحاديث</span
               ><svg
                 aria-hidden="true"
                 class="hadith-chevron ui-icon"
@@ -504,7 +494,7 @@
             ></summary>
             <div class="hadith-library-tools"
               ><label class="sr-only" for="hadeethenc-topic-input"
-                >البحث في المكتبة أو موضوع الجلب</label
+                ><!--i18n:ui.4fa129fcb8dfc358-->البحث في المكتبة أو موضوع الجلب</label
               ><input
                 autocomplete="off"
                 class="input-field"
@@ -523,12 +513,12 @@
                   viewbox="0 0 24 24"
                 >
                   <path d="M12 3v12m-4-4 4 4 4-4M3 16v5h18v-5"></path>
-                </svg>
+                </svg><!--i18n:ui.ab862714beb29a10-->
                 جلب أحاديث جديدة من موسوعة الأحاديث النبوية</button
               ></div
             >
             <p class="hadith-library-help"
-              >البحث يصفّي مكتبتك فوراً. زر الجلب يبحث عن الموضوع المكتوب ويضيف الأحاديث الجديدة.</p
+              ><!--i18n:ui.364499b861f133dc-->البحث يصفّي مكتبتك فوراً. زر الجلب يبحث عن الموضوع المكتوب ويضيف الأحاديث الجديدة.</p
             >
             <p id="hadeethenc-sync-status" role="status"></p
             ><p id="hadith-library-status" role="status"></p>
@@ -536,10 +526,10 @@
               ><div class="hadith-library-grid" id="hadith-library-grid"></div
             ></div>
             <nav aria-label="صفحات مكتبة الأحاديث" class="hadith-library-pagination"
-              ><button class="btn btn-secondary" disabled="" id="hadith-library-prev">السابق</button
+              ><button class="btn btn-secondary" disabled="" id="hadith-library-prev"><!--i18n:action.previous-->السابق</button
               ><span id="hadith-library-page"></span
               ><button class="btn btn-secondary" disabled="" id="hadith-library-next"
-                >التالي</button
+                ><!--i18n:action.next-->التالي</button
               ></nav
             ></details
           ></section
@@ -557,10 +547,10 @@
                     class="yt-manager-toggle"
                     id="btn-toggle-youtube-manager"
                     type="button"
-                    ><svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+                    ><svg class="ui-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button><!--i18n:ui.8233576743111c01-->
                   اقتراح الدروس اليومية وإدارة القنوات</h2
                 >
-                <p style="font-size: var(--font-size-xs); color: var(--text-muted)">
+                <p style="font-size: var(--font-size-xs); color: var(--text-muted)"><!--i18n:ui.3b75fce72f101221-->
                   جمع المحاضرات والدروس الكاملة وتجنب المقاطع القصيرة، مرتبة في أكثر من 40 مجالاً
                   إيمانياً وعلمياً، مع تنبيه يومي يصلك بعد صلاة العشاء بـ 45 دقيقة.
                 </p>
@@ -581,12 +571,12 @@
                   >
                     <circle cx="12" cy="12" r="9"></circle>
                     <path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .5-1.5 1-1.5 2m0 3h.01"></path>
-                  </svg>
+                  </svg><!--i18n:ui.03630dbb9ae31602-->
                   كيف أستخرج معرّف القناة (Channel ID)؟</button
                 >
               </div> </div
             ><div class="form-group yt-add-channel">
-              <label class="form-label">إضافة قناة بمعرّفها أو رابطها أو @اسمها:</label>
+              <label class="form-label"><!--i18n:ui.f54e07206b32532d-->إضافة قناة بمعرّفها أو رابطها أو @اسمها:</label>
               <div style="display: contents">
                 <input
                   class="input-field"
@@ -595,7 +585,7 @@
                   type="text"
                 />
                 <button class="btn btn-primary" id="btn-add-channel"
-                  >إضافة
+                  ><!--i18n:action.add-->إضافة
                   <svg
                     aria-hidden="true"
                     class="ui-icon"
@@ -611,7 +601,7 @@
                     <path d="M12 5v14M5 12h14"></path></svg
                 ></button>
               </div> </div
-            ><p><button class="btn btn-secondary" type="button" id="btn-channel-directory">قنوات مقترحة</button></p><div hidden="" id="youtube-manager-body">
+            ><p><button class="btn btn-secondary" type="button" id="btn-channel-directory"><!--i18n:lessons.suggestedChannels-->قنوات مقترحة</button></p><div hidden="" id="youtube-manager-body">
               <p
                 hidden=""
                 id="yt-feed-status"
@@ -621,7 +611,7 @@
               <!-- Subscribed channel strip. -->
               <div>
                 <div class="form-label" style="margin-bottom: var(--spacing-xs)"
-                  >القنوات المتابعة حالياً:</div
+                  ><!--i18n:ui.bcef80b018767bdb-->القنوات المتابعة حالياً:</div
                 >
                 <div class="grid-3" id="yt-channels-list"></div>
               </div> </div
@@ -645,7 +635,7 @@
                   <path
                     d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"
                   ></path>
-                </svg>
+                </svg><!--i18n:ui.8d344568df2c545b-->
                 الدروس المرشحة لك</h3>
               <button aria-label="تحديث الخلاصات" class="btn btn-secondary compact-feed-refresh" id="btn-refresh-yt" title="تحديث الخلاصات"><svg aria-hidden="true" class="ui-icon" data-icon="refresh" fill="none" focusable="false" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" viewbox="0 0 24 24">
 <path d="M20 7V3m0 4h-4M4 17v4m0-4h4M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3"></path>
@@ -675,14 +665,14 @@
         <!-- Quran tab: independent reading and memorization/revision plans. -->
         <section class="tab-section" id="tab-adhkar"><article class="card-panel">
   <header class="card-header adhkar-header"><nav id="adhkar-title" class="adhkar-breadcrumb" aria-label="مسار أقسام الأذكار"></nav>
-  <button type="button" class="btn btn-secondary" id="adhkar-back" hidden>رجوع</button></header>
+  <button type="button" class="btn btn-secondary" id="adhkar-back" hidden><!--i18n:action.back-->رجوع</button></header>
   <div id="adhkar-content"></div>
-  <p class="settings-status">حصن المسلم لسعيد بن علي بن وهف القحطاني · النسخة الرقمية asellam/HisnElMuslim</p>
+  <p class="settings-status"><!--i18n:ui.5b2aa9e1aac16ff7-->حصن المسلم لسعيد بن علي بن وهف القحطاني · النسخة الرقمية asellam/HisnElMuslim</p>
 </article></section><section class="tab-section" id="tab-quran"
           ><article class="card-panel quran-unified-card" id="quran-unified-card">
             <header class="card-header"
               ><div
-                ><h2 class="card-title">ورد القرآن الكريم</h2
+                ><h2 class="card-title"><!--i18n:nav.wird-->ورد القرآن الكريم</h2
                 ><span class="meta-pill" id="quran-riwaya-badge"></span></div
               ><button
                 aria-expanded="false"
@@ -709,7 +699,7 @@
                   <path
                     d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
                   ></path>
-                </svg>
+                </svg><!--i18n:wird.settings-->
                 إعدادات الورد</button
               ></header
             >
@@ -731,7 +721,7 @@
                   <path
                     d="M12 5C8 3 5 3 2 4v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"
                   ></path></svg
-                >ورد القراءة والتلاوة</button
+                ><!--i18n:wird.reading-->ورد القراءة والتلاوة</button
               ><button
                 aria-controls="quran-panel-hifz"
                 aria-selected="false"
@@ -750,7 +740,7 @@
                   <path
                     d="M12 5C9 0 3 3 4 7c-4 2-3 8 0 9-1 5 5 7 8 3 3 4 9 2 8-3 4-2 4-7 0-9 1-4-5-7-8-2Zm0 0v14M6 9l3 2M18 9l-3 2"
                   ></path></svg
-                >ورد الحفظ والمراجعة</button
+                ><!--i18n:wird.memorization-->ورد الحفظ والمراجعة</button
               ></div
             >
             <div
@@ -760,9 +750,9 @@
               role="tabpanel"
             >
               <div class="card-header">
-                <h3 class="card-title">ورد القراءة والتلاوة </h3>
+                <h3 class="card-title"><!--i18n:wird.reading-->ورد القراءة والتلاوة </h3>
                 <div class="quran-notice-actions"
-                  ><span class="meta-pill" id="reading-schedule-badge">بعد العشاء بـ 30 د</span
+                  ><span class="meta-pill" id="reading-schedule-badge"><!--i18n:ui.79e752aece11c38c-->بعد العشاء بـ 30 د</span
                   ><button
                     aria-pressed="true"
                     class="quran-notification-shortcut"
@@ -778,13 +768,13 @@
                       viewbox="0 0 24 24"
                     >
                       <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg
-                    ><span>الإشعار مفعّل</span></button
+                    ><span><!--i18n:reminder.enabled-->الإشعار مفعّل</span></button
                   ></div
                 >
               </div>
               <div class="video-card">
                 <div style="font-size: var(--font-size-xs); color: var(--text-muted)"
-                  >الورد المحدد:</div
+                  ><!--i18n:ui.b166b5a71dec2522-->الورد المحدد:</div
                 >
                 <form novalidate class="wird-position-editor" id="reading-current-assignment">
   <label for="reading-position-input" id="reading-position-label"></label>
@@ -801,15 +791,15 @@
                 <div
                   id="reading-range-desc"
                   style="font-size: var(--font-size-xs); color: var(--text-secondary)"
-                >
+                ><!--i18n:ui.f9eaf2a659834130-->
                   القرآن الكريم كاملاً
                 </div>
                 <div class="wird-actions">
                   <!-- Mark this portion complete. -->
-                  <button type="button" class="btn btn-secondary" data-open-quran-reader="reading">اقرأ الورد</button>
+                  <button type="button" class="btn btn-secondary" data-open-quran-reader="reading"><!--i18n:wird.openReading-->اقرأ الورد</button>
 <button class="btn btn-primary" id="btn-complete-reading" style="flex: 1">
                     <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-9"/></svg>
-                    <span>أتممت ورد القراءة (انتقل للتالي)</span>
+                    <span><!--i18n:ui.5ee1a6e8d815b7aa-->أتممت ورد القراءة (انتقل للتالي)</span>
                   </button>
                   <!-- Choose another random portion. -->
                   <button
@@ -840,7 +830,7 @@
                       <line x1="15" x2="21" y1="15" y2="21"></line>
                       <line x1="4" x2="9" y1="4" y2="9"></line>
                     </svg>
-                    <span>اختيار ورد عشوائي جديد</span>
+                    <span><!--i18n:wird.random-->اختيار ورد عشوائي جديد</span>
                   </button>
                 </div>
               </div> </div
@@ -852,9 +842,9 @@
               role="tabpanel"
             >
               <div class="card-header">
-                <h3 class="card-title">ورد الحفظ والمراجعة</h3>
+                <h3 class="card-title"><!--i18n:wird.memorization-->ورد الحفظ والمراجعة</h3>
                 <div class="quran-notice-actions"
-                  ><span class="meta-pill" id="hifz-schedule-badge">بعد الفجر بـ 30 د</span
+                  ><span class="meta-pill" id="hifz-schedule-badge"><!--i18n:ui.e5961aa64564213d-->بعد الفجر بـ 30 د</span
                   ><button
                     aria-pressed="true"
                     class="quran-notification-shortcut"
@@ -870,13 +860,13 @@
                       viewbox="0 0 24 24"
                     >
                       <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg
-                    ><span>الإشعار مفعّل</span></button
+                    ><span><!--i18n:reminder.enabled-->الإشعار مفعّل</span></button
                   ></div
                 >
               </div>
               <div class="video-card">
                 <div style="font-size: var(--font-size-xs); color: var(--text-muted)"
-                  >مقدار الحفظ/المراجعة الحالي المطلوب:</div
+                  ><!--i18n:ui.37fefa51c89848c7-->مقدار الحفظ/المراجعة الحالي المطلوب:</div
                 >
                 <form novalidate class="wird-position-editor" id="hifz-current-assignment">
   <label for="hifz-position-input" id="hifz-position-label"></label>
@@ -893,12 +883,12 @@
                 <div
                   id="hifz-range-desc"
                   style="font-size: var(--font-size-xs); color: var(--text-secondary)"
-                >
+                ><!--i18n:ui.d7a2e52c8143259d-->
                   نطاق الحفظ المحدد
                 </div>
-                <div class="wird-actions"><button type="button" class="btn btn-secondary" data-open-quran-reader="hifz">افتح ورد المراجعة</button>
+                <div class="wird-actions"><button type="button" class="btn btn-secondary" data-open-quran-reader="hifz"><!--i18n:wird.openReview-->افتح ورد المراجعة</button>
 <button class="btn btn-primary" id="btn-complete-hifz"
-                  ><svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-9"/></svg>
+                  ><svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-9"/></svg><!--i18n:ui.5072618f7d64a72a-->
                   أتممت ورد الحفظ/المراجعة (انتقل للتالي)</button
                 ></div>
               </div>
@@ -908,15 +898,15 @@
         <!-- Application settings and prayer preparation screen. -->
         <section class="tab-section" id="tab-settings"
           ><div aria-label="أقسام الإعدادات" class="quran-segments settings-segments" role="tablist"
-            ><button
+            ><button aria-controls="data-settings-section-panel-language" aria-selected="true" data-settings-section="language" id="data-settings-section-language" role="tab" tabindex="0" type="button"><!--i18n:settings.language-->اللغة</button><button
               aria-controls="data-settings-section-panel-notifications"
-              aria-selected="true"
+              aria-selected="false"
               data-settings-section="notifications"
               id="data-settings-section-notifications"
               role="tab"
-              tabindex="0"
+              tabindex="-1"
               type="button"
-              >الإشعارات</button
+              ><!--i18n:settings.notifications-->الإشعارات</button
             ><button
               aria-controls="data-settings-section-panel-screen"
               aria-selected="false"
@@ -925,7 +915,7 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >شاشة التهيئة</button
+              ><!--i18n:ui.8087a29988b58bc4-->شاشة التهيئة</button
             ><button
               aria-controls="data-settings-section-panel-appearance"
               aria-selected="false"
@@ -934,7 +924,7 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >المظهر</button
+              ><!--i18n:settings.appearance-->المظهر</button
             ><button
               aria-controls="data-settings-section-panel-resources"
               aria-selected="false"
@@ -943,7 +933,7 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >التخزين والاستهلاك</button
+              ><!--i18n:settings.storageAndUsage-->التخزين والاستهلاك</button
             ><button
               aria-controls="data-settings-section-panel-accessibility"
               aria-selected="false"
@@ -952,7 +942,7 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >إمكانية الوصول</button
+              ><!--i18n:settings.accessibility-->إمكانية الوصول</button
             ><button
               aria-controls="data-settings-section-panel-performance"
               aria-selected="false"
@@ -961,7 +951,7 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >الأداء</button
+              ><!--i18n:settings.performance-->الأداء</button
             ><button
               aria-controls="data-settings-section-panel-report"
               aria-selected="false"
@@ -970,7 +960,7 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >التبليغ عن خطأ</button
+              ><!--i18n:feedback.heading-->الإبلاغ عن خطأ أو إرسال ملاحظات</button
             ><button
               aria-controls="data-settings-section-panel-updates"
               aria-selected="false"
@@ -979,21 +969,32 @@
               role="tab"
               tabindex="-1"
               type="button"
-              >التحديثات</button
-            ><button id="data-settings-section-sync" data-settings-section="sync" aria-controls="data-settings-section-panel-sync" aria-selected="false" role="tab" tabindex="-1" type="button">ربط الأجهزة</button><button id="data-settings-section-other" data-settings-section="other" aria-controls="data-settings-section-panel-other" aria-selected="false" role="tab" tabindex="-1" type="button">أخرى</button>
+              ><!--i18n:settings.updates-->التحديثات</button
+            ><button id="data-settings-section-sync" data-settings-section="sync" aria-controls="data-settings-section-panel-sync" aria-selected="false" role="tab" tabindex="-1" type="button"><!--i18n:sync.link-->ربط الأجهزة</button><button id="data-settings-section-other" data-settings-section="other" aria-controls="data-settings-section-panel-other" aria-selected="false" role="tab" tabindex="-1" type="button"><!--i18n:ui.17a9f38e22b66720-->أخرى</button>
               <button id="data-settings-section-shortcuts" data-settings-section="shortcuts"
                 aria-controls="data-settings-section-panel-shortcuts" aria-selected="false"
-                role="tab" tabindex="-1" type="button">الاختصارات</button></div
-          ><div
+                role="tab" tabindex="-1" type="button"><!--i18n:ui.8297de40f4382803-->الاختصارات</button></div
+          ><div aria-labelledby="data-settings-section-language" class="settings-section-panel" id="data-settings-section-panel-language" role="tabpanel"><article class="card-panel"><div class="form-group">
+      <label class="form-label" for="mihrab-interface-language"><!--i18n:settings.appLanguage-->لغة الواجهة</label>
+      <select class="select-field" id="mihrab-interface-language">
+        <option value="ar" lang="ar" dir="auto" data-no-ui-translation>العربية</option>
+        <option value="en" lang="en" dir="auto" data-no-ui-translation>English</option>
+        <option value="id" lang="id" dir="auto" data-no-ui-translation>Bahasa Indonesia</option>
+      <option value="ur" lang="ur" dir="auto" data-no-ui-translation>اردو</option>
+<option value="bn" lang="bn" dir="auto" data-no-ui-translation>বাংলা</option>
+<option value="fr" lang="fr" dir="auto" data-no-ui-translation>Français</option>
+<option value="tr" lang="tr" dir="auto" data-no-ui-translation>Türkçe</option>
+</select>
+    </div></article></div><div
             aria-labelledby="data-settings-section-notifications"
             class="settings-section-panel"
             id="data-settings-section-panel-notifications"
             role="tabpanel"
-            ><article class="card-panel notification-settings" id="notification-settings"
+             hidden=""><article class="card-panel notification-settings" id="notification-settings"
               ><header class="card-header"
                 ><div
-                  ><h3 class="card-title">الإشعارات ومواعيد التذكير</h3
-                  ><p>تحكّم بجميع تنبيهات التطبيق من هنا.</p></div
+                  ><h3 class="card-title"><!--i18n:settings.notificationsAndReminders-->الإشعارات ومواعيد التذكير</h3
+                  ><p><!--i18n:settings.notificationsHint-->تحكّم بجميع تنبيهات التطبيق من هنا.</p></div
                 ></header
               ><div
                 aria-label="أنواع الإشعارات"
@@ -1007,7 +1008,7 @@
                   role="tab"
                   tabindex="0"
                   type="button"
-                  >الأذان</button
+                  ><!--i18n:prayer.adhan-->الأذان</button
                 ><button
                   aria-controls="data-notice-section-panel-pre-prayer"
                   aria-selected="false"
@@ -1016,7 +1017,7 @@
                   role="tab"
                   tabindex="-1"
                   type="button"
-                  >التنبيه للصلاة</button
+                  ><!--i18n:reminder.prayer-->التنبيه للصلاة</button
                 ><button
                   aria-controls="data-notice-section-panel-lock"
                   aria-selected="false"
@@ -1025,7 +1026,7 @@
                   role="tab"
                   tabindex="-1"
                   type="button"
-                  >شاشة التهيئة</button
+                  ><!--i18n:ui.8087a29988b58bc4-->شاشة التهيئة</button
                 ><button
                   aria-controls="data-notice-section-panel-wards"
                   aria-selected="false"
@@ -1034,7 +1035,7 @@
                   role="tab"
                   tabindex="-1"
                   type="button"
-                  >الأوراد</button
+                  ><!--i18n:ui.215b477f92b46cfd-->الأوراد</button
                 ><button
                   aria-controls="data-notice-section-panel-lessons"
                   aria-selected="false"
@@ -1043,41 +1044,41 @@
                   role="tab"
                   tabindex="-1"
                   type="button"
-                  >الدروس</button
-                ><button id="data-notice-section-custom" aria-controls="data-notice-section-panel-custom" aria-selected="false" data-notice-section="custom" role="tab" tabindex="-1" type="button">تذكيرات مخصّصة</button></div
+                  ><!--i18n:ui.c6bf78111461c7cc-->الدروس</button
+                ><button id="data-notice-section-custom" aria-controls="data-notice-section-panel-custom" aria-selected="false" data-notice-section="custom" role="tab" tabindex="-1" type="button"><!--i18n:reminder.custom-->تذكيرات مخصّصة</button></div
               ><div class="notice-columns"
                 ><section
                   aria-labelledby="data-notice-section-adhan"
                   class="notice-group notice-column-adhan"
                   id="data-notice-section-panel-adhan"
                   role="tabpanel"
-                  ><h4>إشعارات الأذان</h4
+                  ><h4><!--i18n:ui.5f6a38ee8feb3b56-->إشعارات الأذان</h4
                   ><label class="settings-switch"
-                    ><span>إرسال إشعار عند الأذان</span
+                    ><span><!--i18n:ui.6f76ba6e920c49d8-->إرسال إشعار عند الأذان</span
                     ><input id="notice-prayer-enabled" role="switch" type="checkbox" /></label
                   ><fieldset id="notice-prayer-fields"
                     ><label class="settings-switch"
-                      ><span>تشغيل صوت الأذان مع الإشعار</span
+                      ><span><!--i18n:ui.0d0db8e7381cf501-->تشغيل صوت الأذان مع الإشعار</span
                       ><input id="settings-audio-enabled" role="switch" type="checkbox" /></label
                     ><details
-                      ><summary>خيارات متقدمة لكل صلاة</summary
+                      ><summary><!--i18n:ui.f1ffc889c81771a4-->خيارات متقدمة لكل صلاة</summary
                       ><div class="notice-prayer-grid"
                         ><label class="settings-switch"
-                          ><span>الفجر</span
+                          ><span><!--i18n:prayer.fajr-->الفجر</span
                           ><input id="notice-prayer-fajr" role="switch" type="checkbox" /></label
                         ><label class="settings-switch"
-                          ><span>الظهر</span
+                          ><span><!--i18n:prayer.dhuhr-->الظهر</span
                           ><input id="notice-prayer-dhuhr" role="switch" type="checkbox" /></label
                         ><label class="settings-switch"
-                          ><span>العصر</span><input id="notice-prayer-asr" role="switch" type="checkbox" /></label
+                          ><span><!--i18n:prayer.asr-->العصر</span><input id="notice-prayer-asr" role="switch" type="checkbox" /></label
                         ><label class="settings-switch"
-                          ><span>المغرب</span
+                          ><span><!--i18n:prayer.maghrib-->المغرب</span
                           ><input id="notice-prayer-maghrib" role="switch" type="checkbox" /></label
                         ><label class="settings-switch"
-                          ><span>العشاء</span
+                          ><span><!--i18n:prayer.isha-->العشاء</span
                           ><input id="notice-prayer-isha" role="switch" type="checkbox" /></label
                         ><label class="settings-switch"
-                          ><span>صلاة الجمعة</span
+                          ><span><!--i18n:prayer.friday-->صلاة الجمعة</span
                           ><input
                             id="notice-prayer-friday"
                             role="switch" type="checkbox" /></label></div></details></fieldset></section
@@ -1087,23 +1088,23 @@
                   hidden=""
                   id="data-notice-section-panel-pre-prayer"
                   role="tabpanel"
-                  ><h4>إشعارات التنبيه للصلاة</h4
+                  ><h4><!--i18n:ui.bef77819cd184ebf-->إشعارات التنبيه للصلاة</h4
                   ><p hidden="" id="pre-prayer-lock-hint"
-                    >التنبيه القبلي لا يظهر عند تفعيل شاشة التهيئة؛ يُستخدم تنبيه الشاشة بدلاً
+                    ><!--i18n:ui.b3719b0957fdd210-->التنبيه القبلي لا يظهر عند تفعيل شاشة التهيئة؛ يُستخدم تنبيه الشاشة بدلاً
                     منه.</p
                   ><fieldset id="pre-prayer-editor"
                     ><label class="settings-switch"
-                      ><span>تفعيل التنبيه قبل الصلاة</span
+                      ><span><!--i18n:ui.75a31a58e6c6a6c3-->تفعيل التنبيه قبل الصلاة</span
                       ><input id="notice-pre-enabled" role="switch" type="checkbox" /></label
                     ><fieldset id="notice-pre-fields"
                       ><div class="pre-reminder-grid">
                         <div class="pre-reminder-card">
                           <div class="pre-reminder-heading"
-                            ><span>بقية الصلوات</span
-                            ><span class="pre-reminder-tag">المدة العامة</span></div
+                            ><span><!--i18n:ui.4ca787d0a8882a01-->بقية الصلوات</span
+                            ><span class="pre-reminder-tag"><!--i18n:ui.faae2b866100d455-->المدة العامة</span></div
                           >
                           <label class="form-group" for="settings-pre-prayer-min"
-                            >التذكير قبل الصلاة (دقيقة)<input
+                            ><!--i18n:reminder.beforePrayer-->التذكير قبل الصلاة (دقيقة)<input
                               class="input-field"
                               id="settings-pre-prayer-min"
                               max="240"
@@ -1111,17 +1112,17 @@
                               type="number"
                               value="15"
                           /></label>
-                          <small>يمكن تخصيص كل صلاة من الخيارات المتقدمة.</small>
+                          <small><!--i18n:ui.efb7e9c98b9b8cfc-->يمكن تخصيص كل صلاة من الخيارات المتقدمة.</small>
                         </div>
                         <div class="pre-reminder-card">
                           <label
                             class="settings-switch pre-reminder-heading"
                             for="notice-friday-enabled"
-                            ><span>صلاة الجمعة</span
+                            ><span><!--i18n:prayer.friday-->صلاة الجمعة</span
                             ><input id="notice-friday-enabled" role="switch" type="checkbox"
                           /></label>
                           <label class="form-group" for="settings-friday-min"
-                            >التذكير قبل الجمعة (دقيقة)<input
+                            ><!--i18n:ui.6bda0ea251c4dc66-->التذكير قبل الجمعة (دقيقة)<input
                               class="input-field"
                               id="settings-friday-min"
                               max="240"
@@ -1129,16 +1130,16 @@
                               type="number"
                               value="60"
                           /></label>
-                          <small>تذكير مستقل، قبل الموعد بـ30 دقيقة على الأقل.</small>
+                          <small><!--i18n:ui.2abd823b8e7748d1-->تذكير مستقل، قبل الموعد بـ30 دقيقة على الأقل.</small>
                         </div> </div
                       ><details
-                        ><summary>خيارات متقدمة لكل صلاة</summary
-                        ><p>اترك المدة فارغة لاستخدام المدة العامة. للجمعة إعدادها المستقل أعلاه.</p
+                        ><summary><!--i18n:ui.f1ffc889c81771a4-->خيارات متقدمة لكل صلاة</summary
+                        ><p><!--i18n:ui.35e9ee2c1775b47d-->اترك المدة فارغة لاستخدام المدة العامة. للجمعة إعدادها المستقل أعلاه.</p
                         ><div class="notice-override"
                           ><label class="settings-switch"
-                            ><span>الفجر</span><input id="notice-pre-fajr" role="switch" type="checkbox" /></label
+                            ><span><!--i18n:prayer.fajr-->الفجر</span><input id="notice-pre-fajr" role="switch" type="checkbox" /></label
                           ><label for="notice-minutes-fajr"
-                            >الدقائق<input
+                            ><!--i18n:ui.b24262b34f38c6fe-->الدقائق<input
                               class="input-field"
                               id="notice-minutes-fajr"
                               max="240"
@@ -1147,10 +1148,10 @@
                               type="number" /></label></div
                         ><div class="notice-override"
                           ><label class="settings-switch"
-                            ><span>الظهر</span
+                            ><span><!--i18n:prayer.dhuhr-->الظهر</span
                             ><input id="notice-pre-dhuhr" role="switch" type="checkbox" /></label
                           ><label for="notice-minutes-dhuhr"
-                            >الدقائق<input
+                            ><!--i18n:ui.b24262b34f38c6fe-->الدقائق<input
                               class="input-field"
                               id="notice-minutes-dhuhr"
                               max="240"
@@ -1159,9 +1160,9 @@
                               type="number" /></label></div
                         ><div class="notice-override"
                           ><label class="settings-switch"
-                            ><span>العصر</span><input id="notice-pre-asr" role="switch" type="checkbox" /></label
+                            ><span><!--i18n:prayer.asr-->العصر</span><input id="notice-pre-asr" role="switch" type="checkbox" /></label
                           ><label for="notice-minutes-asr"
-                            >الدقائق<input
+                            ><!--i18n:ui.b24262b34f38c6fe-->الدقائق<input
                               class="input-field"
                               id="notice-minutes-asr"
                               max="240"
@@ -1170,10 +1171,10 @@
                               type="number" /></label></div
                         ><div class="notice-override"
                           ><label class="settings-switch"
-                            ><span>المغرب</span
+                            ><span><!--i18n:prayer.maghrib-->المغرب</span
                             ><input id="notice-pre-maghrib" role="switch" type="checkbox" /></label
                           ><label for="notice-minutes-maghrib"
-                            >الدقائق<input
+                            ><!--i18n:ui.b24262b34f38c6fe-->الدقائق<input
                               class="input-field"
                               id="notice-minutes-maghrib"
                               max="240"
@@ -1182,10 +1183,10 @@
                               type="number" /></label></div
                         ><div class="notice-override"
                           ><label class="settings-switch"
-                            ><span>العشاء</span
+                            ><span><!--i18n:prayer.isha-->العشاء</span
                             ><input id="notice-pre-isha" role="switch" type="checkbox" /></label
                           ><label for="notice-minutes-isha"
-                            >الدقائق<input
+                            ><!--i18n:ui.b24262b34f38c6fe-->الدقائق<input
                               class="input-field"
                               id="notice-minutes-isha"
                               max="240"
@@ -1198,9 +1199,9 @@
                   hidden=""
                   id="data-notice-section-panel-wards"
                   role="tabpanel"
-                  ><h4>إشعارات الأوراد</h4
+                  ><h4><!--i18n:reminder.wird-->إشعارات الأوراد</h4
                   ><div class="wird-notification-mode">
-                    <label class="form-label" for="quran-notif-mode">نظام الإشعارات:</label>
+                    <label class="form-label" for="quran-notif-mode"><!--i18n:ui.b36bba6f5771f12f-->نظام الإشعارات:</label>
                     <select class="select-field" id="quran-notif-mode">
                       <option value="both">تفعيل كلا الإشعارين</option>
                       <option value="reading_only">تفعيل إشعار ورد القراءة فقط</option>
@@ -1208,7 +1209,7 @@
                       <option value="none">إيقاف إشعارات الورد</option>
                     </select> </div
                   ><div class="quran-timing" id="notice-reading"
-                    ><h4>ورد القراءة والتلاوة</h4
+                    ><h4><!--i18n:wird.reading-->ورد القراءة والتلاوة</h4
                     ><div class="quran-timing-choices compact-timing-choices"
                       ><label class="wird-timing-choice" for="reading-prayer-enabled"
                         ><input
@@ -1216,16 +1217,16 @@
                           id="reading-prayer-enabled"
                           name="reading-timing"
                           type="radio"
-                        />
+                        /><!--i18n:ui.36cbf7da4a3b0cd4-->
                         موعد مرتبط بالصلاة</label
                       ><label class="wird-timing-choice" for="reading-custom-enabled"
-                        ><input id="reading-custom-enabled" name="reading-timing" type="radio" />
+                        ><input id="reading-custom-enabled" name="reading-timing" type="radio" /><!--i18n:ui.4646665bcb099a5c-->
                         تحديد ساعة مخصصة</label
                       ></div
                     ><div class="notification-time-slot"
                       ><fieldset id="reading-prayer-fields"
                         ><div class="wird-time-field"
-                          ><label for="reading-after-prayer">الصلاة</label
+                          ><label for="reading-after-prayer"><!--i18n:ui.99682ad2d9e0166e-->الصلاة</label
                           ><select class="select-field" id="reading-after-prayer"
                             ><option value="fajr">الفجر</option
                             ><option value="dhuhr">الظهر</option
@@ -1234,7 +1235,7 @@
                             ><option value="isha">العشاء</option></select
                           ></div
                         ><div class="wird-time-field"
-                          ><label for="reading-after-isha">المدة بعد الصلاة (دقيقة)</label
+                          ><label for="reading-after-isha"><!--i18n:ui.a64f903f16830005-->المدة بعد الصلاة (دقيقة)</label
                           ><input
                             class="input-field"
                             id="reading-after-isha"
@@ -1244,14 +1245,14 @@
                             value="30" /></div></fieldset
                       ><fieldset id="reading-fixed-fields"
                         ><div class="wird-time-field"
-                          ><label for="reading-custom-time">الساعة المخصصة</label
+                          ><label for="reading-custom-time"><!--i18n:ui.00fe75485badec23-->الساعة المخصصة</label
                           ><input
                             class="input-field"
                             id="reading-custom-time"
                             type="time"
                             value="20:30" /></div></fieldset></div></div
                   ><div class="quran-timing" id="notice-hifz"
-                    ><h4>ورد الحفظ والمراجعة</h4
+                    ><h4><!--i18n:wird.memorization-->ورد الحفظ والمراجعة</h4
                     ><div class="quran-timing-choices compact-timing-choices"
                       ><label class="wird-timing-choice" for="hifz-prayer-enabled"
                         ><input
@@ -1259,16 +1260,16 @@
                           id="hifz-prayer-enabled"
                           name="hifz-timing"
                           type="radio"
-                        />
+                        /><!--i18n:ui.36cbf7da4a3b0cd4-->
                         موعد مرتبط بالصلاة</label
                       ><label class="wird-timing-choice" for="hifz-custom-enabled"
-                        ><input id="hifz-custom-enabled" name="hifz-timing" type="radio" /> تحديد
+                        ><input id="hifz-custom-enabled" name="hifz-timing" type="radio" /><!--i18n:ui.4646665bcb099a5c--> تحديد
                         ساعة مخصصة</label
                       ></div
                     ><div class="notification-time-slot"
                       ><fieldset id="hifz-prayer-fields"
                         ><div class="wird-time-field"
-                          ><label for="hifz-after-prayer">الصلاة</label
+                          ><label for="hifz-after-prayer"><!--i18n:ui.99682ad2d9e0166e-->الصلاة</label
                           ><select class="select-field" id="hifz-after-prayer"
                             ><option value="fajr">الفجر</option
                             ><option value="dhuhr">الظهر</option
@@ -1277,7 +1278,7 @@
                             ><option value="isha">العشاء</option></select
                           ></div
                         ><div class="wird-time-field"
-                          ><label for="hifz-after-fajr">المدة بعد الصلاة (دقيقة)</label
+                          ><label for="hifz-after-fajr"><!--i18n:ui.a64f903f16830005-->المدة بعد الصلاة (دقيقة)</label
                           ><input
                             class="input-field"
                             id="hifz-after-fajr"
@@ -1287,7 +1288,7 @@
                             value="30" /></div></fieldset
                       ><fieldset id="hifz-fixed-fields"
                         ><div class="wird-time-field"
-                          ><label for="hifz-custom-time">الساعة المخصصة</label
+                          ><label for="hifz-custom-time"><!--i18n:ui.00fe75485badec23-->الساعة المخصصة</label
                           ><input
                             class="input-field"
                             id="hifz-custom-time"
@@ -1299,12 +1300,12 @@
                   hidden=""
                   id="data-notice-section-panel-lessons"
                   role="tabpanel"
-                  ><h4>إشعارات الدروس</h4
+                  ><h4><!--i18n:reminder.lessons-->إشعارات الدروس</h4
                   ><label class="settings-switch"
-                    ><span>إرسال تذكير بالدروس</span
+                    ><span><!--i18n:ui.0c00fc0ce9f9559b-->إرسال تذكير بالدروس</span
                     ><input id="notice-lessons-enabled" role="switch" type="checkbox" /></label
                   ><p class="settings-status" hidden="" id="lesson-network-hint"
-                    >إشعارات الدروس متوقفة تلقائياً لأن اتصال يوتيوب ممنوع من إعدادات الاستهلاك.</p
+                    ><!--i18n:ui.30eadf5f9f408285-->إشعارات الدروس متوقفة تلقائياً لأن اتصال يوتيوب ممنوع من إعدادات الاستهلاك.</p
                   ><fieldset id="notice-lessons-fields"
                     ><div class="quran-timing-choices compact-timing-choices"
                       ><label
@@ -1313,16 +1314,16 @@
                           id="lesson-prayer-enabled"
                           name="lesson-timing"
                           type="radio"
-                        />
+                        /><!--i18n:reminder.afterPrayer-->
                         بعد الصلاة</label
                       ><label
-                        ><input id="lesson-custom-enabled" name="lesson-timing" type="radio" /> ساعة
+                        ><input id="lesson-custom-enabled" name="lesson-timing" type="radio" /><!--i18n:ui.f99c847e71874dcb--> ساعة
                         ثابتة</label
                       ></div
                     ><div class="notification-time-slot"
                       ><fieldset id="lesson-prayer-fields"
                         ><div class="wird-time-field"
-                          ><label class="timing-field-label" for="lesson-after-prayer">الصلاة</label
+                          ><label class="timing-field-label" for="lesson-after-prayer"><!--i18n:ui.99682ad2d9e0166e-->الصلاة</label
                           ><select class="select-field" id="lesson-after-prayer"
                             ><option value="fajr">الفجر</option
                             ><option value="dhuhr">الظهر</option
@@ -1332,7 +1333,7 @@
                           ></div
                         ><div class="wird-time-field"
                           ><label class="timing-field-label" for="lesson-after-minutes"
-                            >المدة بعد الصلاة (دقيقة)</label
+                            ><!--i18n:ui.a64f903f16830005-->المدة بعد الصلاة (دقيقة)</label
                           ><input
                             class="input-field"
                             id="lesson-after-minutes"
@@ -1343,33 +1344,33 @@
                       ><fieldset id="lesson-fixed-fields"
                         ><div class="wird-time-field"
                           ><label class="timing-field-label" for="lesson-custom-time"
-                            >الساعة الثابتة</label
+                            ><!--i18n:reminder.fixedTime-->الساعة الثابتة</label
                           ><input
                             class="input-field"
                             id="lesson-custom-time"
                             type="time"
                             value="20:45" /></div></fieldset></div></fieldset></section
                 ><section id="data-notice-section-panel-custom" class="notice-group" role="tabpanel" aria-labelledby="data-notice-section-custom" hidden>
-  <h4>التذكيرات المخصّصة</h4>
-  <p>تُحفظ هنا مباشرة. عند تعارض المواعيد يتأخّر التذكير المخصّص إلى أقرب وقت خالٍ.</p>
+  <h4><!--i18n:ui.da07edd134142a1f-->التذكيرات المخصّصة</h4>
+  <p><!--i18n:ui.aa096fb8b65c0dcc-->تُحفظ هنا مباشرة. عند تعارض المواعيد يتأخّر التذكير المخصّص إلى أقرب وقت خالٍ.</p>
   <form id="custom-reminder-form">
     <div class="custom-reminder-fields">
-      <label>المحتوى<select class="select-field" name="kind"><option value="hadith">حديث</option><option value="adhkar">ذكر</option><option value="video">مقطع</option></select></label>
-      <label>النمط<select class="select-field" name="frequency"><option value="daily">يومي</option><option value="interval">تكراري</option></select></label>
-      <label data-reminder-field="hours" hidden>التكرار بالساعات<input class="input-field" type="number" name="hours" min="2" max="168" value="2"></label>
-      <label data-reminder-field="timing">الموعد اليومي<select class="select-field" name="timing"><option value="fixed">ساعة ثابتة</option><option value="prayer">بعد صلاة</option></select></label>
-      <label data-reminder-field="clock">الساعة<input class="input-field" type="time" name="clock" value="08:00"></label>
-      <label data-reminder-field="prayer" hidden>الصلاة<select class="select-field" name="prayer"><option value="fajr">الفجر</option><option value="dhuhr">الظهر</option><option value="asr">العصر</option><option value="maghrib">المغرب</option><option value="isha">العشاء</option></select></label>
-      <label data-reminder-field="offset" hidden>الدقائق بعد الصلاة<input class="input-field" type="number" name="offset" min="0" max="240" value="15"></label>
+      <label><!--i18n:ui.32ebf177d161e7e7-->المحتوى<select class="select-field" name="kind"><option value="hadith">حديث</option><option value="adhkar">ذكر</option><option value="video">مقطع</option></select></label>
+      <label><!--i18n:ui.aa6561fcf6a38e52-->النمط<select class="select-field" name="frequency"><option value="daily">يومي</option><option value="interval">تكراري</option></select></label>
+      <label data-reminder-field="hours" hidden><!--i18n:reminder.repeatHours-->التكرار بالساعات<input class="input-field" type="number" name="hours" min="2" max="168" value="2"></label>
+      <label data-reminder-field="timing"><!--i18n:ui.454c75ce9bb87b06-->الموعد اليومي<select class="select-field" name="timing"><option value="fixed">ساعة ثابتة</option><option value="prayer">بعد صلاة</option></select></label>
+      <label data-reminder-field="clock"><!--i18n:ui.2912156526ab6f5c-->الساعة<input class="input-field" type="time" name="clock" value="08:00"></label>
+      <label data-reminder-field="prayer" hidden><!--i18n:ui.99682ad2d9e0166e-->الصلاة<select class="select-field" name="prayer"><option value="fajr">الفجر</option><option value="dhuhr">الظهر</option><option value="asr">العصر</option><option value="maghrib">المغرب</option><option value="isha">العشاء</option></select></label>
+      <label data-reminder-field="offset" hidden><!--i18n:ui.9c93867f8a5f19c2-->الدقائق بعد الصلاة<input class="input-field" type="number" name="offset" min="0" max="240" value="15"></label>
     </div>
-    <label class="custom-reminder-fields">مدة ظهور النافذة (ثانية)<input class="input-field" type="number" name="durationSeconds" min="5" max="60" value="15" required></label>
-    <button type="submit" class="btn btn-primary">حفظ التذكير</button>
+    <label class="custom-reminder-fields"><!--i18n:ui.fe67ce9671c45651-->مدة ظهور النافذة (ثانية)<input class="input-field" type="number" name="durationSeconds" min="5" max="60" value="15" required></label>
+    <button type="submit" class="btn btn-primary"><!--i18n:reminder.save-->حفظ التذكير</button>
 
   </form>
   <div class="custom-reminder-saved">
-    <h5>آخر تذكير محفوظ</h5>
+    <h5><!--i18n:ui.1cb0f06b79a45d45-->آخر تذكير محفوظ</h5>
     <div id="custom-reminder-list"></div>
-    <button type="button" id="custom-reminder-open-history" class="btn btn-secondary">سجل التذكيرات</button>
+    <button type="button" id="custom-reminder-open-history" class="btn btn-secondary"><!--i18n:ui.ea90e04e57ecec8f-->سجل التذكيرات</button>
   </div>
   <p id="custom-reminder-status" role="status"></p>
 </section>
@@ -1379,13 +1380,13 @@
                   hidden=""
                   id="data-notice-section-panel-lock"
                   role="tabpanel"
-                  ><h4>إشعارات شاشة التهيئة للصلاة</h4
+                  ><h4><!--i18n:ui.fa2367efc3a1a437-->إشعارات شاشة التهيئة للصلاة</h4
                   ><p class="settings-status" id="lock-notification-disabled-hint"
-                    >فعّل شاشة التهيئة من قسم «شاشة التهيئة» لإتاحة تعديل مواعيدها وتنبيهها.</p
+                    ><!--i18n:ui.91e6cd2cf9467754-->فعّل شاشة التهيئة من قسم «شاشة التهيئة» لإتاحة تعديل مواعيدها وتنبيهها.</p
                   ><section class="notice-group" hidden="" id="lock-notification-settings"
                     ><div class="grid-3"
                       ><label class="form-group" for="settings-lock-before"
-                        >ظهور الشاشة قبل الأذان (دقيقة)<input
+                        ><!--i18n:ui.284d15d134f280b4-->ظهور الشاشة قبل الأذان (دقيقة)<input
                           class="input-field"
                           id="settings-lock-before"
                           max="120"
@@ -1393,7 +1394,7 @@
                           type="number"
                           value="15" /></label
                       ><label class="form-group" for="settings-lock-warning"
-                        >التنبيه قبل ظهور الشاشة (دقيقة)<input
+                        ><!--i18n:ui.4b7f54470fb9e4a2-->التنبيه قبل ظهور الشاشة (دقيقة)<input
                           class="input-field"
                           id="settings-lock-warning"
                           max="60"
@@ -1401,16 +1402,16 @@
                           type="number"
                           value="1" /></label
                       ><label class="form-group" for="settings-lock-snooze"
-                        >تأجيل الظهور مرة واحدة (حتى 5 دقائق)<input
+                        ><!--i18n:ui.f493daa51e0ad4df-->تأجيل الظهور مرة واحدة (حتى 5 دقائق)<input
                           class="input-field"
                           id="settings-lock-snooze"
                           max="5"
                           min="1"
                           type="number"
                           value="3" /></label></div
-                    ><p>يتاح التأجيل إذا حددت ظهور الشاشة قبل الأذان بأكثر من 10 دقائق.</p
+                    ><p><!--i18n:ui.76ee5e9c7789250a-->يتاح التأجيل إذا حددت ظهور الشاشة قبل الأذان بأكثر من 10 دقائق.</p
                     ><button class="btn" id="btn-preview-warning"
-                      >تجربة تنبيه الشاشة</button
+                      ><!--i18n:ui.c45baadc17c09390-->تجربة تنبيه الشاشة</button
                     ></section
                   ></section
                 ></div
@@ -1420,29 +1421,29 @@
           <article class="card-panel inline-only-settings" id="quran-general-settings" tabindex="-1"
             ><header class="card-header"
               ><div
-                ><h3 class="card-title">إعدادات القرآن الكريم</h3
-                ><p>الرواية ومقدار الورد ونطاق الحفظ. تُحفظ التعديلات مباشرة.</p></div
+                ><h3 class="card-title"><!--i18n:ui.038c27935db553fd-->إعدادات القرآن الكريم</h3
+                ><p><!--i18n:ui.ad20ee26db6a6d29-->الرواية ومقدار الورد ونطاق الحفظ. تُحفظ التعديلات مباشرة.</p></div
               ></header
             ><div class="grid-2"
               ><div class="form-group"
-                ><label for="quran-riwaya">الرواية</label
+                ><label for="quran-riwaya"><!--i18n:reader.riwaya-->الرواية</label
                 ><select class="select-field" id="quran-riwaya"
                   ><option value="hafs">حفص عن عاصم — العد الكوفي</option
                   ><option value="warsh">ورش عن نافع — العد المدني الأخير</option></select
                 ></div
               ></div
             ><section class="compact-settings-section" data-quran-settings-kind="reading"
-              ><h4>ورد القراءة والتلاوة</h4
+              ><h4><!--i18n:wird.reading-->ورد القراءة والتلاوة</h4
               ><div class="grid-2">
                 <div class="form-group">
-                  <label class="form-label">نمط ورد القراءة:</label>
+                  <label class="form-label"><!--i18n:ui.df0a11f1675c7653-->نمط ورد القراءة:</label>
                   <select class="select-field" id="reading-mode">
                     <option value="sequential">تسلسلي (ختمة مستمرة)</option>
                     <option value="random">عشوائي / تجديد يومي</option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">وحدة ورد القراءة:</label>
+                  <label class="form-label"><!--i18n:ui.38588017d1ab1355-->وحدة ورد القراءة:</label>
                   <select class="select-field" id="reading-unit"
                     ><option value="juz">جزء (Juz)</option>
                     <option value="hizb">حزب (Hizb)</option>
@@ -1451,7 +1452,7 @@
                   </select>
                 </div> </div
               ><div class="form-group">
-                <label class="form-label">المقدار في كل ورد:</label>
+                <label class="form-label"><!--i18n:ui.ac1092ea254ccce3-->المقدار في كل ورد:</label>
                 <input
                   class="input-field"
                   id="reading-amount"
@@ -1461,10 +1462,10 @@
                   value="1"
                 /> </div></section
             ><section class="compact-settings-section" data-quran-settings-kind="hifz" hidden=""
-              ><h4>ورد الحفظ والمراجعة</h4
+              ><h4><!--i18n:wird.memorization-->ورد الحفظ والمراجعة</h4
               ><div class="grid-2">
                 <div class="form-group">
-                  <label class="form-label">وحدة الحفظ/المراجعة المستقلة:</label>
+                  <label class="form-label"><!--i18n:ui.4e27aa49a0a1890b-->وحدة الحفظ/المراجعة المستقلة:</label>
                   <select class="select-field" id="hifz-unit"
                     ><option value="juz">جزء (Juz)</option>
                     <option value="hizb">حزب (Hizb)</option>
@@ -1473,7 +1474,7 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">مقدار الحفظ/المراجعة:</label>
+                  <label class="form-label"><!--i18n:ui.d49a1ee407702650-->مقدار الحفظ/المراجعة:</label>
                   <input
                     class="input-field"
                     id="hifz-amount"
@@ -1491,7 +1492,9 @@
             hidden=""
             id="data-settings-section-panel-appearance"
             role="tabpanel"
-            ><div class="card-panel appearance-settings">
+            >
+
+<div class="card-panel appearance-settings">
               <div class="card-header"
                 ><h3 class="card-title"
                   ><svg
@@ -1510,21 +1513,21 @@
                       d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 0-4 2 2 0 0 1 0-4h5a3 3 0 0 0 3-3c0-4-4-7-9-7Z"
                     ></path>
                     <path d="M7 9h.01M10 6h.01M15 6h.01M6 13h.01"></path>
-                  </svg>
+                  </svg><!--i18n:ui.17c0d42537eddd34-->
                   إعدادات المظهر</h3
-                ><span class="meta-pill" id="theme-live-indicator">نشط</span></div
+                ><span class="meta-pill" id="theme-live-indicator"><!--i18n:status.active-->نشط</span></div
               >
               <div class="appearance-options">
                 <label class="appearance-family-switch">
-                  <span>المظهر العصري</span>
+                  <span><!--i18n:ui.658b9489f6bcf458-->المظهر العصري</span>
                   <input id="theme-modern-enabled" role="switch" type="checkbox" />
                 </label>
                 <div class="form-group" id="modern-theme-options" hidden
-                  ><label class="form-label" for="theme-selector">اختر أحد القوالب</label
-                  ><select class="select-field" id="theme-selector"></select
+                  ><label class="form-label" for="theme-selector"><!--i18n:ui.32fc2ac240194d3d-->اختر أحد القوالب</label
+                  ><select class="select-field" id="theme-selector" data-native-select></select
                 ></div>
                 <div class="form-group"
-                  ><span class="form-label">الوضع اللوني</span
+                  ><span class="form-label"><!--i18n:ui.65f3c5d8ade6d1a8-->الوضع اللوني</span
                   ><div class="mode-toggle-group">
                     <button aria-pressed="true" class="mode-btn" data-color-mode="dark"
                       ><svg
@@ -1540,7 +1543,7 @@
                         viewbox="0 0 24 24"
                       >
                         <path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10Z"></path>
-                      </svg>
+                      </svg><!--i18n:settings.darkMode-->
                       الوضع الليلي</button
                     >
                     <button aria-pressed="false" class="mode-btn" data-color-mode="light"
@@ -1560,7 +1563,7 @@
                         <path
                           d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
                         ></path>
-                      </svg>
+                      </svg><!--i18n:settings.lightMode-->
                       الوضع النهاري</button
                     >
                   </div></div
@@ -1578,27 +1581,27 @@
               <!-- Location and per-prayer minute adjustments. -->
               <div class="card-panel inline-only-settings" id="region-general-settings">
                 <div class="card-header">
-                  <h3 class="card-title">الموقع الجغرافي وتعديل الدقائق (+ / -)</h3>
+                  <h3 class="card-title"><!--i18n:ui.bb16139ba28635b3-->الموقع الجغرافي وتعديل الدقائق (+ / -)</h3>
                 </div>
-<p class="resource-note" data-phone-location-note hidden>يتم التحكم بالموقع عبر الهاتف المتصل، يمكنك فك الارتباط <a href="#data-settings-section-panel-sync" data-open-sync-settings>من هنا</a>.</p>
+<p class="resource-note" data-phone-location-note hidden><!--i18n:ui.366460ceb400c32e-->يتم التحكم بالموقع عبر الهاتف المتصل، يمكنك فك الارتباط <a href="#data-settings-section-panel-sync" data-open-sync-settings><!--i18n:ui.98f70d12b72ec0ee-->من هنا</a>.</p>
                 <div id="desktop-location-fields">
                 <!-- Cascading country and city selectors. -->
                 <div class="grid-2">
                   <div class="form-group">
-                    <label class="form-label">1. اختر الدولة / البلد:</label>
+                    <label class="form-label"><!--i18n:ui.5927a88dcd300020-->1. اختر الدولة / البلد:</label>
                     <select class="select-field" id="settings-country-select">
                       <option value="">-- اختر الدولة أولاً --</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">2. اختر المدينة التابعة لها:</label>
+                    <label class="form-label"><!--i18n:ui.52ab7593183eecb8-->2. اختر المدينة التابعة لها:</label>
                     <select class="select-field" disabled="" id="settings-city-select">
                       <option value="">-- يرجى اختيار الدولة أولاً --</option>
                     </select>
                   </div>
                 </div>
                 <small style="color: var(--text-muted)"
-                  >بيانات المدن: GeoNames (geonames.org) — CC BY 4.0</small
+                  ><!--i18n:ui.e45b5e9cc0a532c7-->بيانات المدن: GeoNames (geonames.org) — CC BY 4.0</small
                 >
                 <p
                   id="settings-city-count"
@@ -1606,7 +1609,7 @@
                   style="font-size: var(--font-size-sm); color: var(--text-secondary)"
                 ></p>
                 <div class="form-group">
-                  <label class="form-label">طريقة حساب المواقيت:</label>
+                  <label class="form-label"><!--i18n:ui.102be991539c6529-->طريقة حساب المواقيت:</label>
                   <select class="select-field" id="settings-calc-method">
                     <option value="UmmAlQura">أم القرى (مكة المكرمة والخليج)</option>
                     <option value="MuslimWorldLeague">رابطة العالم الإسلامي</option>
@@ -1648,12 +1651,12 @@
                       <path
                         d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
                       ></path>
-                    </svg>
+                    </svg><!--i18n:ui.01b7682347ea265a-->
                     إدخال المدينة والإحداثيات يدوياً</summary
                   >
                   <div class="grid-2" style="margin-top: var(--spacing-sm)">
                     <div class="form-group">
-                      <label class="form-label">اسم المدينة:</label>
+                      <label class="form-label"><!--i18n:ui.dcb59818d02f24fb-->اسم المدينة:</label>
                       <input
                         class="input-field"
                         id="settings-city-name"
@@ -1662,7 +1665,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">اسم الدولة:</label>
+                      <label class="form-label"><!--i18n:ui.e057bacfe787d5bb-->اسم الدولة:</label>
                       <input
                         class="input-field"
                         id="settings-country-name"
@@ -1673,27 +1676,27 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="settings-time-zone"
-                      >المنطقة الزمنية للمدينة:</label
+                      ><!--i18n:ui.2e9d6e5a7046cdd3-->المنطقة الزمنية للمدينة:</label
                     >
                     <select class="select-field" id="settings-time-zone"></select>
                   </div>
                   <div class="grid-2" style="margin-top: var(--spacing-xs)">
                     <div class="form-group">
-                      <label class="form-label">خط العرض (Latitude):</label>
+                      <label class="form-label"><!--i18n:ui.5463e2f64b333dd1-->خط العرض (Latitude):</label>
                       <input class="input-field" id="settings-lat" step="0.0001" type="number" />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">خط الطول (Longitude):</label>
+                      <label class="form-label"><!--i18n:ui.2ef91636a63242de-->خط الطول (Longitude):</label>
                       <input class="input-field" id="settings-lng" step="0.0001" type="number" />
                     </div>
                   </div>
                 </details>
                 </div>
                 <details class="advanced-coords-accordion"
-                  ><summary>تعديل الفروق بالدقائق لكل صلاة</summary
+                  ><summary><!--i18n:ui.bf8e1c5a19ef6e89-->تعديل الفروق بالدقائق لكل صلاة</summary
                   ><div class="grid-3">
                     <div class="form-group">
-                      <label class="form-label">الفجر (دقيقة):</label>
+                      <label class="form-label"><!--i18n:ui.031a6006933df0ed-->الفجر (دقيقة):</label>
                       <input
                         class="input-field"
                         id="adj-fajr"
@@ -1704,7 +1707,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">الشروق (دقيقة):</label>
+                      <label class="form-label"><!--i18n:ui.339082a81f80ccb6-->الشروق (دقيقة):</label>
                       <input
                         class="input-field"
                         id="adj-sunrise"
@@ -1715,7 +1718,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">الظهر/الجمعة:</label>
+                      <label class="form-label"><!--i18n:ui.d16adee32d01cca3-->الظهر/الجمعة:</label>
                       <input
                         class="input-field"
                         id="adj-dhuhr"
@@ -1726,7 +1729,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">العصر (دقيقة):</label>
+                      <label class="form-label"><!--i18n:ui.20b32a13d78dd59c-->العصر (دقيقة):</label>
                       <input
                         class="input-field"
                         id="adj-asr"
@@ -1737,7 +1740,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">المغرب (دقيقة):</label>
+                      <label class="form-label"><!--i18n:ui.bf18ce0dc32b7d6d-->المغرب (دقيقة):</label>
                       <input
                         class="input-field"
                         id="adj-maghrib"
@@ -1748,7 +1751,7 @@
                       />
                     </div>
                     <div class="form-group">
-                      <label class="form-label">العشاء (دقيقة):</label>
+                      <label class="form-label"><!--i18n:ui.f0faa64461026602-->العشاء (دقيقة):</label>
                       <input
                         class="input-field"
                         id="adj-isha"
@@ -1760,13 +1763,13 @@
                     </div> </div
                 ></details>
                 <button class="btn btn-primary" id="btn-save-region" type="button"
-                  >حفظ إعدادات المنطقة</button
+                  ><!--i18n:ui.05b8a614d002b64d-->حفظ إعدادات المنطقة</button
                 ><p class="settings-status" id="region-settings-status" role="status"></p
               ></div>
               <!-- Pre-prayer reminders and preparation screen settings. -->
               <div class="card-panel"
                 ><header class="card-header"
-                  ><h3 class="card-title">شاشة التهيئة للصلاة</h3
+                  ><h3 class="card-title"><!--i18n:preparation.screen-->شاشة التهيئة للصلاة</h3
                   ><button
                     aria-label="ما غرض شاشة التهيئة للصلاة؟"
                     class="btn btn-secondary"
@@ -1775,13 +1778,13 @@
                     >؟</button
                   ></header
                 ><label class="settings-switch"
-                  ><span>تفعيل شاشة التهيئة للصلاة</span
+                  ><span><!--i18n:preparation.enable-->تفعيل شاشة التهيئة للصلاة</span
                   ><input id="settings-lock-enabled" role="switch" type="checkbox" /></label
                 ><p
-                  >تستمر شاشة التهيئة حتى موعد الأذان وتُغلق تلقائياً عند دخوله. اضبط موعد ظهورها
+                  ><!--i18n:preparation.description-->تستمر شاشة التهيئة حتى موعد الأذان وتُغلق تلقائياً عند دخوله. اضبط موعد ظهورها
                   وتنبيهها من قسم الإشعارات.</p
                 ><label class="settings-switch"
-                  ><span>كتم صوت النظام أثناء التهيئة</span
+                  ><span><!--i18n:preparation.muteSystem-->كتم صوت النظام أثناء التهيئة</span
                   ><input id="settings-lock-mute" role="switch" type="checkbox" /></label
                 ><div class="settings-action-row"
                   ><button class="btn btn-gold" id="btn-preview-lock"
@@ -1799,7 +1802,7 @@
                     >
                       <rect height="14" rx="2" width="20" x="2" y="3"></rect>
                       <path d="M12 17v4m-4 0h8"></path>
-                    </svg>
+                    </svg><!--i18n:preparation.preview-->
                     تجربة شاشة التهيئة (30 ثانية)</button
                   ></div
                 ><p class="settings-status" id="lock-settings-status" role="status"></p
@@ -1813,9 +1816,9 @@
             role="tabpanel"
             ><article class="card-panel" id="resource-general-settings"
               ><header class="card-header"
-                ><h3 class="card-title">التخزين والاستهلاك</h3
+                ><h3 class="card-title"><!--i18n:settings.storageAndUsage-->التخزين والاستهلاك</h3
                 ><button class="btn btn-secondary" id="btn-refresh-resources" type="button"
-                  >تحديث القياسات</button
+                  ><!--i18n:ui.e59dd465bf793f9c-->تحديث القياسات</button
                 ></header
               ><div
                 aria-label="التخزين والاستهلاك"
@@ -1829,7 +1832,7 @@
                   role="tab"
                   tabindex="0"
                   type="button"
-                  >التخزين</button
+                  ><!--i18n:settings.storage-->التخزين</button
                 ><button
                   aria-controls="data-resource-section-panel-usage"
                   aria-selected="false"
@@ -1838,18 +1841,18 @@
                   role="tab"
                   tabindex="-1"
                   type="button"
-                  >الاستهلاك</button
+                  ><!--i18n:ui.39a9c7f925d72d45-->الاستهلاك</button
                 ></div
               ><div class="resource-sections"
                 ><section
                   aria-labelledby="data-resource-section-storage"
                   id="data-resource-section-panel-storage"
                   role="tabpanel"
-                  ><h4>القرص والذاكرة</h4
+                  ><h4><!--i18n:ui.1a863235ab930c36-->القرص والذاكرة</h4
                   ><div class="storage-overview"
                     ><p class="storage-total"
                       ><strong id="disk-total">—</strong
-                      ><span>إجمالي مساحة التطبيق على القرص</span></p
+                      ><span><!--i18n:ui.4e138023fc5121b6-->إجمالي مساحة التطبيق على القرص</span></p
                     ><div
                       aria-label="توزيع المساحة المستخدمة"
                       class="storage-composition"
@@ -1864,19 +1867,19 @@
                       role="status"
                     ></div></div
                   ><p class="resource-memory-line"
-                    >الذاكرة المستخدمة الآن: <span id="memory-used">—</span></p
+                    ><!--i18n:ui.1ea9ecdc306f0936-->الذاكرة المستخدمة الآن: <span id="memory-used">—</span></p
                   ><button class="btn btn-secondary" id="btn-clear-resource-cache" type="button"
-                    >مسح كاش الشبكة</button
+                    ><!--i18n:settings.clearNetworkCache-->مسح كاش الشبكة</button
                   ><details
-                    ><summary>حذف بيانات أخرى</summary
-                    ><label for="resource-data-kind">نوع البيانات</label
+                    ><summary><!--i18n:ui.a7df27d6362c684d-->حذف بيانات أخرى</summary
+                    ><label for="resource-data-kind"><!--i18n:ui.2bdba8a13601bed3-->نوع البيانات</label
                     ><select class="select-field" id="resource-data-kind"
                       ><option value="youtube">مقاطع يوتيوب المحفوظة</option
                       ><option value="hadith">الأحاديث المجلوبة وسجل العرض</option
                       ><option value="cities">مواقيت المدن السابقة</option
                       ><option value="history">سجل استهلاك الإنترنت</option></select
                     ><button class="btn btn-secondary" id="btn-delete-resource-data" type="button"
-                      >حذف البيانات المحددة</button
+                      ><!--i18n:settings.deleteSelectedData-->حذف البيانات المحددة</button
                     ></details
                   ><p
                     class="settings-status"
@@ -1888,12 +1891,12 @@
                   hidden=""
                   id="data-resource-section-panel-usage"
                   role="tabpanel"
-                  ><h4>استهلاك الإنترنت</h4
+                  ><h4><!--i18n:settings.networkUsage-->استهلاك الإنترنت</h4
                   ><div class="resource-ranges"
-                    ><button aria-pressed="false" data-usage-range="1" type="button">اليوم</button
-                    ><button aria-pressed="true" data-usage-range="7" type="button">أسبوع</button
+                    ><button aria-pressed="false" data-usage-range="1" type="button"><!--i18n:ui.2422f71e7f4eadec-->اليوم</button
+                    ><button aria-pressed="true" data-usage-range="7" type="button"><!--i18n:reminder.week-->أسبوع</button
                     ><button aria-pressed="false" data-usage-range="30" type="button"
-                      >شهر</button
+                      ><!--i18n:ui.418e78e480bd4252-->شهر</button
                     ></div
                   ><p id="usage-total"></p
                   ><input checked="" hidden="" id="network-show-chart" role="switch" type="checkbox" /><p
@@ -1907,7 +1910,7 @@
                     class="btn btn-secondary usage-chart-toggle"
                     id="btn-toggle-usage-chart"
                     type="button"
-                    >إخفاء مبيان الاستهلاك</button
+                    ><!--i18n:ui.828d42f383c8d1d3-->إخفاء مبيان الاستهلاك</button
                   ><div
                     aria-label="خط استهلاك الإنترنت؛ استخدم السهمين لاستعراض التفاصيل"
                     id="usage-chart"
@@ -1921,9 +1924,9 @@
                     role="status"
                   ></div></section></div
               ><details class="resource-advanced"
-                ><summary>إعدادات متقدمة للتحكم بالإنترنت</summary
+                ><summary><!--i18n:ui.12a4ce2a168f2880-->إعدادات متقدمة للتحكم بالإنترنت</summary
                 ><p class="network-policy-note"
-                  >تغيير هذه الإعدادات قد يؤثر على الخدمات المتاحة.<button
+                  ><!--i18n:confirm.network-->تغيير هذه الإعدادات قد يؤثر على الخدمات المتاحة.<button
                     aria-label="شرح سياسة الإنترنت"
                     class="resource-help"
                     data-network-policy=""
@@ -1942,12 +1945,12 @@
                         d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1 .7-1.7 1.1-1.7 2.7M12 17h.01"
                       ></path></svg></button></p
                 ><label class="settings-switch"
-                  ><span>السماح للتطبيق بالإنترنت</span
+                  ><span><!--i18n:settings.allowInternet-->السماح للتطبيق بالإنترنت</span
                   ><input checked="" id="network-enabled" role="switch" type="checkbox" /></label
                 ><fieldset id="network-category-fields"
                   ><div class="network-option-row"
                     ><label class="settings-switch"
-                      ><span>خلاصات يوتيوب والصور والمشاهدة</span
+                      ><span><!--i18n:ui.e502ae06ae906ed7-->خلاصات يوتيوب والصور والمشاهدة</span
                       ><input checked="" id="network-youtube" role="switch" type="checkbox" /></label
                     ><button
                       aria-label="ما المقصود بخلاصات يوتيوب؟"
@@ -1968,16 +1971,16 @@
                           d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1 .7-1.7 1.1-1.7 2.7M12 17h.01"
                         ></path></svg></button></div
                   ><label class="settings-switch"
-                    ><span>جلب الأحاديث وشروحها</span
+                    ><span><!--i18n:ui.00bedeb4fd9641c9-->جلب الأحاديث وشروحها</span
                     ><input checked="" id="network-hadith" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>التحقق من مواقيت الصلاة تلقائياً ويدوياً</span
+                    ><span><!--i18n:ui.fb647681d47992cf-->التحقق من مواقيت الصلاة تلقائياً ويدوياً</span
                     ><input checked="" id="network-prayer" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>كشف الموقع عبر الإنترنت</span
+                    ><span><!--i18n:ui.f72ba749b5084ebb-->كشف الموقع عبر الإنترنت</span
                     ><input checked="" id="network-location" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>الاتصالات الأخرى</span
+                    ><span><!--i18n:settings.otherConnections-->الاتصالات الأخرى</span
                     ><input
                       checked=""
                       id="network-other"
@@ -1989,12 +1992,12 @@
             id="data-settings-section-panel-accessibility"
             role="tabpanel"
             ><article class="card-panel" id="accessibility-general-settings"
-              ><header class="card-header"><h3 class="card-title">إمكانية الوصول</h3></header
+              ><header class="card-header"><h3 class="card-title"><!--i18n:settings.accessibility-->إمكانية الوصول</h3></header
               ><p class="resource-note"
-                >تُطبّق هذه الخيارات وتُحفظ فوراً. تكبير الواجهة يكبّر النصوص والأزرار والبطاقات
+                ><!--i18n:ui.209c2e086753f490-->تُطبّق هذه الخيارات وتُحفظ فوراً. تكبير الواجهة يكبّر النصوص والأزرار والبطاقات
                 معاً؛ لا حاجة لتوسيع البطاقات وحدها وخلق فراغات.</p
               ><div class="a11y-controls"
-                ><label>حجم الواجهة والبطاقات</label
+                ><label><!--i18n:settings.interfaceScale-->حجم الواجهة والبطاقات</label
                 ><div class="a11y-stepper"
                   ><button aria-label="تصغير الواجهة" data-a11y-step="zoom:-10" type="button"
                     >−</button
@@ -2002,8 +2005,8 @@
                   ><button aria-label="تكبير الواجهة" data-a11y-step="zoom:10" type="button"
                     >+</button
                   ></div
-                ><small>80%–150% · الاختصارات Ctrl + وCtrl − وCtrl 0</small
-                ><label for="settings-a11y-reading">حجم نصوص القراءة</label
+                ><small><!--i18n:ui.b8b8550640863601-->80%–150% · الاختصارات Ctrl + وCtrl − وCtrl 0</small
+                ><label for="settings-a11y-reading"><!--i18n:settings.readingTextSize-->حجم نصوص القراءة</label
                 ><input
                   data-a11y-key="readingSize"
                   id="settings-a11y-reading"
@@ -2013,51 +2016,51 @@
                   type="range"
                   value="100"
                 /><output data-a11y-output="readingSize">100%</output
-                ><small>للآيات والحديث وشرحه؛ تبقى الخطوط القرآنية المعتمدة.</small
-                ><label for="settings-a11y-contrast">وضوح الألوان</label
+                ><small><!--i18n:ui.3f2b034ef116b2b7-->للآيات والحديث وشرحه؛ تبقى الخطوط القرآنية المعتمدة.</small
+                ><label for="settings-a11y-contrast"><!--i18n:ui.85b42e12439c6d55-->وضوح الألوان</label
                 ><select class="select-field" data-a11y-key="contrast" id="settings-a11y-contrast"
                   ><option value="theme">ألوان القالب</option
                   ><option value="dark">تباين مرتفع داكن</option
                   ><option value="light">تباين مرتفع فاتح</option></select
                 ><label class="settings-switch"
-                  ><span>خط أوضح للواجهة</span
+                  ><span><!--i18n:ui.0e69467cda424ac6-->خط أوضح للواجهة</span
                   ><input data-a11y-key="clearFont" role="switch" type="checkbox" /></label
                 ><label class="settings-switch"
-                  ><span>تقليل الحركة والمؤثرات</span
+                  ><span><!--i18n:settings.reduceMotion-->تقليل الحركة والمؤثرات</span
                   ><input data-a11y-key="reduceMotion" role="switch" type="checkbox" /></label
                 ><button class="btn btn-secondary" data-a11y-reset="" type="button"
-                  >استعادة الافتراضي</button
+                  ><!--i18n:action.restoreDefaults-->استعادة الافتراضي</button
                 ></div
               ><details class="a11y-button-settings"
-                ><summary>ظهور الزر ومكانه</summary
+                ><summary><!--i18n:ui.9e7d75d887855eac-->ظهور الزر ومكانه</summary
                 ><label class="settings-switch"
-                  ><span>إظهار زر الوصول العائم</span
+                  ><span><!--i18n:ui.350b8c8f49cf512d-->إظهار زر الوصول العائم</span
                   ><input checked="" data-a11y-key="buttonVisible" role="switch" type="checkbox" /></label
-                ><label for="a11y-position">مكان الزر</label
+                ><label for="a11y-position"><!--i18n:settings.buttonPosition-->مكان الزر</label
                 ><select class="select-field" data-a11y-key="buttonPosition" id="a11y-position"
                   ><option value="bottom-left">أسفل اليسار</option
                   ><option value="bottom-right">أسفل اليمين</option
                   ><option value="top-left">أعلى اليسار</option
                   ><option value="top-right">أعلى اليمين</option></select
-                ><p>الصفحات التي يظهر فيها الزر:</p
+                ><p><!--i18n:ui.3b2bc91a3ee43143-->الصفحات التي يظهر فيها الزر:</p
                 ><div class="a11y-page-options"
                   ><label class="settings-switch"
-                    ><span>مواقيت الصلاة</span
+                    ><span><!--i18n:nav.prayers-->مواقيت الصلاة</span
                     ><input checked="" data-a11y-page="tab-prayers" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>الأحاديث</span
+                    ><span><!--i18n:ui.b36e86980a7e86b0-->الأحاديث</span
                     ><input checked="" data-a11y-page="tab-hadith" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>الدروس والقنوات</span
+                    ><span><!--i18n:nav.lessons-->الدروس والقنوات</span
                     ><input checked="" data-a11y-page="tab-youtube" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>القرآن الكريم</span
+                    ><span><!--i18n:ui.355bd9c0e166cc67-->القرآن الكريم</span
                     ><input checked="" data-a11y-page="tab-quran" role="switch" type="checkbox" /></label
                   ><label class="settings-switch"
-                    ><span>الإعدادات</span
+                    ><span><!--i18n:nav.settings-->الإعدادات</span
                     ><input checked="" data-a11y-page="tab-settings" role="switch" type="checkbox" /></label></div
                 ><small
-                  >يمكن إخفاؤه من جميع الصفحات؛ تظل هذه الأدوات والاختصارات متاحة من
+                  ><!--i18n:ui.5fb9dab78a2cdaa6-->يمكن إخفاؤه من جميع الصفحات؛ تظل هذه الأدوات والاختصارات متاحة من
                   الإعدادات.</small
                 ></details
               ><p
@@ -2072,50 +2075,50 @@
             id="data-settings-section-panel-performance"
             role="tabpanel"
             ><article class="card-panel"
-              ><header class="card-header"><h3 class="card-title">أداء التطبيق</h3></header
+              ><header class="card-header"><h3 class="card-title"><!--i18n:ui.ac633ba32224aa62-->أداء التطبيق</h3></header
               ><label class="settings-switch"
-                ><span>اختيار المستوى تلقائياً حسب الجهاز</span
+                ><span><!--i18n:ui.d8db2e9b76ea286f-->اختيار المستوى تلقائياً حسب الجهاز</span
                 ><input checked="" id="performance-auto" role="switch" type="checkbox" /></label
               ><fieldset class="performance-radio-options"
-                ><legend class="sr-only">مستوى الأداء</legend
+                ><legend class="sr-only"><!--i18n:ui.a698162251d23e8f-->مستوى الأداء</legend
                 ><label class="performance-radio-option"
-                  ><input name="performance-level" type="radio" value="eco" /><span>اقتصادي</span
-                  ><small data-performance-recommendation="eco" hidden="">(موصى به)</small></label
+                  ><input name="performance-level" type="radio" value="eco" /><span><!--i18n:settings.economy-->اقتصادي</span
+                  ><small data-performance-recommendation="eco" hidden=""><!--i18n:ui.ffa7bc262d3cd961-->(موصى به)</small></label
                 ><label class="performance-radio-option"
                   ><input name="performance-level" type="radio" value="balanced" /><span
-                    >متوازن</span
+                    ><!--i18n:settings.balanced-->متوازن</span
                   ><small data-performance-recommendation="balanced" hidden=""
-                    >(موصى به)</small
+                    ><!--i18n:ui.ffa7bc262d3cd961-->(موصى به)</small
                   ></label
                 ><label class="performance-radio-option"
-                  ><input name="performance-level" type="radio" value="full" /><span>كامل</span
-                  ><small data-performance-recommendation="full" hidden="">(موصى به)</small></label
+                  ><input name="performance-level" type="radio" value="full" /><span><!--i18n:ui.c349b59c70a81234-->كامل</span
+                  ><small data-performance-recommendation="full" hidden=""><!--i18n:ui.ffa7bc262d3cd961-->(موصى به)</small></label
                 ></fieldset
               ><div class="performance-hardware-lines"
                 ><p id="performance-cpu"></p><p id="performance-memory"></p
                 ><p id="performance-cores"></p></div
-              ><p class="resource-note">تُطبق تغييرات الأداء بعد الضغط على «حفظ جميع الإعدادات».</p
+              ><p class="resource-note"><!--i18n:ui.0436df2441d6d6e9-->تُطبق تغييرات الأداء بعد الضغط على «حفظ جميع الإعدادات».</p
               ><p class="settings-status" id="performance-status" role="status"></p></article></div
           ><div id="data-settings-section-panel-shortcuts" class="settings-section-panel" role="tabpanel"
                 aria-labelledby="data-settings-section-shortcuts" hidden>
               <article class="card-panel shortcut-settings">
-                <header class="card-header"><div><h3 class="card-title">اختصارات لوحة المفاتيح</h3>
-                  <p>اضغط على زر الاختصار لتغييره. اختصار النافذة المصغّرة ثابت ويعمل حتى خارج محراب.</p></div></header>
+                <header class="card-header"><div><h3 class="card-title"><!--i18n:settings.shortcuts-->اختصارات لوحة المفاتيح</h3>
+                  <p><!--i18n:ui.64146ad9100e80f8-->اضغط على زر الاختصار لتغييره. اختصار النافذة المصغّرة ثابت ويعمل حتى خارج محراب.</p></div></header>
                 <div id="shortcut-rows"></div>
                 <div class="directory-row">
-                  <span>إظهار أو إغلاق النافذة المصغّرة</span>
+                  <span><!--i18n:ui.22750b2e4e90615c-->إظهار أو إغلاق النافذة المصغّرة</span>
                   <kbd dir="ltr" class="btn btn-secondary" style="cursor: default">Ctrl + Shift + Space</kbd>
                 </div>
-                <button type="button" class="btn btn-secondary" id="shortcut-reset">استعادة الاختصارات الأصلية</button>
+                <button type="button" class="btn btn-secondary" id="shortcut-reset"><!--i18n:ui.c1caf75b613d1296-->استعادة الاختصارات الأصلية</button>
               </article>
             </div><div id="data-settings-section-panel-sync" class="settings-section-panel" role="tabpanel" aria-labelledby="data-settings-section-sync" hidden>
           <article class="card-panel local-sync-panel">
-            <header class="card-header"><h3 class="card-title">ربط الأجهزة محلياً</h3></header>
-            <p>اتصل بالشبكة المحلية نفسها على الجهازين. يرسل الهاتف الموقع إلى الحاسوب عند اختيار مشاركته.</p>
-            <p>بيانات الاستهلاك والتخزين وأذونات النظام تبقى خاصة بكل جهاز.</p>
+            <header class="card-header"><h3 class="card-title"><!--i18n:ui.b2c38150cafe50fc-->ربط الأجهزة محلياً</h3></header>
+            <p><!--i18n:ui.7a33bd6d1a2f0b2b-->اتصل بالشبكة المحلية نفسها على الجهازين. يرسل الهاتف الموقع إلى الحاسوب عند اختيار مشاركته.</p>
+            <p><!--i18n:ui.cd1616a955ce3b40-->بيانات الاستهلاك والتخزين وأذونات النظام تبقى خاصة بكل جهاز.</p>
             <div data-sync-content></div><p data-sync-message role="status"></p>
           </article>
-        </div><div id="data-settings-section-panel-other" class="settings-section-panel" role="tabpanel" aria-labelledby="data-settings-section-other" hidden><article class="card-panel" id="automatic-settings"><h3 class="card-title">أخرى</h3><p>تحكّم بالعمليات التلقائية. يمكنك ضبط المنطقة يدوياً من صفحة المواقيت.</p><label class="settings-switch"><span>التحقق من مواقيت الصلاة تلقائياً كل يوم</span><input id="auto-prayer-verification" role="switch" type="checkbox" role="switch" checked></label><p class="resource-note">تُحفظ مواقيت كل يوم لمنطقتك، ويُستكمل التحقق عند توفر الإنترنت وفق إعدادات الشبكة.</p><label class="settings-switch" id="desktop-location-auto-field"><span>تحديث الموقع تلقائياً أثناء استخدام التطبيق</span><input id="location-auto-update" role="switch" type="checkbox" role="switch"></label><p class="resource-note" data-phone-location-note hidden>يتم التحكم بالموقع عبر الهاتف المتصل، يمكنك فك الارتباط <a href="#data-settings-section-panel-sync" data-open-sync-settings>من هنا</a>.</p><p class="settings-status" id="automatic-settings-status" role="status"></p></article></div><div
+        </div><div id="data-settings-section-panel-other" class="settings-section-panel" role="tabpanel" aria-labelledby="data-settings-section-other" hidden><article class="card-panel" id="automatic-settings"><h3 class="card-title"><!--i18n:ui.17a9f38e22b66720-->أخرى</h3><p><!--i18n:ui.dfd6b3bdd0ac4315-->تحكّم بالعمليات التلقائية. يمكنك ضبط المنطقة يدوياً من صفحة المواقيت.</p><label class="settings-switch"><span><!--i18n:ui.503b632335462523-->التحقق من مواقيت الصلاة تلقائياً كل يوم</span><input id="auto-prayer-verification" role="switch" type="checkbox" role="switch" checked></label><p class="resource-note"><!--i18n:ui.646c49c70762a72e-->تُحفظ مواقيت كل يوم لمنطقتك، ويُستكمل التحقق عند توفر الإنترنت وفق إعدادات الشبكة.</p><label class="settings-switch" id="desktop-location-auto-field"><span><!--i18n:ui.80daa1753453f5c3-->تحديث الموقع تلقائياً أثناء استخدام التطبيق</span><input id="location-auto-update" role="switch" type="checkbox" role="switch"></label><p class="resource-note" data-phone-location-note hidden><!--i18n:ui.366460ceb400c32e-->يتم التحكم بالموقع عبر الهاتف المتصل، يمكنك فك الارتباط <a href="#data-settings-section-panel-sync" data-open-sync-settings><!--i18n:ui.98f70d12b72ec0ee-->من هنا</a>.</p><p class="settings-status" id="automatic-settings-status" role="status"></p></article></div><div
             aria-labelledby="data-settings-section-report"
             class="settings-section-panel"
             hidden=""
@@ -2124,101 +2127,25 @@
             ><article class="card-panel bug-report-panel"
               ><header class="card-header"
                 ><div
-                  ><h3 class="card-title">التبليغ عن خطأ</h3
-                  ><p>اكتب ما حدث وراجع المعلومات التي تريد مشاركتها.</p></div
+                  ><h3 class="card-title"><!--i18n:feedback.heading-->الإبلاغ عن خطأ أو إرسال ملاحظات</h3
+                  ><p><!--i18n:report.review-->اكتب ما حدث وراجع المعلومات التي تريد مشاركتها.</p></div
                 ></header
-              ><form id="bug-report-form"
-                ><label class="form-group" for="bug-report-scope"
-                  >نطاق الخطأ<input
-                    class="input-field"
-                    id="bug-report-scope"
-                    maxlength="120"
-                    placeholder="مثلاً: إشعارات الصلاة، ورد القرآن، الدروس"
-                    required="" /></label
-                ><label class="form-group" for="bug-report-description"
-                  >وصف الخطأ<textarea
-                    class="input-field"
-                    id="bug-report-description"
-                    maxlength="8000"
-                    placeholder="ما الذي فعلته؟ ماذا حدث؟ وما النتيجة المتوقعة؟"
-                    required=""
-                    rows="6"
-                  ></textarea></label
-                ><fieldset class="bug-report-channel"
-                  ><legend>طريقة التبليغ المرغوبة</legend
-                  ><label class="report-platform" title="GitHub"
-                    ><input
-                      checked=""
-                      name="channel"
-                      type="radio"
-                      value="github"
-                      aria-label="GitHub"
-                    /><svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      width="22"
-                      height="22"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.76-.24.76-.54v-2.08c-3.12.68-3.78-1.33-3.78-1.33-.51-1.3-1.25-1.64-1.25-1.64-1.02-.7.08-.68.08-.68 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.49-.28-5.11-1.25-5.11-5.54 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.63 5.25-5.13 5.53.4.35.76 1.03.76 2.08v3.07c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z"
-                      /></svg
-                    ><span>GitHub</span></label
-                  ><label class="report-platform" title="Google — Gmail"
-                    ><input
-                      name="channel"
-                      type="radio"
-                      value="gmail"
-                      aria-label="Google — Gmail"
-                    /><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22">
-                      <path
-                        fill="#4285f4"
-                        d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.36Z"
-                      />
-                      <path
-                        fill="#34a853"
-                        d="M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.05.96-3.38.96-2.6 0-4.81-1.76-5.6-4.12H3.06v2.59A10 10 0 0 0 12 22Z"
-                      />
-                      <path
-                        fill="#fbbc05"
-                        d="M6.4 13.92a6 6 0 0 1 0-3.84V7.49H3.06a10 10 0 0 0 0 9.02Z"
-                      />
-                      <path
-                        fill="#ea4335"
-                        d="M12 5.96c1.47 0 2.79.5 3.83 1.5l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.94 5.49l3.34 2.59A5.99 5.99 0 0 1 12 5.96Z"
-                      /></svg
-                    ><span>Google</span></label
-                  ></fieldset
-                ><p class="resource-note"
-                  >تماشياً مع سياسة خصوصية محراب، لا يُرسل البلاغ مباشرة من التطبيق. بعد المعاينة
-                  والموافقة ستنتقل إلى خدمة الطرف الثالث لإتمامه بحسابك. لا تُجمع سجلات أو بيانات
-                  جهاز تلقائياً.</p
-                ><div class="settings-action-row"
-                  ><button class="btn btn-primary" type="submit">معاينة البلاغ</button
-                  ><button class="btn btn-secondary" disabled="" id="bug-report-copy" type="button"
-                    >نسخ نص البلاغ</button
-                  ><button
-                    class="btn btn-primary"
-                    disabled=""
-                    id="bug-report-continue"
-                    type="button"
-                    >متابعة إلى المنصة المختارة</button
-                  ><button class="btn btn-secondary" id="bug-report-clear" type="button"
-                    >مسح المسودة</button
-                  ></div
-                ><textarea
-                  aria-label="معاينة نص البلاغ"
-                  class="input-field"
-                  hidden=""
-                  id="bug-report-preview"
-                  readonly=""
-                  rows="8"
-                ></textarea
-                ><p
-                  class="settings-status"
-                  id="bug-report-status"
-                  role="status"
-                ></p></form></article></div
+              ><form id="bug-report-form">
+<label class="form-group" for="bug-report-type"><!--i18n:feedback.type-->نوع البلاغ<select class="input-field" id="bug-report-type" required></select></label>
+<label class="form-group" for="bug-report-section"><!--i18n:feedback.section-->القسم المعني<select class="input-field" id="bug-report-section" required></select></label>
+<label class="form-group" for="bug-report-description"><!--i18n:feedback.details-->تفاصيل البلاغ<textarea class="input-field" id="bug-report-description" maxlength="8000" required rows="6" dir="auto"></textarea></label>
+<label class="form-group" for="bug-report-note"><!--i18n:feedback.note-->ملاحظة إضافية (اختيارية)<textarea class="input-field" id="bug-report-note" maxlength="300" rows="2" dir="auto" aria-describedby="bug-report-count"></textarea><output id="bug-report-count" dir="ltr">0/300</output></label>
+<label class="settings-switch"><span><!--i18n:feedback.attach-->إرفاق إصدار التطبيق ونظام التشغيل ولغة الواجهة والرواية المختارة</span><input id="bug-report-context" role="switch" type="checkbox" checked></label>
+<fieldset class="bug-report-channel"><legend><!--i18n:feedback.destination-->منصة الإرسال</legend>
+<label class="report-platform"><input name="channel" type="radio" value="github"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.49c-2.23.49-2.7-.95-2.7-.95-.36-.93-.89-1.18-.89-1.18-.73-.5.06-.49.06-.49.8.06 1.22.82 1.22.82.72 1.22 1.87.87 2.33.67.07-.52.28-.87.51-1.07-1.78-.2-3.65-.89-3.65-3.96 0-.88.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82A7.65 7.65 0 0 1 8 3.84c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.08-1.87 3.76-3.66 3.96.29.25.54.74.54 1.49v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg><span data-no-ui-translation>GitHub</span></label>
+<label class="report-platform"><input name="channel" type="radio" value="google" checked><svg aria-hidden="true" width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.22 5.48-4.76 7.18l7.73 6C44.42 38.04 46.98 31.9 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59a14.41 14.41 0 0 1 0-9.18l-7.98-6.19a24 24 0 0 0 0 21.56Z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg><span data-no-ui-translation>Google Forms</span></label></fieldset>
+<p id="bug-report-platform-warning" class="resource-note"></p>
+<div class="settings-action-row">
+<button class="btn btn-primary" id="bug-report-continue" type="submit" disabled><!--i18n:feedback.prepareAndContinue-->تجهيز البلاغ والمتابعة</button>
+<button class="btn btn-secondary" id="bug-report-clear" type="button"><!--i18n:report.clearDraft-->مسح المسودة</button>
+</div>
+<p class="settings-status" id="bug-report-status" role="status"></p>
+</form></article></div
           ><div
             aria-labelledby="data-settings-section-updates"
             class="settings-section-panel"
@@ -2226,34 +2153,34 @@
             id="data-settings-section-panel-updates"
             role="tabpanel"
             ><article class="card-panel" style="max-width: 740px; margin-inline: auto"
-              ><header class="card-header"><h3 class="card-title">تحديث محراب</h3></header
+              ><header class="card-header"><h3 class="card-title"><!--i18n:ui.79af326d5278448c-->تحديث محراب</h3></header
               ><p
-                >النسخة الحالية: <strong id="update-current-version">—</strong> · الإصدار المتاح:
+                ><!--i18n:ui.322653776a8f324d-->النسخة الحالية: <strong id="update-current-version">—</strong><!--i18n:ui.3313342820d650af--> · الإصدار المتاح:
                 <strong id="update-next-version">—</strong></p
               ><div class="update-check-options"
                 ><label class="settings-switch"
-                  ><span>التحقق التلقائي يومياً</span
+                  ><span><!--i18n:ui.7c3801e475294b24-->التحقق التلقائي يومياً</span
                   ><input id="update-enabled" role="switch" type="checkbox" /></label
                 ><label class="settings-switch"
-                  ><span>تنزيل التحديث تلقائياً عند توفره</span
+                  ><span><!--i18n:ui.a671176f43a9f926-->تنزيل التحديث تلقائياً عند توفره</span
                   ><input id="update-auto-download" role="switch" type="checkbox" /></label
                 ><label class="settings-switch"
-                  ><span>استقبال النسخ التجريبية أيضاً</span
+                  ><span><!--i18n:ui.516ab19c5288b5cf-->استقبال النسخ التجريبية أيضاً</span
                   ><input id="update-prerelease" role="switch" type="checkbox" /></label></div
               ><p class="resource-note"
-                >النسخ التجريبية قد تتضمن أخطاء. تعطيلها يوقف التقاط نسخ تجريبية جديدة؛ لا يخفض
+                ><!--i18n:ui.76779727f5078f6d-->النسخ التجريبية قد تتضمن أخطاء. تعطيلها يوقف التقاط نسخ تجريبية جديدة؛ لا يخفض
                 إصداراً مثبتاً. انتظر إصداراً مستقراً أحدث. تُحفظ الخيارات بزر الحفظ الموحد أسفل
                 الإعدادات.</p
               ><p class="resource-note"
-                >تُجلب الإصدارات من GitHub دون حساب مستخدم أو إرسال إعداداتك. قد يستقبل GitHub عنوان
+                ><!--i18n:ui.4e11a0b9a8d3c4af-->تُجلب الإصدارات من GitHub دون حساب مستخدم أو إرسال إعداداتك. قد يستقبل GitHub عنوان
                 الاتصال. يخضع الفحص والتنزيل لمنع الإنترنت العام وفئة الاتصالات الأخرى. التنزيل
                 التلقائي لا يعيد تشغيل التطبيق تلقائياً.</p
               ><div class="settings-action-row"
-                ><button class="btn btn-primary" id="update-check" type="button">تحقق الآن</button
+                ><button class="btn btn-primary" id="update-check" type="button"><!--i18n:update.checkNow-->تحقق الآن</button
                 ><button class="btn btn-secondary" hidden="" id="update-download" type="button"
-                  >تنزيل التحديث</button
+                  ><!--i18n:update.download-->تنزيل التحديث</button
                 ><button class="btn btn-primary" hidden="" id="update-install" type="button"
-                  >تثبيت وإعادة تشغيل</button
+                  ><!--i18n:update.installAndRestart-->تثبيت وإعادة تشغيل</button
                 ></div
               ><progress
                 hidden=""
@@ -2263,11 +2190,11 @@
                 value="0"
               ></progress
               ><p id="update-status" role="status"></p
-              ><small>آخر تحقق: <span id="update-last-check">—</span></small></article
+              ><small><!--i18n:ui.456528601c9e3691-->آخر تحقق: <span id="update-last-check">—</span></small></article
             ></div
           ><div class="settings-unified-save"
             ><button class="btn btn-primary" id="btn-save-settings" type="button"
-              >حفظ جميع الإعدادات</button
+              ><!--i18n:action.saveAll-->حفظ جميع الإعدادات</button
             ><p class="settings-status" id="settings-save-status" role="status"></p></div
         ></section>
       </main>
@@ -2312,7 +2239,7 @@
           <rect height="18" rx="3" width="20" x="2" y="3"></rect>
           <rect class="icon-detail" height="4" rx="2" width="12" x="6" y="14"></rect></svg
       ></span>
-      <span class="control-tooltip" role="tooltip">القائمة الجانبية</span>
+      <span class="control-tooltip" role="tooltip"><!--i18n:ui.9af6c1715fbfc4af-->القائمة الجانبية</span>
     </button>
     <button
       aria-describedby="settings-control-tooltip"
@@ -2341,7 +2268,7 @@
           d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
         ></path></svg
       ><span class="control-tooltip" id="settings-control-tooltip" role="tooltip"
-        >الإعدادات والقوالب</span
+        ><!--i18n:ui.e436c4f73c3df826-->الإعدادات والقوالب</span
       >
     </button>
     <nav aria-label="التنقل السريع" class="floating-dock" id="floating-dock">
@@ -2365,7 +2292,7 @@
           >
             <path d="M4 22V11c0-5 5-6 8-10 3 4 8 5 8 10v11M2 22h20"></path>
             <path class="icon-detail" d="M8 22V12c0-3 2-4 4-6 2 2 4 3 4 6v10M10 17h4"></path></svg
-          ><span class="control-tooltip" role="tooltip">مواقيت الصلاة</span></button
+          ><span class="control-tooltip" role="tooltip"><!--i18n:nav.prayers-->مواقيت الصلاة</span></button
         >
         <button aria-label="حديث اليوم والصلوات" class="dock-button" data-tab="tab-hadith"
           ><svg
@@ -2384,9 +2311,9 @@
               d="M17 12v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2h11v2a3 3 0 0 0 3 3M6 17V6a3 3 0 0 1 3-3h3M6 7H2V6a3 3 0 0 1 6 0"
             ></path>
             <path class="icon-detail" d="m12 10 1-4 6-5 3 3-6 5-4 1Zm0 0-2 3m4-7 3 3"></path></svg
-          ><span class="control-tooltip" role="tooltip">حديث اليوم والصلوات</span></button
+          ><span class="control-tooltip" role="tooltip"><!--i18n:hadith.todayAndPrayers-->حديث اليوم والصلوات</span></button
         >
-        <button class="dock-button" data-tab="tab-adhkar" type="button" aria-label="الأذكار"><svg class="ui-icon nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 19v2m-1 1h2"/><circle cx="12" cy="4" r="1.65"/><circle cx="7" cy="6" r="1.65"/><circle cx="6" cy="11" r="1.65"/><circle cx="8" cy="15" r="1.65"/><circle cx="12" cy="17" r="1.65"/><circle cx="16" cy="15" r="1.65"/><circle cx="18" cy="11" r="1.65"/><circle cx="17" cy="6" r="1.65"/></svg><span class="control-tooltip" role="tooltip">الأذكار</span></button>
+        <button class="dock-button" data-tab="tab-adhkar" type="button" aria-label="الأذكار"><svg class="ui-icon nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 19v2m-1 1h2"/><circle cx="12" cy="4" r="1.65"/><circle cx="7" cy="6" r="1.65"/><circle cx="6" cy="11" r="1.65"/><circle cx="8" cy="15" r="1.65"/><circle cx="12" cy="17" r="1.65"/><circle cx="16" cy="15" r="1.65"/><circle cx="18" cy="11" r="1.65"/><circle cx="17" cy="6" r="1.65"/></svg><span class="control-tooltip" role="tooltip"><!--i18n:nav.adhkar-->الأذكار</span></button>
 <button aria-label="الدروس والقنوات" class="dock-button" data-tab="tab-youtube"
           ><svg
             aria-hidden="true"
@@ -2403,7 +2330,7 @@
             <rect height="14" rx="3" width="20" x="2" y="6"></rect>
             <path d="m8 2 4 4 4-4M8 23h8"></path>
             <path class="icon-detail" d="m10 10 5 3-5 3v-6Z"></path></svg
-          ><span class="control-tooltip" role="tooltip">الدروس والقنوات</span></button
+          ><span class="control-tooltip" role="tooltip"><!--i18n:nav.lessons-->الدروس والقنوات</span></button
         >
         <button aria-label="ورد القرآن الكريم" class="dock-button" data-tab="tab-quran"
           ><svg
@@ -2423,7 +2350,7 @@
               class="icon-detail"
               d="m6 18 12 5M18 18 6 23M5 6l4 1M5 9l4 1m6-3 4-1m-4 4 4-1"
             ></path></svg
-          ><span class="control-tooltip" role="tooltip">ورد القرآن الكريم</span></button
+          ><span class="control-tooltip" role="tooltip"><!--i18n:nav.wird-->ورد القرآن الكريم</span></button
         >
       </div>
       <span aria-hidden="true" class="dock-divider"></span>
@@ -2447,7 +2374,7 @@
             viewbox="0 0 24 24"
           >
             <path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10Z"></path></svg
-          ><span class="control-tooltip" role="tooltip">الوضع الليلي</span></button
+          ><span class="control-tooltip" role="tooltip"><!--i18n:settings.darkMode-->الوضع الليلي</span></button
         >
         <button
           aria-label="الوضع النهاري"
@@ -2471,7 +2398,7 @@
             <path
               d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
             ></path></svg
-          ><span class="control-tooltip" role="tooltip">الوضع النهاري</span></button
+          ><span class="control-tooltip" role="tooltip"><!--i18n:settings.lightMode-->الوضع النهاري</span></button
         >
       </div>
     </nav>
@@ -2492,10 +2419,10 @@
             viewbox="0 0 24 24"
           >
             <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"></path>
-          </svg>
+          </svg><!--i18n:confirm.deleteChannel-->
           تأكيد حذف القناة من قائمة المتابعة</h3
         >
-        <p style="color: var(--text-secondary); line-height: 1.7">
+        <p style="color: var(--text-secondary); line-height: 1.7"><!--i18n:confirm.deleteChannelName-->
           هل أنت متأكد من رغبتك في حذف قناة:
           <br />
           <strong
@@ -2503,14 +2430,14 @@
             style="font-size: var(--font-size-xl); color: var(--accent-secondary)"
           ></strong>
           <br />
-          <span style="font-size: var(--font-size-xs); color: var(--text-muted)">
+          <span style="font-size: var(--font-size-xs); color: var(--text-muted)"><!--i18n:ui.7a1974e21f443cb1-->
             المعرّف التقني (Channel ID): <code id="delete-modal-channel-id"></code>
           </span>
         </p>
         <div style="display: flex; justify-content: flex-end; gap: var(--spacing-sm)">
-          <button class="btn" id="btn-cancel-delete-channel">إلغاء</button>
+          <button class="btn" id="btn-cancel-delete-channel"><!--i18n:action.cancel-->إلغاء</button>
           <button class="btn btn-danger" id="btn-confirm-delete-channel"
-            >نعم، احذف القناة نهائياً</button
+            ><!--i18n:confirm.deleteChannelButton-->نعم، احذف القناة نهائياً</button
           >
         </div>
       </div>
@@ -2534,11 +2461,11 @@
             >
               <path d="M12 5c-3-2-7-2-10-1v15c3-1 7-1 10 1 3-2 7-2 10-1V4c-3-1-7-1-10 1Z"></path>
               <path d="M12 5v15"></path>
-            </svg>
+            </svg><!--i18n:ui.d38b086f6a9fc303-->
             الدليل الإرشادي المبسط: كيف تستخرج معرّف أي قناة (Channel ID)؟</h3
           >
           <button class="btn" id="btn-close-yt-tutorial"
-            >إغلاق
+            ><!--i18n:action.close-->إغلاق
             <svg
               aria-hidden="true"
               class="ui-icon"
@@ -2611,8 +2538,8 @@
                 stroke-width="1"
               /></svg
             ><div
-              ><strong>1. افتح صفحة القناة</strong
-              ><p>اضغط على وصف القناة أو «المزيد… / More…» أسفل اسمها.</p></div
+              ><strong><!--i18n:ui.27e97f11ca12e7e9-->1. افتح صفحة القناة</strong
+              ><p><!--i18n:ui.f4a5829e528bada9-->اضغط على وصف القناة أو «المزيد… / More…» أسفل اسمها.</p></div
             ></div
           ><div class="tutorial-step"
             ><svg
@@ -2676,9 +2603,9 @@
                 stroke-width="1"
               /></svg
             ><div
-              ><strong>2. افتح مشاركة القناة</strong
+              ><strong><!--i18n:ui.942efae0f1c6308b-->2. افتح مشاركة القناة</strong
               ><p
-                >في معلومات القناة اختر «مشاركة القناة / Share channel»، ثم «نسخ معرّف القناة / Copy
+                ><!--i18n:ui.90f5c3061d46b45e-->في معلومات القناة اختر «مشاركة القناة / Share channel»، ثم «نسخ معرّف القناة / Copy
                 channel ID».</p
               ></div
             ></div
@@ -2728,9 +2655,9 @@
               />
               <path d="M93 108h14m-7-7v14" stroke-linecap="round" /></svg
             ><div
-              ><strong>3. أضفها إلى محراب</strong
+              ><strong><!--i18n:ui.f4393de8e8183432-->3. أضفها إلى محراب</strong
               ><p
-                >الصق المعرّف في خانة إضافة قناة، ثم اضغط «إضافة». يمكنك أيضاً لصق رابط القناة
+                ><!--i18n:ui.02f891af8b10e065-->الصق المعرّف في خانة إضافة قناة، ثم اضغط «إضافة». يمكنك أيضاً لصق رابط القناة
                 مباشرة.</p
               ></div
             ></div
@@ -2758,13 +2685,13 @@
               >
                 <circle cx="12" cy="12" r="9"></circle>
                 <path d="m8 12 3 3 5-6"></path>
-              </svg>
+              </svg><!--i18n:status.success-->
               تمت العملية بنجاح</span
             >
-            <h3 class="card-title" id="op-modal-title">نتيجة الاختبار</h3>
+            <h3 class="card-title" id="op-modal-title"><!--i18n:ui.10b3735e1c9c81ac-->نتيجة الاختبار</h3>
           </div>
           <button class="btn" id="btn-close-op-modal"
-            >إغلاق
+            ><!--i18n:action.close-->إغلاق
             <svg
               aria-hidden="true"
               class="ui-icon"
@@ -2792,7 +2719,7 @@
         <div class="status-modal-details" id="op-modal-details"></div>
         <div style="display: flex; justify-content: space-between; align-items: center">
           <button class="btn btn-gold" id="btn-op-modal-extra-link" style="display: none"
-            >فتح الرابط المستخرج
+            ><!--i18n:ui.4714cb63980f1535-->فتح الرابط المستخرج
             <svg
               aria-hidden="true"
               class="ui-icon"
@@ -2809,7 +2736,7 @@
                 d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"
               ></path></svg
           ></button>
-          <button class="btn btn-primary" id="btn-ok-op-modal">حسناً، واضح</button>
+          <button class="btn btn-primary" id="btn-ok-op-modal"><!--i18n:ui.473c1e275d2e64a3-->حسناً، واضح</button>
         </div>
       </div>
     </div>
@@ -2822,11 +2749,11 @@
     ><script src="./performance.js"></script
     ><script src="./paged-lesson-feed.js"></script
     ><script src="./project-info.js"></script
-    ><script src="./bug-report.js"></script
+    ><script src="./report-taxonomy.js"></script><script src="./bug-report.js"></script
     ><script src="./updates.js"></script
     ><script src="./final-polish.js"></script
     ><script src="./hadith-preview.js"></script
-    ><script src="./adhkar-data.js"></script><script src="./adhkar-ui.js"></script><script src="./lessons-ui.js"></script><script src="./shortcuts-ui.js"></script><script src="./custom-reminder-ui.js"></script><script src="./local-sync-ui.js"></script><script src="./renderer.js"></script>
+    ><script src="./adhkar-data.js"></script><script src="./adhkar-ui.js"></script><script src="./lessons-ui.js"></script><script src="./shortcuts-ui.js"></script><script src="./custom-reminder-ui.js"></script><script src="./local-sync-ui.js"></script><script src="./interface-language.js"></script><script src="./renderer.js"></script>
     <div
       aria-modal="false"
       class="inline-settings-popover"
@@ -2838,111 +2765,111 @@
         class="popover-close"
         id="btn-close-inline-settings"
         type="button"
-        >إغلاق</button
+        ><!--i18n:action.close-->إغلاق</button
       ><div id="inline-settings-content"></div></div
     ><dialog
       aria-labelledby="location-confirm-title"
       class="location-confirm-dialog"
       id="confirm-detected-location"
-      ><h3 id="location-confirm-title">تأكيد الموقع المكتشف</h3
-      ><p>راجع البيانات قبل تطبيقها على مواقيت الصلاة.</p><dl id="detected-location-details"></dl
+      ><h3 id="location-confirm-title"><!--i18n:ui.c49b46960f6331e3-->تأكيد الموقع المكتشف</h3
+      ><p><!--i18n:ui.2f3e7da7fa7fc2f6-->راجع البيانات قبل تطبيقها على مواقيت الصلاة.</p><dl id="detected-location-details"></dl
       ><p id="detected-location-error" role="alert"></p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="btn-confirm-detected-location" type="button"
-          >تأكيد الموقع</button
+          ><!--i18n:prayer.confirmLocation-->تأكيد الموقع</button
         ><button class="btn btn-secondary" id="btn-cancel-detected-location" type="button"
-          >إلغاء</button
+          ><!--i18n:action.cancel-->إلغاء</button
         ></div
       ></dialog
     ><dialog
       aria-labelledby="unsaved-settings-title"
       class="location-confirm-dialog"
       id="unsaved-settings-dialog"
-      ><h3 id="unsaved-settings-title">لديك تغييرات غير محفوظة</h3
+      ><h3 id="unsaved-settings-title"><!--i18n:status.unsaved-->لديك تغييرات غير محفوظة</h3
       ><p
-        >احفظ تعديلات الإشعارات أو شاشة التهيئة أو التخزين والاستهلاك أو الأداء أو التحديثات قبل
+        ><!--i18n:settings.saveNoticeDesktop-->احفظ تعديلات الإشعارات أو شاشة التهيئة أو التخزين والاستهلاك أو الأداء أو التحديثات قبل
         مغادرة الإعدادات. يتغير المظهر فوراً ولا يحتاج إلى تأكيد الحفظ.</p
       ><p id="unsaved-settings-error" role="alert"></p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="btn-save-settings-and-leave" type="button"
-          >حفظ ومتابعة</button
+          ><!--i18n:action.saveAndContinue-->حفظ ومتابعة</button
         ><button class="btn btn-secondary" id="btn-discard-settings-and-leave" type="button"
-          >تراجع عن جميع التعديلات ومغادرة</button
+          ><!--i18n:confirm.discardAndLeave-->تراجع عن جميع التعديلات ومغادرة</button
         ><button class="btn btn-secondary" id="btn-stay-in-settings" type="button"
-          >البقاء في الإعدادات</button
+          ><!--i18n:confirm.staySettings-->البقاء في الإعدادات</button
         ></div
       ></dialog
     ><dialog class="location-confirm-dialog" id="resource-delete-dialog"
-      ><h3>تأكيد حذف البيانات</h3><p id="resource-delete-description"></p
+      ><h3><!--i18n:confirm.deleteData-->تأكيد حذف البيانات</h3><p id="resource-delete-description"></p
       ><p id="resource-delete-error" role="alert"></p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="btn-confirm-resource-delete" type="button"
-          >تأكيد الحذف</button
+          ><!--i18n:confirm.delete-->تأكيد الحذف</button
         ><button class="btn btn-secondary" id="btn-cancel-resource-delete" type="button"
-          >إلغاء</button
+          ><!--i18n:action.cancel-->إلغاء</button
         ></div
       ></dialog
     ><dialog
       aria-labelledby="network-policy-title"
       class="location-confirm-dialog"
       id="network-policy-dialog"
-      ><h3 id="network-policy-title">سياسة الإنترنت في محراب</h3
+      ><h3 id="network-policy-title"><!--i18n:ui.de8c3caf893d0195-->سياسة الإنترنت في محراب</h3
       ><p
-        >محراب يعمل محلياً، ولا يستخدم الإنترنت لحفظ بياناتك في حساب سحابي أو مزامنتها. وظائفه
+        ><!--i18n:about.localPrivacy-->محراب يعمل محلياً، ولا يستخدم الإنترنت لحفظ بياناتك في حساب سحابي أو مزامنتها. وظائفه
         المحلية متاحة دون إنترنت. لا نضيف إعلانات أو أدوات تتبع من طرفنا.</p
       ><p
-        >خدمات الأطراف الثالثة، مثل يوتيوب ومزودي المواقيت والموقع، قد تجمع بيانات الاتصال وفق
+        ><!--i18n:about.thirdParty-->خدمات الأطراف الثالثة، مثل يوتيوب ومزودي المواقيت والموقع، قد تجمع بيانات الاتصال وفق
         سياساتها الخاصة؛ لا نتحكم في تتبعها.</p
       ><dl
-        ><dt>يوتيوب</dt
+        ><dt><!--i18n:ui.4414cb57cc95720a-->يوتيوب</dt
         ><dd
-          >عناوين وصور وروابط المقاطع المقترحة يومياً. المنع يوقف التحديث والمشاهدة داخل التطبيق
+          ><!--i18n:ui.ad67ddfa81b30e85-->عناوين وصور وروابط المقاطع المقترحة يومياً. المنع يوقف التحديث والمشاهدة داخل التطبيق
           وإشعارات الدروس، وتبقى بيانات المقاطع المحفوظة.</dd
-        ><dt>الأحاديث</dt
+        ><dt><!--i18n:ui.b36e86980a7e86b0-->الأحاديث</dt
         ><dd
-          >البحث عن أحاديث وشروح جديدة. المنع يُبقي المكتبة المحلية ويوقف الجلب الجديد. إن لم يوجد
+          ><!--i18n:ui.e85915968c23d2cf-->البحث عن أحاديث وشروح جديدة. المنع يُبقي المكتبة المحلية ويوقف الجلب الجديد. إن لم يوجد
           حديث محلي مناسب لا يضاف إلى التنبيه، ويستمر الأذان.</dd
-        ><dt>مواقيت الصلاة</dt
+        ><dt><!--i18n:nav.prayers-->مواقيت الصلاة</dt
         ><dd
-          >المطابقة مع المزود الرسمي أو البديل. عند المنع يستمر الحساب المحلي وآخر ضبط محفوظ، وقد
+          ><!--i18n:ui.37063cf372592cb8-->المطابقة مع المزود الرسمي أو البديل. عند المنع يستمر الحساب المحلي وآخر ضبط محفوظ، وقد
           تقل المطابقة الرسمية.</dd
-        ><dt>الموقع</dt
+        ><dt><!--i18n:settings.location-->الموقع</dt
         ><dd
-          >كشف المدينة عبر خدمة خارجية. عند المنع يمكنك اختيار الدولة والمدينة والإحداثيات
+          ><!--i18n:ui.2169953cd6577158-->كشف المدينة عبر خدمة خارجية. عند المنع يمكنك اختيار الدولة والمدينة والإحداثيات
           يدوياً.</dd
-        ><dt>اتصالات أخرى</dt
+        ><dt><!--i18n:ui.c695aa2a2f8f7fa5-->اتصالات أخرى</dt
         ><dd
-          >الموارد الخارجية التي لا تقع في الفئات السابقة. المنع العام يوقف جميع اتصالات HTTP وHTTPS
+          ><!--i18n:ui.db02604802d80edd-->الموارد الخارجية التي لا تقع في الفئات السابقة. المنع العام يوقف جميع اتصالات HTTP وHTTPS
           للتطبيق؛ تبقى الصلاة والأوراد وشاشة التهيئة والبيانات المحلية متاحة.</dd
         ></dl
       ><button class="btn btn-primary" data-close-resource-dialog="" type="button"
-        >فهمت</button
+        ><!--i18n:action.gotIt-->فهمت</button
       ></dialog
     ><dialog class="location-confirm-dialog" id="youtube-explanation-dialog"
-      ><h3>ما هي خلاصات يوتيوب؟</h3
+      ><h3><!--i18n:ui.8a5ed524af15abe3-->ما هي خلاصات يوتيوب؟</h3
       ><p
-        >المقصود بها بيانات المقاطع المقترحة كل يوم من القنوات التي تتابعها: العنوان، القناة، الصورة
+        ><!--i18n:ui.c1ebb244d20a6021-->المقصود بها بيانات المقاطع المقترحة كل يوم من القنوات التي تتابعها: العنوان، القناة، الصورة
         ورابط المشاهدة. لا تعني تنزيل ملفات الفيديو كاملة. المشاهدة نفسها قد تستهلك بيانات إضافية
         عبر يوتيوب.</p
       ><p
-        >إيقاف هذا الخيار يمنع تحديث المقترحات والصور والمشاهدة داخل التطبيق ويوقف إشعارات الدروس
+        ><!--i18n:ui.917bd7fb6cb7da72-->إيقاف هذا الخيار يمنع تحديث المقترحات والصور والمشاهدة داخل التطبيق ويوقف إشعارات الدروس
         تلقائياً. تبقى بيانات المقاطع المحفوظة متاحة.</p
       ><button class="btn btn-primary" data-close-resource-dialog="" type="button"
-        >فهمت</button
+        ><!--i18n:action.gotIt-->فهمت</button
       ></dialog
     ><dialog class="location-confirm-dialog" id="network-first-change-dialog"
-      ><h3>تأكيد تعديل اتصال التطبيق</h3
+      ><h3><!--i18n:ui.34267195028a5cdc-->تأكيد تعديل اتصال التطبيق</h3
       ><p
-        >تغيير هذه الإعدادات قد يؤثر على الخدمات المتاحة وجودة التحديثات. يمكنك مراجعة سياسة
+        ><!--i18n:ui.f1efce6bf508ce1b-->تغيير هذه الإعدادات قد يؤثر على الخدمات المتاحة وجودة التحديثات. يمكنك مراجعة سياسة
         الإنترنت من علامة الاستفهام.</p
       ><p
-        >يظهر هذا التنبيه مرة واحدة في جلسة التطبيق، ثم يمكنك تعديل بقية الخيارات بحرية. تبقى
+        ><!--i18n:ui.f949ebef2f22e92d-->يظهر هذا التنبيه مرة واحدة في جلسة التطبيق، ثم يمكنك تعديل بقية الخيارات بحرية. تبقى
         التغييرات بحاجة إلى الحفظ.</p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="btn-accept-network-change" type="button"
-          >فهمت، متابعة التعديل</button
+          ><!--i18n:ui.29c56e212d27d6a6-->فهمت، متابعة التعديل</button
         ><button class="btn btn-secondary" id="btn-cancel-network-change" type="button"
-          >إلغاء</button
+          ><!--i18n:action.cancel-->إلغاء</button
         ></div
       ></dialog
     ><button
@@ -2973,18 +2900,18 @@
       popover="auto"
       role="dialog"
       ><div class="a11y-header"
-        ><h3 id="accessibility-popover-title">إمكانية الوصول</h3
+        ><h3 id="accessibility-popover-title"><!--i18n:settings.accessibility-->إمكانية الوصول</h3
         ><button aria-label="إغلاق لوحة الوصول" id="btn-close-accessibility" type="button"
-          >إغلاق</button
+          ><!--i18n:action.close-->إغلاق</button
         ></div
       ><div class="a11y-controls"
-        ><label>حجم الواجهة والبطاقات</label
+        ><label><!--i18n:settings.interfaceScale-->حجم الواجهة والبطاقات</label
         ><div class="a11y-stepper"
           ><button aria-label="تصغير الواجهة" data-a11y-step="zoom:-10" type="button">−</button
           ><output data-a11y-output="zoom">100%</output
           ><button aria-label="تكبير الواجهة" data-a11y-step="zoom:10" type="button">+</button></div
-        ><small>80%–150% · الاختصارات Ctrl + وCtrl − وCtrl 0</small
-        ><label for="floating-a11y-reading">حجم نصوص القراءة</label
+        ><small><!--i18n:ui.b8b8550640863601-->80%–150% · الاختصارات Ctrl + وCtrl − وCtrl 0</small
+        ><label for="floating-a11y-reading"><!--i18n:settings.readingTextSize-->حجم نصوص القراءة</label
         ><input
           data-a11y-key="readingSize"
           id="floating-a11y-reading"
@@ -2994,33 +2921,33 @@
           type="range"
           value="100"
         /><output data-a11y-output="readingSize">100%</output
-        ><small>للآيات والحديث وشرحه؛ تبقى الخطوط القرآنية المعتمدة.</small
-        ><label for="floating-a11y-contrast">وضوح الألوان</label
+        ><small><!--i18n:ui.3f2b034ef116b2b7-->للآيات والحديث وشرحه؛ تبقى الخطوط القرآنية المعتمدة.</small
+        ><label for="floating-a11y-contrast"><!--i18n:ui.85b42e12439c6d55-->وضوح الألوان</label
         ><select class="select-field" data-a11y-key="contrast" id="floating-a11y-contrast"
           ><option value="theme">ألوان القالب</option
           ><option value="dark">تباين مرتفع داكن</option
           ><option value="light">تباين مرتفع فاتح</option></select
         ><label class="settings-switch"
-          ><span>خط أوضح للواجهة</span><input data-a11y-key="clearFont" role="switch" type="checkbox" /></label
+          ><span><!--i18n:ui.0e69467cda424ac6-->خط أوضح للواجهة</span><input data-a11y-key="clearFont" role="switch" type="checkbox" /></label
         ><label class="settings-switch"
-          ><span>تقليل الحركة والمؤثرات</span
+          ><span><!--i18n:settings.reduceMotion-->تقليل الحركة والمؤثرات</span
           ><input data-a11y-key="reduceMotion" role="switch" type="checkbox" /></label
         ><button class="btn btn-secondary" data-a11y-reset="" type="button"
-          >استعادة الافتراضي</button
+          ><!--i18n:action.restoreDefaults-->استعادة الافتراضي</button
         ></div
       ><button class="btn btn-secondary" id="btn-customize-accessibility" type="button"
-        >تخصيص ظهور الزر</button
+        ><!--i18n:ui.c4eb4269905df7b3-->تخصيص ظهور الزر</button
       ></div
     ><dialog class="location-confirm-dialog" id="performance-warning-dialog"
-      ><h3>رفع مستوى الأداء على هذا الجهاز</h3
+      ><h3><!--i18n:ui.fae81f421e5b3ca8-->رفع مستوى الأداء على هذا الجهاز</h3
       ><p
-        >هذا المستوى أعلى من المقترح لموارد الجهاز. قد يزيد استهلاك الذاكرة وبطء التمرير وزمن
+        ><!--i18n:settings.performanceConfirm-->هذا المستوى أعلى من المقترح لموارد الجهاز. قد يزيد استهلاك الذاكرة وبطء التمرير وزمن
         استجابة الواجهة، خصوصاً مع الصور والتفاصيل الكاملة. هل تريد تطبيقه رغم ذلك؟</p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="btn-confirm-performance" type="button"
-          >تطبيق المستوى</button
+          ><!--i18n:ui.32aaf317d31fce22-->تطبيق المستوى</button
         ><button class="btn btn-secondary" id="btn-cancel-performance" type="button"
-          >الإبقاء على المستوى الحالي</button
+          ><!--i18n:ui.1e35a9b55e82757e-->الإبقاء على المستوى الحالي</button
         ></div
       ></dialog
     ><button
@@ -3042,7 +2969,7 @@
         <circle cx="12" cy="12" r="9"></circle>
         <path d="M12 11v6m0-10h.01"></path></svg
       ><span class="control-tooltip" id="project-info-tooltip" role="tooltip"
-        >عن التطبيق</span
+        ><!--i18n:ui.74e32d2700bc1f46-->عن التطبيق</span
       ></button
     >
     <dialog
@@ -3050,9 +2977,9 @@
       class="location-confirm-dialog project-info-dialog"
       id="project-info-dialog"
       ><header class="project-info-header"
-        ><h2 id="project-info-title">عن محراب</h2
+        ><h2 id="project-info-title"><!--i18n:nav.about-->عن محراب</h2
         ><button class="btn btn-secondary" id="btn-close-project-info" type="button"
-          >إغلاق</button
+          ><!--i18n:action.close-->إغلاق</button
         ></header
       ><div aria-label="معلومات المشروع" class="quran-segments settings-segments" role="tablist">
         <button
@@ -3062,7 +2989,7 @@
           id="data-about-section-developer"
           role="tab"
           type="button"
-          >غاية المشروع</button
+          ><!--i18n:ui.69ce68c5ed92253c-->غاية المشروع</button
         >
         <button
           aria-controls="data-about-section-panel-project"
@@ -3072,7 +2999,7 @@
           role="tab"
           tabindex="-1"
           type="button"
-          >المشروع والخصوصية</button
+          ><!--i18n:ui.e183520e89fec809-->المشروع والخصوصية</button
         >
         <button
           aria-controls="data-about-section-panel-usage"
@@ -3082,7 +3009,7 @@
           role="tab"
           tabindex="-1"
           type="button"
-          >الاستخدام</button
+          ><!--i18n:ui.905db3269be84eb4-->الاستخدام</button
         >
         <button
           aria-controls="data-about-section-panel-rights"
@@ -3092,7 +3019,7 @@
           role="tab"
           tabindex="-1"
           type="button"
-          >الحقوق والمصادر</button
+          ><!--i18n:about.credits-->الحقوق والمصادر</button
         >
         <button
           aria-controls="data-about-section-panel-support"
@@ -3102,14 +3029,14 @@
           role="tab"
           tabindex="-1"
           type="button"
-          >ادعمنا</button
+          ><!--i18n:nav.support-->ادعمنا</button
         ></div
       >
       <section
         aria-labelledby="data-about-section-developer"
         id="data-about-section-panel-developer"
         role="tabpanel"
-        ><h3>غاية المشروع وهدفه</h3><p>محراب وقف عن جدّي رحمه الله، أُهدي ثواب هذا العمل إليه رجاء أن ينفعه الله به. كانت وفاته باعثاً لتخصيص المشروع لهذا الغرض، وأسأل الله أن يغفر له ويرحمه ويتقبّل هذا العمل.</p><p>غاية محراب تقليل التشتيت والمساعدة على المحافظة على الفروض والسنن اليومية، وبناء نظام يومي نافع يجمع الصلاة والقرآن والذكر والعلم.</p><p>التطبيق مجرد أداة؛ والمنفعة تتحقق بإحسان استخدام الأدوات المتاحة، والحرص على العمل بما ينفع.</p><p><a class="btn btn-secondary" data-project-repository href="https://github.com/Mohamed2006-Dev/mihrab-app" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.55 9.55 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg> مستودع المشروع</a></p><button class="btn btn-primary" id="btn-about-support" type="button">دعم تطوير المشروع</button><p id="project-contact-status" class="settings-status" role="status"></p></section
+        ><h3><!--i18n:ui.852433971bbf03a3-->غاية المشروع وهدفه</h3><p><!--i18n:ui.ce5a582d9219fd69-->محراب وقف عن جدّي رحمه الله، أُهدي ثواب هذا العمل إليه رجاء أن ينفعه الله به. كانت وفاته باعثاً لتخصيص المشروع لهذا الغرض، وأسأل الله أن يغفر له ويرحمه ويتقبّل هذا العمل.</p><p><!--i18n:about.purpose-->غاية محراب تقليل التشتيت والمساعدة على المحافظة على الفروض والسنن اليومية، وبناء نظام يومي نافع يجمع الصلاة والقرآن والذكر والعلم.</p><p><!--i18n:ui.c49c683bff7beaa8-->التطبيق مجرد أداة؛ والمنفعة تتحقق بإحسان استخدام الأدوات المتاحة، والحرص على العمل بما ينفع.</p><p><a class="btn btn-secondary" data-project-repository href="https://github.com/Mohamed2006-Dev/mihrab-app" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.55 9.55 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg><!--i18n:about.repository--> مستودع المشروع</a></p><button class="btn btn-primary" id="btn-about-support" type="button"><!--i18n:ui.642aded10abd8532-->دعم تطوير المشروع</button><p id="project-contact-status" class="settings-status" role="status"></p></section
       >
       <section
         aria-labelledby="data-about-section-project"
@@ -3117,31 +3044,31 @@
         id="data-about-section-panel-project"
         role="tabpanel"
         >
-        <p class="resource-note">يضم محراب مواقيت الصلاة، والأحاديث وشروحها، وأوراد القرآن والأذكار، والدروس. يمكنك إنشاء تذكيراتك من قسم الإشعارات.
-        </p><h4>ربط الهاتف والحاسوب</h4>
-        <p class="resource-note">من الإعدادات ← ربط الأجهزة، يمكنك مشاركة القنوات والتذكيرات المخصّصة وإعدادات الأوراد وتقدّمها عبر الشبكة المحلية. ويمكن للهاتف مشاركة موقعه مع الحاسوب في الاتجاه المسموح. تبقى قياسات التخزين واستهلاك الإنترنت مستقلة لكل جهاز</p>
-        <button class="btn btn-secondary" type="button" id="btn-update-highlights">ما الجديد في محراب؟</button>
-        <h3>بيئة محلية للاستعداد للصلاة</h3
+        <p class="resource-note"><!--i18n:about.features-->يضم محراب مواقيت الصلاة، والأحاديث وشروحها، وأوراد القرآن والأذكار، والدروس. يمكنك إنشاء تذكيراتك من قسم الإشعارات.
+        </p><h4><!--i18n:ui.d1f8cda0196b3e4a-->ربط الهاتف والحاسوب</h4>
+        <p class="resource-note"><!--i18n:ui.114965a4f876975c-->من الإعدادات ← ربط الأجهزة، يمكنك مشاركة القنوات والتذكيرات المخصّصة وإعدادات الأوراد وتقدّمها عبر الشبكة المحلية. ويمكن للهاتف مشاركة موقعه مع الحاسوب في الاتجاه المسموح. تبقى قياسات التخزين واستهلاك الإنترنت مستقلة لكل جهاز</p>
+        <button class="btn btn-secondary" type="button" id="btn-update-highlights"><!--i18n:update.whatsNew-->ما الجديد في محراب؟</button>
+        <h3><!--i18n:ui.09b9058d91fd776e-->بيئة محلية للاستعداد للصلاة</h3
         ><p
-          >محراب لتنظيم الصلاة وقراءة أوراد القرآن بحفص وورش ومتابعة الأذكار والأحاديث والدروس، مع شاشة التهيئة للصلاة وقوالب عصرية وتقليدية.</p><h4>الخصوصية والتخزين</h4
+          ><!--i18n:ui.2b368b0d658b2148-->محراب لتنظيم الصلاة وقراءة أوراد القرآن بحفص وورش ومتابعة الأذكار والأحاديث والدروس، مع شاشة التهيئة للصلاة وقوالب عصرية وتقليدية.</p><h4><!--i18n:about.privacy-->الخصوصية والتخزين</h4
         ><p
-          >الإعدادات والتقدم في الأوراد والأحاديث والمقاطع المخزنة وسجل استهلاك الشبكة تُحفظ محلياً.
+          ><!--i18n:about.localStorage-->الإعدادات والتقدم في الأوراد والأحاديث والمقاطع المخزنة وسجل استهلاك الشبكة تُحفظ محلياً.
           لا يوجد حساب سحابي لمحراب، ولا نرسل هذه البيانات إلى خادم تابع لنا. لا نضيف إعلانات أو
           أدوات تتبع من طرفنا.</p
-        ><h4>الاتصال بالخدمات</h4
+        ><h4><!--i18n:ui.eeebab80f41d1a5e-->الاتصال بالخدمات</h4
         ><p
-          >الإنترنت يُستخدم عند السماح به لجلب الأحاديث وشروحها، وتحديث مقترحات يوتيوب وصورها،
+          ><!--i18n:ui.49846439e04b516e-->الإنترنت يُستخدم عند السماح به لجلب الأحاديث وشروحها، وتحديث مقترحات يوتيوب وصورها،
           والتحقق من المواقيت، وكشف الموقع عند طلبه. لهذه الجهات سياساتها الخاصة وقد تتلقى بيانات
           الاتصال مثل عنوان IP. لا نتحكم في إعلانات أو تتبع خدمات الأطراف الثالثة، بما فيها يوتيوب
           ووسيط الدفع.</p
-        ><h4>العمل دون إنترنت</h4
+        ><h4><!--i18n:ui.e35540b19ec9a7b4-->العمل دون إنترنت</h4
         ><p
-          >تستمر الوظائف المحلية والحساب المحلي للمواقيت والأذان وشاشة التهيئة والأوراد والمواد
+          ><!--i18n:ui.ec229f0bce5fd8d3-->تستمر الوظائف المحلية والحساب المحلي للمواقيت والأذان وشاشة التهيئة والأوراد والمواد
           المخزنة. تحتاج المواد الجديدة والمطابقة الرسمية والمشاهدة الخارجية إلى اتصال. يمكن ضبط كل
           فئة من إعدادات التخزين والاستهلاك.</p
-        ><h4>الدقة والتحكم</h4
+        ><h4><!--i18n:ui.946706eb27d9c92f-->الدقة والتحكم</h4
         ><p
-          >قد تختلف المواقيت بحسب المدينة وطريقة الحساب والجهة الرسمية؛ راجع إعدادات منطقتك ومصدرها
+          ><!--i18n:about.prayerTimes-->قد تختلف المواقيت بحسب المدينة وطريقة الحساب والجهة الرسمية؛ راجع إعدادات منطقتك ومصدرها
           عند الحاجة. إعدادات الشبكة والأداء والوصول متاحة للتحكم بالاستهلاك والوضوح.
         </p></section
       >
@@ -3150,25 +3077,25 @@
         hidden=""
         id="data-about-section-panel-usage"
         role="tabpanel"
-        ><h3>إتاحة المصدر والاستخدام غير التجاري</h3
+        ><h3><!--i18n:ui.5a7994e538df1223-->إتاحة المصدر والاستخدام غير التجاري</h3
         ><p
-          >المصدر متاح بالكامل للدراسة والاستخدام والتعديل وإعادة النشر للاستخدام غير التجاري، مع
+          ><!--i18n:about.noncommercial-->المصدر متاح بالكامل للدراسة والاستخدام والتعديل وإعادة النشر للاستخدام غير التجاري، مع
           احترام الضوابط الشرعية وعدم تحويل المشروع أو نسخة مشتقة منه إلى مصدر للكسب والربح.</p
         ><p
-          >يُمنع بيع التطبيق أو النسخ المشتقة، أو فرض اشتراك أو مقابل للوصول إليه، أو توظيفه
+          ><!--i18n:ui.a2ed326423ae12f9-->يُمنع بيع التطبيق أو النسخ المشتقة، أو فرض اشتراك أو مقابل للوصول إليه، أو توظيفه
           للإعلانات أو تحقيق ربح من توزيعه. يجوز تغيير سياسة النسخة المشتقة بما يناسبها، بشرط
           استمرار منع الاستغلال التجاري واحترام الضوابط الشرعية.</p
         ><p
-          >لا تُلزم بنسبة الكود الأصلي إلى المطور أو إضافة اسمه؛ يمكن فعل ذلك إن رغبت. لا يغيّر هذا
+          ><!--i18n:ui.85f24ace9c10ce4e-->لا تُلزم بنسبة الكود الأصلي إلى المطور أو إضافة اسمه؛ يمكن فعل ذلك إن رغبت. لا يغيّر هذا
           حقوق أصحاب المكتبات والمحتوى الخارجي وشروطهم.</p
         ><p
-          >إضافة وسائل الدعم الوارد من جهة مشروع محراب سيُنفق بإذن الله في تطوير هذا المشروع بالخصوص، ولن يخرج عن إطاره. الدعم اختياري تماماً، ولا يغيّر إتاحة ميزات التطبيق.</p
+          ><!--i18n:ui.55a8bbeba5093157-->إضافة وسائل الدعم الوارد من جهة مشروع محراب سيُنفق بإذن الله في تطوير هذا المشروع بالخصوص، ولن يخرج عن إطاره. الدعم اختياري تماماً، ولا يغيّر إتاحة ميزات التطبيق.</p
         ><p
-          >قبول الدعم الطوعي وحده لا يخالف منع الاستغلال التجاري. يشترط أن يبقى اختيارياً تماماً،
+          ><!--i18n:ui.0e5b8755fa0a6d1c-->قبول الدعم الطوعي وحده لا يخالف منع الاستغلال التجاري. يشترط أن يبقى اختيارياً تماماً،
           دون محتوى أو ميزات أو امتيازات مدفوعة، وألا يتحول إلى ثمن أو اشتراك مقنّع. يبقى التطبيق
           متاحاً دون دفع، ويسري هذا الإذن على النسخ المعدلة بالشروط نفسها.</p
         ><p
-          >هذه شروط إتاحة غير تجارية مخصصة؛ لا تُقدَّم بوصفها رخصة مصدر مفتوح معتمدة تسمح بالاستعمال
+          ><!--i18n:ui.3b59b7abf0de24dc-->هذه شروط إتاحة غير تجارية مخصصة؛ لا تُقدَّم بوصفها رخصة مصدر مفتوح معتمدة تسمح بالاستعمال
           التجاري.</p
         ></section
       >
@@ -3177,19 +3104,29 @@
         hidden=""
         id="data-about-section-panel-rights"
         role="tabpanel"
-        ><h3>الحقوق والمصادر</h3
-        ><p
-          >تسري شروط المشروع على الكود الأصلي الذي يملكه مطوره. تبقى حقوق المكتبات والخطوط والمصادر
+        ><h3><!--i18n:about.credits-->الحقوق والمصادر</h3
+        >
+<h4><!--i18n:about.quranTranslations-->ترجمات معاني القرآن</h4>
+<ul>
+  <li><!--i18n:about.quranTranslationEnglish-->الإنجليزية · مركز رواد الترجمة · <a href="https://quranenc.com/en/browse/english_rwwad" data-quran-translation-source>QuranEnc · v1.0.21-csv.1</a></li>
+  <li><!--i18n:about.quranTranslationIndonesian-->الإندونيسية · وزارة الشؤون الدينية الإندونيسية · <a href="https://quranenc.com/id/browse/indonesian_affairs" data-quran-translation-source>QuranEnc · v1.0.1-csv.1</a></li>
+<li><!--i18n:about.quranTranslation.ur-->الأردية · محمد إبراهيم جوناكري · <a href="https://quranenc.com/ur/browse/urdu_junagarhi" data-quran-translation-source>QuranEnc · v1.1.3-csv.1</a></li>
+<li><!--i18n:about.quranTranslation.bn-->البنغالية · أبو بكر محمد زكريا · <a href="https://quranenc.com/bn/browse/bengali_zakaria" data-quran-translation-source>QuranEnc · v1.1.1</a></li>
+<li><!--i18n:about.quranTranslation.fr-->الفرنسية · رشيد معاش · <a href="https://quranenc.com/fr/browse/french_rashid" data-quran-translation-source>QuranEnc · v1.0.3-csv.1</a></li>
+<li><!--i18n:about.quranTranslation.tr-->التركية · مركز رواد الترجمة · <a href="https://quranenc.com/tr/browse/turkish_rwwad" data-quran-translation-source>QuranEnc · v1.0.4-csv.1</a></li>
+</ul>
+<p
+          ><!--i18n:about.terms-->تسري شروط المشروع على الكود الأصلي الذي يملكه مطوره. تبقى حقوق المكتبات والخطوط والمصادر
           الخارجية لأصحابها، وتظل رخصها وإشعاراتها واجبة الاحترام.</p
         ><p
-          >الأحاديث وشروحها من موسوعة الأحاديث النبوية — HadeethEnc.com، مع إبقاء نسبة الناشر
+          ><!--i18n:about.hadithCredit-->الأحاديث وشروحها من موسوعة الأحاديث النبوية — HadeethEnc.com، مع إبقاء نسبة الناشر
           والمصدر وروابط الأحاديث في مواضعها. لا يُنسب محتواها العلمي إلى مطور محراب.</p
         ><p
-          >المقاطع وروابطها وصورها تخص أصحابها على يوتيوب. عرض الخلاصات ليس تملكاً للمحتوى ولا رفعاً
+          ><!--i18n:ui.1f9978c6f3599d98-->المقاطع وروابطها وصورها تخص أصحابها على يوتيوب. عرض الخلاصات ليس تملكاً للمحتوى ولا رفعاً
           لملفات الفيديو إلى التطبيق. بيانات المدن تعتمد GeoNames مع الإسناد إلى المصدر ورخصة CC BY
           4.0.</p
         ><p
-          >النص القرآني لروايتي حفص عن عاصم وورش عن نافع من الموارد المنشورة لدى مجمع الملك فهد
+          ><!--i18n:about.quranSource-->النص القرآني لروايتي حفص عن عاصم وورش عن نافع من الموارد المنشورة لدى مجمع الملك فهد
           لطباعة المصحف الشريف. تُستخدم بيانات المواضع لتنظيم الأوراد وحدودها؛ ولا ندعي اعتماد الجهة
           الناشرة لتجميع التطبيق وتقسيماته. قد يختلف عرض الرسم أو دقته على بعض الشاشات والأجهزة.
           نرحب بالإبلاغ عن أي خطأ عبر قسم التبليغ لمراجعته وتصحيحه.</p
@@ -3200,41 +3137,41 @@
         hidden=""
         id="data-about-section-panel-support"
         role="tabpanel"
-        ><h3>ادعم استمرار محراب</h3
-        ><p>الدعم الوارد من جهة مشروع محراب سيُنفق بإذن الله في تطوير هذا المشروع بالخصوص، ولن يخرج عن إطاره. الدعم اختياري تماماً، ولا يغيّر إتاحة ميزات التطبيق.</p><p
-          >الدعم الطوعي مشروع ومسموح إذا أُنفق فيما يرضي الله عز وجل. يمكنك دعم تطوير محراب
+        ><h3><!--i18n:ui.43e71146e63fa71f-->ادعم استمرار محراب</h3
+        ><p><!--i18n:about.support-->الدعم الوارد من جهة مشروع محراب سيُنفق بإذن الله في تطوير هذا المشروع بالخصوص، ولن يخرج عن إطاره. الدعم اختياري تماماً، ولا يغيّر إتاحة ميزات التطبيق.</p><p
+          ><!--i18n:ui.918ad180d93b7d62-->الدعم الطوعي مشروع ومسموح إذا أُنفق فيما يرضي الله عز وجل. يمكنك دعم تطوير محراب
           واستمراره اختيارياً، دون شراء أي ميزة أو محتوى؛ التطبيق متاح للجميع دون دفع. لا يطلب محراب
           بيانات بطاقتك أو يحتفظ بها.</p
         ><div class="project-support-options"
           ><button class="btn btn-primary" data-project-contact="paypal" type="button"
-            >الدعم عبر PayPal</button
+            ><!--i18n:ui.03fd8d971810ed66-->الدعم عبر PayPal</button
           ><button
             aria-haspopup="dialog"
             class="btn unsupported-payment"
             id="btn-unsupported-card"
             type="button"
-            >الدفع بالبطاقة — غير مدعوم حالياً</button
+            ><!--i18n:ui.58d3ed467531fa55-->الدفع بالبطاقة — غير مدعوم حالياً</button
           ></div
         ><p class="resource-note"
-          >يمكنك فتح بديل التحويل البنكي لعرض بيانات الحساب محلياً. وسائل PayPal المتاحة تختلف بحسب
+          ><!--i18n:ui.0006422f8efee912-->يمكنك فتح بديل التحويل البنكي لعرض بيانات الحساب محلياً. وسائل PayPal المتاحة تختلف بحسب
           الحساب والبلد.</p
         ></section
       ></dialog
     >
     <dialog class="location-confirm-dialog" id="paypal-redirect-dialog"
-      ><h3>الانتقال إلى PayPal</h3
+      ><h3><!--i18n:ui.a0f0ade24c0c3790-->الانتقال إلى PayPal</h3
       ><p
-        >ستُفتح صفحة الدعم في متصفحك على نطاق paypal.me باتصال HTTPS مشفر. تتم العملية لدى PayPal
+        ><!--i18n:ui.8b526e385f6cf3f7-->ستُفتح صفحة الدعم في متصفحك على نطاق paypal.me باتصال HTTPS مشفر. تتم العملية لدى PayPal
         وفق سياساته، ولا تمر بيانات البطاقة عبر محراب.</p
       ><p
-        >راجع النطاق والمستفيد والمبلغ قبل التأكيد. لا يمكن ضمان خلو أي خدمة خارجية من المخاطر، وقد
+        ><!--i18n:ui.81009880a65d4f1d-->راجع النطاق والمستفيد والمبلغ قبل التأكيد. لا يمكن ضمان خلو أي خدمة خارجية من المخاطر، وقد
         تختلف الوسائل والرسوم حسب الخدمة والبلد.</p
       ><p id="paypal-redirect-error" role="alert"></p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="btn-continue-paypal" type="button"
-          >المتابعة إلى PayPal</button
+          ><!--i18n:ui.b2bfb37e6c3cf5df-->المتابعة إلى PayPal</button
         ><button class="btn btn-secondary" data-close-project-dialog="" type="button"
-          >إلغاء</button
+          ><!--i18n:action.cancel-->إلغاء</button
         ></div
       ></dialog
     >
@@ -3242,79 +3179,58 @@
       aria-labelledby="bank-support-title"
       class="location-confirm-dialog bank-support-dialog"
       id="card-not-supported-dialog"
-      ><h3 id="bank-support-title">غير مدعوم حالياً</h3
+      ><h3 id="bank-support-title"><!--i18n:status.unsupported-->غير مدعوم حالياً</h3
       ><p
-        >الدفع بالبطاقة غير مدعوم حالياً. يمكنك بدلاً منه التحويل مباشرة من تطبيقك البنكي باستخدام
+        ><!--i18n:ui.057a9100b8222a20-->الدفع بالبطاقة غير مدعوم حالياً. يمكنك بدلاً منه التحويل مباشرة من تطبيقك البنكي باستخدام
         بيانات الحساب أدناه. لا يُنفَّذ أي تحويل داخل محراب.</p
       ><div class="bank-support-fields"
         ><div class="bank-support-field"
-          ><div><small>اسم المستفيد</small><span data-bank-value="full_name">—</span></div
+          ><div><small><!--i18n:ui.c67c7514e068f473-->اسم المستفيد</small><span data-bank-value="full_name">—</span></div
           ><button class="btn btn-secondary" data-copy-bank="full_name" disabled="" type="button"
-            >نسخ</button
+            ><!--i18n:action.copy-->نسخ</button
           ></div
         ><div class="bank-support-field"
-          ><div><small>رقم الحساب البنكي (RIB)</small><span data-bank-value="rib">—</span></div
+          ><div><small><!--i18n:ui.d99824ae455aaf93-->رقم الحساب البنكي (RIB)</small><span data-bank-value="rib">—</span></div
           ><button class="btn btn-secondary" data-copy-bank="rib" disabled="" type="button"
-            >نسخ</button
+            ><!--i18n:action.copy-->نسخ</button
           ></div
         ><div class="bank-support-field"
-          ><div><small>رمز SWIFT</small><span data-bank-value="swift_code">—</span></div
+          ><div><small><!--i18n:ui.10d4cca3a804c9a5-->رمز SWIFT</small><span data-bank-value="swift_code">—</span></div
           ><button class="btn btn-secondary" data-copy-bank="swift_code" disabled="" type="button"
-            >نسخ</button
+            ><!--i18n:action.copy-->نسخ</button
           ></div
         ></div
       ><p id="bank-support-status" role="status"></p
       ><button class="btn btn-primary" data-close-project-dialog="" type="button"
-        >حسناً</button
+        ><!--i18n:action.ok-->حسناً</button
       ></dialog
     >
-    <dialog
-      aria-labelledby="bug-report-privacy-title"
-      class="location-confirm-dialog"
-      id="bug-report-privacy-dialog"
-      ><h3 id="bug-report-privacy-title">تحذير الخصوصية قبل المتابعة</h3
+    <dialog class="location-confirm-dialog" id="update-install-dialog"
+      ><h3><!--i18n:update.install-->تثبيت التحديث</h3
       ><p
-        >بسبب سياسة الخصوصية التي يتبعها محراب، لا يمكن إتمام الإرسال مباشرة عبر واجهته. ستنتقل إلى
-        خدمة طرف ثالث لمراجعة البلاغ وإرساله بنفسك؛ فتح المسودة لا يعني إرسال البلاغ.</p
-      ><p id="bug-report-platform-warning"></p
-      ><p
-        >سيُنقل نطاق الخطأ ووصفه فقط في رابط المسودة، وقد يظهر النص في سجل المتصفح. إذا طال النص
-        سيُنسخ إلى الحافظة للصقه يدوياً دون اقتطاعه.</p
-      ><label class="settings-switch"
-        ><span>فهمت ما سيُشارك وأوافق على الانتقال</span
-        ><input id="bug-report-consent" role="switch" type="checkbox" /></label
-      ><p id="bug-report-redirect-error" role="alert"></p
-      ><div class="settings-action-row"
-        ><button class="btn btn-primary" disabled="" id="bug-report-confirm" type="button"
-          >فتح المسودة الخارجية</button
-        ><button class="btn btn-secondary" id="bug-report-cancel" type="button">إلغاء</button></div
-      ></dialog
-    ><dialog class="location-confirm-dialog" id="update-install-dialog"
-      ><h3>تثبيت التحديث</h3
-      ><p
-        >سيُغلق محراب ويبدأ تثبيت النسخة الجديدة ثم يُعاد تشغيله. احفظ عملك أولاً. يبقى التثبيت
+        ><!--i18n:ui.b4c9cfeffc6cfd37-->سيُغلق محراب ويبدأ تثبيت النسخة الجديدة ثم يُعاد تشغيله. احفظ عملك أولاً. يبقى التثبيت
         ممنوعاً أثناء الأذان وشاشة التهيئة.</p
       ><p id="update-install-error" role="alert"></p
       ><div class="settings-action-row"
         ><button class="btn btn-primary" id="update-install-confirm" type="button"
-          >تثبيت الآن</button
+          ><!--i18n:ui.23d9d28215bff12c-->تثبيت الآن</button
         ><button class="btn btn-secondary" id="update-install-cancel" type="button"
-          >لاحقاً</button
+          ><!--i18n:action.later-->لاحقاً</button
         ></div
       ></dialog
     ><dialog class="location-confirm-dialog" id="lock-purpose-dialog"
-      ><h3>لماذا شاشة التهيئة للصلاة؟</h3
+      ><h3><!--i18n:ui.6b997b62b9f97ce9-->لماذا شاشة التهيئة للصلاة؟</h3
       ><p
-        >تساعدك على ترك الحاسوب والاستعداد للصلاة قبل الأذان، وتختفي عند موعده. يمكنك تجربة الشاشة
+        ><!--i18n:ui.17e1fed519498bb5-->تساعدك على ترك الحاسوب والاستعداد للصلاة قبل الأذان، وتختفي عند موعده. يمكنك تجربة الشاشة
         مباشرة دون تفعيلها فعلياً؛ زر التجربة لا يغيّر اختيار التفعيل المحفوظ.</p
       ><button class="btn btn-primary" id="btn-close-lock-purpose" type="button"
-        >فهمت</button
+        ><!--i18n:action.gotIt-->فهمت</button
       ></dialog
     ><dialog class="location-confirm-dialog" id="hadith-image-dialog"
       ><header class="card-header"
-        ><h3>معاينة صورة الحديث</h3
+        ><h3><!--i18n:hadith.previewImage-->معاينة صورة الحديث</h3
         ><button class="btn btn-secondary" id="btn-close-hadith-image" type="button"
-          >إغلاق</button
+          ><!--i18n:action.close-->إغلاق</button
         ></header
       ><img alt="صورة الحديث كاملة" id="hadith-image-preview" /><p
         id="hadith-image-status"
@@ -3322,134 +3238,158 @@
       ></p
       ><div class="hadith-image-actions"
         ><button class="btn btn-primary" id="btn-save-hadith-image" type="button"
-          >تحميل الصورة</button
+          ><!--i18n:ui.6fc54e57a0cb0aad-->تحميل الصورة</button
         ><button class="btn btn-secondary" id="btn-copy-hadith-image" type="button"
-          >نسخ الصورة</button
+          ><!--i18n:ui.f085e0a53a38e2d2-->نسخ الصورة</button
         ></div
       ></dialog
     ><dialog id="channel-directory" class="location-confirm-dialog release-dialog" aria-labelledby="channel-directory-title">
-  <header><h3 id="channel-directory-title">قنوات مقترحة</h3><form method="dialog"><button class="btn btn-secondary">إغلاق</button></form></header>
+  <header><h3 id="channel-directory-title"><!--i18n:lessons.suggestedChannels-->قنوات مقترحة</h3><form method="dialog"><button class="btn btn-secondary"><!--i18n:action.close-->إغلاق</button></form></header>
   <input id="channel-directory-query" class="input-field" type="search" aria-label="بحث في القنوات" placeholder="ابحث عن قناة">
-  <h4>قنوات تم حذفها</h4><div id="channel-directory-removed"></div>
-  <h4>قنوات مقترحة</h4><select id="channel-directory-category" class="select-field" aria-label="نوع القناة"><option value="">كافة الأنواع</option></select>
+  <h4><!--i18n:lessons.removedChannels-->قنوات تم حذفها</h4><div id="channel-directory-removed"></div>
+  <h4><!--i18n:lessons.suggestedChannels-->قنوات مقترحة</h4><select id="channel-directory-category" class="select-field" aria-label="نوع القناة"><option value="">كافة الأنواع</option></select>
   <div id="channel-directory-suggested"></div><p id="channel-directory-status" role="status"></p>
 </dialog>
 <dialog id="lesson-reminder-dialog" class="location-confirm-dialog release-dialog" aria-labelledby="lesson-reminder-title">
-  <header><h3>درس مقترح</h3><form method="dialog"><button class="btn btn-secondary">إغلاق</button></form></header>
+  <header><h3><!--i18n:lessons.suggested-->درس مقترح</h3><form method="dialog"><button class="btn btn-secondary"><!--i18n:action.close-->إغلاق</button></form></header>
   <img id="lesson-reminder-image" alt="" hidden>
   <h4 id="lesson-reminder-title"></h4><p id="lesson-reminder-channel"></p>
   <div class="adhkar-actions">
-    <button type="button" class="btn btn-primary" id="lesson-reminder-watch">شاهد المقطع</button>
-    <button type="button" class="btn btn-secondary" id="lesson-reminder-another">اقترح مقطعاً آخر</button>
-    <button type="button" class="btn btn-secondary" id="lesson-reminder-snooze">ذكّرني بعد 5 دقائق</button>
+    <button type="button" class="btn btn-primary" id="lesson-reminder-watch"><!--i18n:ui.699934d0e170740c-->شاهد المقطع</button>
+    <button type="button" class="btn btn-secondary" id="lesson-reminder-another"><!--i18n:lessons.another-->اقترح مقطعاً آخر</button>
+    <button type="button" class="btn btn-secondary" id="lesson-reminder-snooze"><!--i18n:ui.01b4a0146ca0ea0b-->ذكّرني بعد 5 دقائق</button>
   </div>
   <p id="lesson-reminder-status" role="status"></p>
 </dialog><dialog id="update-highlights" class="location-confirm-dialog release-dialog" aria-labelledby="update-highlights-title">
-          <h3 id="update-highlights-title">ما الجديد من 1.0.1 إلى 1.0.2؟</h3>
+          <h3 id="update-highlights-title"><!--i18n:update.release103.title-->ما الجديد من 1.0.2 إلى 1.0.3؟</h3>
           <ul>
-            <li>مصحف للأوراد دون اتصال بحفص وورش، مع حفظ موضع الآية وإتمام ورد القراءة أو الحفظ داخل المصحف.</li>
-            <li>شريط يعرض نطاق الورد على كامل الوحدة، واختيار السورة بالاسم وتحديد البداية من البطاقة.</li>
-            <li>قوالب عصرية وتقليدية بنمطين نهاري وليلي وزخارف متمايزة.</li>
-            <li>تحسين عرض الأذكار والتكرار وإعادة الضبط، مع أيقونات جديدة ومسار تنقّل داخل الأقسام.</li>
-            <li>شاشة التهيئة تغطي الشاشات المتصلة، مع تجاوز يومي مقصود وعداد محلي للجلسات المتتالية.</li>
+            <li><!--i18n:update.release103.sync-->أضيفت المزامنة المحلية بين الهاتف والحاسوب، مع اختيار مصدر البيانات عند أول مزامنة والتحقق من توافق البروتوكول.</li>
+            <li><!--i18n:update.release103.reader-->تحسّن عرض مصحف الورد وتسوية أسطره، مع إصلاح قصّ الصفحات في بعض اللغات وتسريع تجهيز الصفحات المجاورة.</li>
+            <li><!--i18n:update.release103.feedback-->أضيف نموذج بلاغات مصنّف يجهّز التفاصيل لـ Google Forms وGitHub.</li>
+            <li><!--i18n:update.release103.locales-->رُوجعت ترجمات الواجهة والمصطلحات الدينية وأسماء السور، وأُخفي حقل المحدّث عند غيابه من المصدر.</li>
+            <li><!--i18n:update.release103.lessons-->أُصلح عرض أسماء القنوات وترقيم الدروس وتخطيط أزرار التنقل بين الدفعات.</li>
+            <li><!--i18n:update.release103.performance-->خُفّفت المؤثرات في الوضع الاقتصادي، وحُسّن التخزين المؤقت وتوزيع عمل الواجهة على دفعات.</li>
+            <li><!--i18n:update.release103.notifications-->عُولج تكرار جدولة الإشعارات وتحسّن عرض رسائل تعذّر المزامنة.</li>
+            <li><!--i18n:update.release103.windows-->أُعيد تفعيل التسريع الرسومي افتراضيًا في Windows، وأُصلحت اختصارات تقليب المصحف.</li>
           </ul>
-          <form method="dialog"><button class="btn btn-primary">متابعة</button></form>
+          <form method="dialog"><button class="btn btn-primary"><!--i18n:action.continue-->متابعة</button></form>
         </dialog><dialog id="custom-reminder-history" class="location-confirm-dialog release-dialog" aria-labelledby="custom-reminder-history-title">
-  <header><h3 id="custom-reminder-history-title">سجل التذكيرات المخصّصة</h3><form method="dialog"><button class="btn btn-secondary">إغلاق</button></form></header>
-  <label>تصفية حسب المحتوى<select class="select-field" id="custom-reminder-filter"><option value="">الكل</option><option value="hadith">الحديث</option><option value="adhkar">الأذكار</option><option value="video">المقاطع</option></select></label>
+  <header><h3 id="custom-reminder-history-title"><!--i18n:ui.16fdb62fe3e0a21c-->سجل التذكيرات المخصّصة</h3><form method="dialog"><button class="btn btn-secondary"><!--i18n:action.close-->إغلاق</button></form></header>
+  <label><!--i18n:ui.3d582027b700e320-->تصفية حسب المحتوى<select class="select-field" id="custom-reminder-filter"><option value="">الكل</option><option value="hadith">الحديث</option><option value="adhkar">الأذكار</option><option value="video">المقاطع</option></select></label>
   <div id="custom-reminder-archive"></div>
 </dialog>
 <dialog id="custom-reminder-edit" class="location-confirm-dialog release-dialog" aria-labelledby="custom-reminder-edit-title">
-  <h3 id="custom-reminder-edit-title">تعديل التذكير</h3>
+  <h3 id="custom-reminder-edit-title"><!--i18n:ui.a318d029ed7ac118-->تعديل التذكير</h3>
   <p id="custom-reminder-edit-status" role="status"></p>
-  <form method="dialog"><button class="btn btn-secondary">تجاهل التعديلات</button></form>
+  <form method="dialog"><button class="btn btn-secondary"><!--i18n:action.discard-->تجاهل التعديلات</button></form>
 </dialog>
 <dialog id="custom-reminder-delete" class="location-confirm-dialog release-dialog" aria-labelledby="custom-reminder-delete-title">
-  <h3 id="custom-reminder-delete-title">حذف هذا التذكير؟</h3>
+  <h3 id="custom-reminder-delete-title"><!--i18n:reminder.deleteConfirm-->حذف هذا التذكير؟</h3>
   <p id="custom-reminder-delete-status" role="status"></p>
-  <form method="dialog"><button type="button" id="custom-reminder-confirm-delete" class="btn btn-danger">حذف</button> <button class="btn btn-secondary">إلغاء</button></form>
+  <form method="dialog"><button type="button" id="custom-reminder-confirm-delete" class="btn btn-danger"><!--i18n:action.delete-->حذف</button> <button class="btn btn-secondary"><!--i18n:action.cancel-->إلغاء</button></form>
 </dialog>
 <dialog id="adhkar-reset-dialog" class="location-confirm-dialog release-dialog" aria-labelledby="adhkar-reset-title" aria-describedby="adhkar-reset-message">
   <form method="dialog">
     <h3 id="adhkar-reset-title"></h3>
     <p id="adhkar-reset-message"></p>
     <div class="adhkar-reset-dialog-actions">
-      <button type="submit" value="cancel" class="btn btn-secondary" autofocus>إلغاء</button>
-      <button type="submit" value="reset" class="btn btn-primary">تأكيد إعادة الضبط</button>
+      <button type="submit" value="cancel" class="btn btn-secondary" autofocus><!--i18n:action.cancel-->إلغاء</button>
+      <button type="submit" value="reset" class="btn btn-primary"><!--i18n:ui.d24236487d4b2c75-->تأكيد إعادة الضبط</button>
     </div>
   </form>
 </dialog>
 <dialog id="adhkar-source-dialog" class="location-confirm-dialog release-dialog" aria-labelledby="adhkar-source-title">
-  <header><h3 id="adhkar-source-title">مصدر الذكر</h3><form method="dialog"><button class="btn btn-secondary">إغلاق</button></form></header>
+  <header><h3 id="adhkar-source-title"><!--i18n:adhkar.source-->مصدر الذكر</h3><form method="dialog"><button class="btn btn-secondary"><!--i18n:action.close-->إغلاق</button></form></header>
   <p id="adhkar-source-text"></p>
 </dialog>
 <dialog id="sync-device-dialog" class="location-confirm-dialog release-dialog" aria-labelledby="sync-device-title">
-  <header><h3 id="sync-device-title">الأجهزة المرتبطة</h3><form method="dialog"><button class="btn btn-secondary">إغلاق</button></form></header>
+  <header><h3 id="sync-device-title"><!--i18n:sync.devices-->الأجهزة المرتبطة</h3><form method="dialog"><button class="btn btn-secondary"><!--i18n:action.close-->إغلاق</button></form></header>
   <div data-sync-devices></div><p data-sync-device-status role="status"></p>
 </dialog>
 <dialog id="quran-reader-dialog" dir="rtl" aria-labelledby="quran-reader-title">
   <header class="quran-reader-header">
     <div>
-      <h2 id="quran-reader-title">مصحف الورد</h2>
+      <h2 id="quran-reader-title"><!--i18n:reader.title-->مصحف الورد</h2>
       <p id="quran-reader-range"></p>
     </div>
-    <button type="button" class="quran-reader-button" id="quran-reader-exit" autofocus>خروج</button>
+    <button type="button" class="quran-reader-button" id="quran-reader-exit" autofocus><!--i18n:action.exit-->خروج</button>
   </header>
   <div class="quran-reader-scroll" id="quran-reader-scroll">
     <div class="quran-reader-tools">
-      <label for="quran-reader-surah">السورة
-        <select id="quran-reader-surah" data-native-select></select>
+      <label for="quran-reader-surah"><!--i18n:reader.surah-->السورة
+        <select id="quran-reader-surah"></select>
       </label>
+      <div class="quran-reader-tools-actions"><button type="button" id="quran-reader-view-mode" class="quran-reader-button quran-reader-view-mode" disabled aria-pressed="false">
+  <svg class="reader-icon-pages" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/></svg>
+  <svg class="reader-icon-vertical" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16M7 8h10M4 13h16M7 17h10M4 21h16"/></svg>
+</button>
       <details id="quran-reader-settings">
-        <summary>إعدادات المصحف</summary>
+        <summary><!--i18n:reader.settings-->إعدادات المصحف</summary>
         <div class="quran-reader-settings-fields">
-          <label for="quran-reader-theme">المظهر
-            <select id="quran-reader-theme" data-native-select>
+          <label for="quran-reader-theme"><!--i18n:settings.appearance-->المظهر
+            <select id="quran-reader-theme">
               <option value="paper">ورق عاجي</option>
               <option value="night">قراءة ليلية</option>
               <option value="app">قالب التطبيق</option>
             </select>
           </label>
-          <label for="quran-reader-riwaya">رواية القراءة
-            <select id="quran-reader-riwaya" data-native-select>
+          <label for="quran-reader-riwaya"><!--i18n:ui.ef7074954241859a-->رواية القراءة
+            <select id="quran-reader-riwaya">
               <option value="hafs">حفص عن عاصم</option>
               <option value="warsh">ورش عن نافع</option>
             </select>
           </label>
-          <label class="quran-reader-toggle" for="quran-reader-tajweed">
+          <label class="quran-reader-toggle" for="quran-reader-tajweed"><!--i18n:ui.54ce5a6f0cee219b-->
             تلوين أحكام التجويد
             <input id="quran-reader-tajweed" type="checkbox" role="switch" aria-describedby="quran-reader-tajweed-note">
           </label>
           <p id="quran-reader-tajweed-note"></p>
-          <p class="quran-reader-keyboard">← التالية · → السابقة · S الإعدادات · T التجويد · Esc إغلاق</p>
+  <label class="quran-reader-toggle" for="quran-reader-translation-enabled">
+    <!--i18n:reader.translationEnabled-->عرض ترجمة الآيات
+    <input type="checkbox" role="switch" id="quran-reader-translation-enabled" disabled>
+  </label>
+  <label for="quran-reader-translation-language"><!--i18n:reader.translationLanguage-->لغة ترجمة الآيات
+    <select id="quran-reader-translation-language" disabled>
+      <option value="en" lang="en" dir="auto" data-no-ui-translation>English</option>
+      <option value="id" lang="id" dir="auto" data-no-ui-translation>Bahasa Indonesia</option>
+    <option value="ur" lang="ur" dir="auto" data-no-ui-translation>اردو</option>
+<option value="bn" lang="bn" dir="auto" data-no-ui-translation>বাংলা</option>
+<option value="fr" lang="fr" dir="auto" data-no-ui-translation>Français</option>
+<option value="tr" lang="tr" dir="auto" data-no-ui-translation>Türkçe</option>
+</select>
+  </label>
+  <p id="quran-reader-translation-note" hidden><!--i18n:reader.translationHafsOnly-->ترجمة الآيات متاحة مع رواية حفص.</p>
+          <p class="quran-reader-keyboard"><!--i18n:ui.f24cb3c105f67c7a-->← التالية · → السابقة · S الإعدادات · T التجويد · Esc إغلاق</p>
         </div>
       </details>
+      </div>
     </div>
     <p id="quran-reader-status" role="status"></p>
     <div class="quran-reader-viewport"><div class="quran-reader-book" id="quran-reader-book"></div></div>
   </div>
-  <button type="button" class="quran-reader-button" id="quran-reader-annotation" hidden>حفظ الموضع</button>
+  <aside id="quran-reader-translation-card" hidden></aside>
+  <button type="button" class="quran-reader-button" id="quran-reader-annotation" hidden><!--i18n:ui.e5571c743cacadca-->حفظ الموضع</button>
   <footer class="quran-reader-footer">
     <div id="quran-reader-legend" aria-label="دليل ألوان التجويد" hidden>
       <div id="quran-reader-legend-rules"></div>
     </div>
     <p id="quran-reader-bookmark" role="status"></p>
     <nav aria-label="صفحات الورد">
-      <button type="button" class="quran-reader-button" id="quran-reader-previous">السابق</button>
+      <button type="button" class="quran-reader-button" id="quran-reader-previous"><!--i18n:action.previous-->السابق</button>
       <span id="quran-reader-page-number" tabindex="-1"></span>
-      <button type="button" class="quran-reader-button" id="quran-reader-next">التالي</button>
+      <button type="button" class="quran-reader-button" id="quran-reader-next"><!--i18n:action.next-->التالي</button>
       <button type="button" class="quran-reader-button quran-reader-complete" id="quran-reader-complete" disabled><svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-9"/></svg><span></span></button>
     </nav>
   </footer>
 </dialog>
 <dialog class="quran-reader-confirm" id="quran-reader-exit-confirmation" dir="rtl" aria-labelledby="quran-reader-confirm-title">
-  <h3 id="quran-reader-confirm-title">حفظ موضع المتابعة؟</h3>
-  <p>يمكنك حفظ الآية التي حددتها والمتابعة منها لاحقاً، أو الخروج دون تعديل الموضع المحفوظ.</p>
+  <h3 id="quran-reader-confirm-title"><!--i18n:reader.resumePrompt-->حفظ موضع المتابعة؟</h3>
+  <p><!--i18n:ui.1f06199123ae180a-->يمكنك حفظ الآية التي حددتها والمتابعة منها لاحقاً، أو الخروج دون تعديل الموضع المحفوظ.</p>
   <p id="quran-reader-exit-error" role="status"></p>
   <div>
-    <button type="button" class="quran-reader-button" id="quran-reader-stay" autofocus>متابعة القراءة</button>
-    <button type="button" class="quran-reader-button" id="quran-reader-discard">خروج دون حفظ</button>
-    <button type="button" class="quran-reader-button quran-reader-primary" id="quran-reader-save">حفظ وخروج</button>
+    <button type="button" class="quran-reader-button" id="quran-reader-stay" autofocus><!--i18n:reader.continueReading-->متابعة القراءة</button>
+    <button type="button" class="quran-reader-button" id="quran-reader-discard"><!--i18n:reader.exitWithoutSaving-->خروج دون حفظ</button>
+    <button type="button" class="quran-reader-button quran-reader-primary" id="quran-reader-save"><!--i18n:reader.saveAndExit-->حفظ وخروج</button>
   </div>
 </dialog>
 <script src="./quran-reader-model.js"></script>

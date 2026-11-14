@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer, webFrame } = require('electron');
 
 contextBridge.exposeInMainWorld('mihrabApi', {
+  getInterfaceLanguage: () => ipcRenderer.invoke('interface-language:get'),
+  setInterfaceLanguage: (code) => ipcRenderer.invoke('interface-language:set', code),
+  getInterfaceCatalog: (code) => ipcRenderer.invoke('interface-language:catalog', code),
   getLessonById: (id) => ipcRenderer.invoke('youtube:lesson-by-id', id),
   getAnotherLesson: (excluded) => ipcRenderer.invoke('youtube:lesson-another', excluded),
   snoozeLesson: (id) => ipcRenderer.invoke('youtube:lesson-snooze', id),
@@ -45,7 +48,9 @@ contextBridge.exposeInMainWorld('mihrabApi', {
   refreshYoutubeFeeds: (contextId) => ipcRenderer.invoke('youtube:refresh-feeds', { contextId }),
   openExternalUrl: (url) => ipcRenderer.invoke('youtube:open-external', { url }),
 
+  previewBugReport: (payload) => ipcRenderer.invoke('report:preview', payload),
   openBugReport: (payload) => ipcRenderer.invoke('report:open-draft', payload),
+  updatePerformanceSignals: signals => ipcRenderer.invoke('performance:signals', signals),
   getUpdateStatus: () => ipcRenderer.invoke('updates:status'),
   checkForUpdate: () => ipcRenderer.invoke('updates:check'),
   downloadUpdate: () => ipcRenderer.invoke('updates:download'),

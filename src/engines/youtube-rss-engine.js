@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs/promises');
 const nativeFs = require('fs');
 const { randomUUID } = require('crypto');
-const CLASSIFIER_VERSION = 'atomic-weights-v1';
+const CLASSIFIER_VERSION = 'atomic-weights-v2-multilingual';
 const GENERAL = { id: 'ctx_general', title: 'دروس ومختارات عامة' };
 
 function normalizeArabic(value = '') {
@@ -381,7 +381,7 @@ class YouTubeRssEngine {
           const legacy = context.keywords || [];
           const exact = [
             ...new Set(
-              (context.exactPhrases || legacy.filter((k) => normalizeArabic(k).includes(' ')))
+              [...(context.exactPhrases || legacy.filter((k) => normalizeArabic(k).includes(' '))), ...(context.localizedPhrases || [])]
                 .map(normalizeArabic)
                 .filter(Boolean),
             ),

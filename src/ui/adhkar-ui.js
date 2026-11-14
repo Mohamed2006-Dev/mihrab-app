@@ -165,6 +165,7 @@ function renderAdhkarText(value) {
 }
 
 function bindAdhkar() {
+  const economy = () => document.documentElement.dataset.performance === 'eco';
   const host = document.getElementById('adhkar-content');
   const back = document.getElementById('adhkar-back');
   const title = document.getElementById('adhkar-title');
@@ -249,9 +250,11 @@ function bindAdhkar() {
     for (const row of rows) {
       const card = button(row.title, () => select(row), 'adhkar-category');
       card.dataset.weight = row.weight || 'regular';
-      const key = adhkarChapterIcons[row.id] || adhkarCategoryIcons[row.chapters?.[0]] || row.icon;
-      const icon = adhkarIcons[key] || adhkarIcons.other;
-      card.insertAdjacentHTML('afterbegin', '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + icon + '</svg>');
+      if (!economy()) {
+  const key = adhkarChapterIcons[row.id] || adhkarCategoryIcons[row.chapters?.[0]] || row.icon;
+        const icon = adhkarIcons[key] || adhkarIcons.other;
+        card.insertAdjacentHTML('afterbegin', '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + icon + '</svg>');
+      }
       grid.append(card);
     }
     host.append(grid);
@@ -282,12 +285,12 @@ function bindAdhkar() {
     const focus = focusCounter ? incoming.querySelector('.adhkar-counter:not(:disabled)') : null;
     (focus || incoming).focus({ preventScroll: true });
     if (incoming.getBoundingClientRect().top < 0) incoming.scrollIntoView({ block: 'start' });
-    if (!outgoing || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (economy() || !outgoing || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     outgoing.inert = true;
     outgoing.setAttribute('aria-hidden', 'true');
     outgoing.classList.add('adhkar-reading-card--outgoing');
     host.prepend(outgoing);
-    const sign = delta > 0 ? 1 : -1;
+    const sign = (delta > 0 ? 1 : -1) * (document.documentElement.dir === 'ltr' ? -1 : 1);
     const timing = { duration: 460, easing: 'cubic-bezier(.22,.72,.26,1)' };
     outgoing.animate([
       { transform: 'none', opacity: 1 },
@@ -465,9 +468,10 @@ function bindAdhkar() {
     const resetCurrent = button('', () => confirmReset(false), 'btn btn-secondary adhkar-reset-current');
     resetCurrent.setAttribute('aria-label', 'إعادة ضبط هذا الذكر');
     resetCurrent.title = 'إعادة ضبط هذا الذكر';
-    resetCurrent.insertAdjacentHTML('afterbegin', resetIcon);
+    if (economy()) resetCurrent.textContent = '↺';
+    else resetCurrent.insertAdjacentHTML('afterbegin', resetIcon);
     const resetChapter = button('إعادة ضبط التقدم', () => confirmReset(true), 'btn btn-secondary adhkar-reset-chapter');
-    resetChapter.insertAdjacentHTML('afterbegin', resetIcon);
+    if (!economy()) resetChapter.insertAdjacentHTML('afterbegin', resetIcon);
     const counterRow = document.createElement('div');
     counterRow.className = 'adhkar-counter-row';
     counterRow.append(counter, resetCurrent);
@@ -481,7 +485,7 @@ function bindAdhkar() {
         remaining <= 10 ? `متبقي ${remaining} تكرارات` : `متبقي ${remaining} تكرارًا`;
       counter.disabled = remaining === 0;
       counter.style.setProperty('--adhkar-progress', (entry.Count ? done / entry.Count : 0) * 100 + '%');
-      counter.setAttribute('aria-label', counter.textContent + '، التكرارات المكتملة ' + done + ' من ' + entry.Count);
+      counter.setAttribute('aria-label', `التكرارات المكتملة ${done} من ${entry.Count}`);
       resetCurrent.hidden = done === 0;
       resetChapter.hidden = !chapter.entries.some((item, i) => counts[i] < item.Count);
     }
@@ -539,5 +543,9 @@ function bindAdhkar() {
     saveProgress();
     render();
   };
+  window.addEventListener('mihrab:performance-profile', () => {
+    for (const animation of host.getAnimations({ subtree: true })) animation.cancel();
+    render();
+  });
   render();
 }

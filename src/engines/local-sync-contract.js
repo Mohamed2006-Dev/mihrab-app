@@ -1,6 +1,10 @@
 'use strict';
 const Reminders = require('./custom-reminders');
-const GROUPS = ['channels', 'reminders', 'wird', 'location'];
+// Increment when the wire protocol becomes incompatible. Independent of the app version.
+const PROTOCOL_VERSION = 3;
+// Stable envelope for pairing, authentication and link management.
+const LINK_VERSION = 1;
+const GROUPS = ['channels', 'reminders', 'wird', 'settings', 'location'];
 const DIRECTIONS = ['phone-to-desktop', 'desktop-to-phone', 'two-way'];
 const ID = /^[A-Za-z0-9_-]{22,64}$/;
 const modes = ['both','reading_only','hifz_only','none'];
@@ -32,6 +36,10 @@ function block(row, hifz) {
       }
     }
   }
+  if (row.cycleId !== undefined) {
+    assert(row.cycleId === null || ID.test(row.cycleId));
+    if (row.cycleId !== null) result.cycleId = row.cycleId;
+  }
   const pos=row.currentPosition;
   if(pos){
     result.currentPosition=pick(pos,['juzNumber','hizbNumber','rubNumber','surahNumber','pageNumber']);
@@ -51,6 +59,12 @@ function block(row, hifz) {
 }
 
 function sanitize(group, value) {
+  if(group==='settings'){
+    assert(value&&['ar','en','id','ur','bn','fr','tr'].includes(value.language));
+    assert(['amber-gold','andalusian-sand','copper-courtyard','dusk-atelier','emerald-sanctuary','royal-sapphire','classic-monochrome'].includes(value.theme));
+    assert(['light','dark'].includes(value.mode));
+    return pick(value,['language','theme','mode']);
+  }
   if(group==='channels'){
     assert(Array.isArray(value)&&value.length<=300);
     const ids=new Set();
@@ -83,14 +97,18 @@ function phoneLocation(config, gpsAuthorized) {
   return sanitize('location',loc);
 }
 function project(config, group) {
-  const value={channels:config.youtube?.channels||[],reminders:config.notifications?.customReminders||[],wird:config.quranWird}[group];
-  return sanitize(group,value);
+  return sanitize(group,rawGroup(config,group));
 }
 function patch(group,value) {
   const safe=sanitize(group,value);
+  if(group==='settings')return {sharedSettings:safe};
   if(group==='channels')return {youtube:{channels:safe}};
   if(group==='reminders')return {notifications:{customReminders:safe}};
-  if(group==='wird')return {quranWird:safe};
+  if(group==='wird')return {quranWird:{
+    ...safe,
+    reading:{cycleId:null,...safe.reading},
+    hifz:{cycleId:null,...safe.hifz},
+  }};
   throw Error('تُحل أسماء المدن محلياً على الحاسوب.');
 }
 function locationAllowed(link) {
@@ -106,25 +124,103 @@ function validateLink(link) {
 }
 
 function same(a,b){return JSON.stringify(a)===JSON.stringify(b);}
-function reconcile(group,base,desktop,phone,direction,first) {
-  if(same(desktop,phone))return {value:desktop};
-  if(first&&(group==='channels'||group==='reminders')){
+function entries(group, value) {
+  if(group==='channels'||group==='reminders'){
     const key=group==='channels'?'channelId':'id';
-    const phoneMap=new Map(phone.map(item=>[item[key],item]));
-    const merged=[...phone];
-    for(const item of desktop){
-      if(phoneMap.has(item[key])){
-        if(!same(phoneMap.get(item[key]),item)&&direction==='two-way')return {conflict:true};
-        if(direction==='desktop-to-phone')merged[merged.findIndex(row=>row[key]===item[key])]=item;
-      }else merged.push(item);
+    return Object.fromEntries((value||[]).map(row=>[row[key],row]));
+  }
+  if(group==='settings')return value||{};
+  return {all:value};
+}
+function recordEdits(previous, next, groups=GROUPS, now=Date.now()) {
+  const clocks=structuredClone(previous.syncClocks||{});
+  for(const group of groups){
+    if(group==='location')continue;
+    const a=entries(group,rawGroup(previous,group)),b=entries(group,rawGroup(next,group));
+    for(const key of new Set([...Object.keys(a),...Object.keys(b)])){
+      if(same(a[key],b[key]))continue;
+      const clock=clocks[group]||={};
+      if(now===null)delete clock[key];
+      else clock[key]=Math.max(now,(clock[key]||0)+1);
     }
-    return {value:sanitize(group,merged)};
+  }
+  return clocks;
+}
+function rawGroup(config,group){
+  return {channels:config.youtube?.channels||[],reminders:config.notifications?.customReminders||[],
+    wird:config.quranWird,settings:config.sharedSettings}[group];
+}
+function latest(a,b){
+  if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||a<1||b<1)return undefined;
+  return b>a?'phone':'desktop';
+}
+function mergeItems(group, base, desktop, phone, choices, desktopClock, phoneClock) {
+  const key = group === 'channels' ? 'channelId' : 'id';
+  const index = rows => new Map((rows || []).map(row => [row[key], row]));
+  const [before, left, right] = [base, desktop, phone].map(index);
+  const ids = new Set([...left.keys(), ...right.keys(), ...before.keys()]);
+  const desktopValue = [], phoneValue = [], baseline = [], items = [];
+  for (const id of ids) {
+    const old = before.get(id), a = left.get(id), b = right.get(id);
+    const side=choices[id] || (base && latest(desktopClock[id],phoneClock[id]));
+    let value;
+    if (same(a,b)) value = a;
+    else if (same(a,old)) value = b;
+    else if (same(b,old)) value = a;
+    else if (side === 'desktop' || side === 'phone') value = side === 'desktop' ? a : b;
+    else {
+      items.push({id, desktop:a ?? null, phone:b ?? null});
+      if (a) desktopValue.push(a);
+      if (b) phoneValue.push(b);
+      if (old) baseline.push(old);
+      continue;
+    }
+    if (value) {
+      desktopValue.push(value);
+      phoneValue.push(value);
+      baseline.push(value);
+    }
+  }
+  try {
+    const a = sanitize(group,desktopValue), b = sanitize(group,phoneValue);
+    // Duplicate reminder schedules cannot be represented on a single device.
+    if(a.length!==desktopValue.length||b.length!==phoneValue.length)return {conflict:true};
+    return {desktopValue:a,phoneValue:b,baseline,items};
+  } catch {
+    // The union can exceed the device's supported capacity. Keep both copies.
+    return {conflict:true};
+  }
+}
+
+function reconcile(group,base,desktop,phone,direction,first,choices={},desktopClock={},phoneClock={}) {
+  if(direction==='two-way'&&(group==='channels'||group==='reminders'))
+    return mergeItems(group,base,desktop,phone,choices,desktopClock,phoneClock);
+  if(same(desktop,phone))return {value:desktop};
+  if(first&&direction!=='two-way'&&(group==='channels'||group==='reminders')){
+    const key=group==='channels'?'channelId':'id';
+    const [other,source]=direction==='desktop-to-phone'?[phone,desktop]:[desktop,phone];
+    try{return {value:sanitize(group,[...new Map([...other,...source].map(item=>[item[key],item])).values()])};}
+    catch{return {conflict:true};}
   }
   if(direction==='phone-to-desktop')return {value:phone};
   if(direction==='desktop-to-phone')return {value:desktop};
-  if(first)return {conflict:true};
-  if(same(desktop,base))return {value:phone};
-  if(same(phone,base))return {value:desktop};
-  return {conflict:true};
+  if(!first&&same(desktop,base))return {value:phone};
+  if(!first&&same(phone,base))return {value:desktop};
+  if(group==='settings'&&!first){
+    const merged={};
+    for(const key of Object.keys(desktop)){
+      const a=desktop[key],b=phone[key],old=base[key];
+      const side=a===old?'phone':b===old||a===b?'desktop':latest(desktopClock[key],phoneClock[key])||choices.all;
+      if(!side)return {conflict:true,items:[{id:'all',desktop,phone}]};
+      merged[key]=side==='desktop'?a:b;
+    }
+    return {value:merged};
+  }
+  if(!first&&group==='wird'&&!choices.all){
+    const side=latest(desktopClock.all,phoneClock.all);
+    if(side)return {value:side==='desktop'?desktop:phone};
+  }
+  if(choices.all==='desktop'||choices.all==='phone')return {value:choices.all==='desktop'?desktop:phone};
+  return {conflict:true,items:[{id:'all',desktop,phone}]};
 }
-module.exports={GROUPS,ID,sanitize,phoneLocation,project,patch,validateLink,locationAllowed,same,reconcile};
+module.exports={LINK_VERSION,PROTOCOL_VERSION,GROUPS,ID,sanitize,phoneLocation,project,patch,validateLink,locationAllowed,same,reconcile,recordEdits};

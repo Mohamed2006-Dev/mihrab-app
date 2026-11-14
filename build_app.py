@@ -441,6 +441,14 @@ def main():
 
     print_banner()
 
+    log_info("Checking interface translations...")
+    locales = subprocess.run(
+        [sys.executable, "scripts/sync-locales.py", "check"], cwd=PROJECT_ROOT
+    )
+    if locales.returncode:
+        log_error("Desktop build stopped. See locale check output above.")
+        sys.exit(locales.returncode)
+
     # 1. Stop stale processes
     cleanup_running_processes()
 

@@ -13,7 +13,7 @@ const channelAvatarObserver = new IntersectionObserver(
       window.mihrabApi
         .getChannelAvatar(row.dataset.avatarId)
         .then((url) => {
-          if (!url || !row.isConnected) return;
+          if (!url || !row.isConnected || !window.mihrabPerformance.profile.images) return;
           const img = document.createElement('img');
           img.className = 'channel-avatar';
           img.alt = '';
@@ -30,6 +30,7 @@ const channelAvatarObserver = new IntersectionObserver(
   { rootMargin: '40px' },
 );
 function observeChannelAvatar(row, id) {
+  if (!window.mihrabPerformance.profile.images) return;
   const source = bundledChannelAvatars.get(id);
   if (source) {
     const placeholder = row.querySelector('.channel-avatar');
@@ -135,7 +136,15 @@ window.addEventListener('resize', () => openCustomSelect?.position());
 window.visualViewport?.addEventListener('resize', () => openCustomSelect?.position());
 document.addEventListener('click', () => queueMicrotask(() => openCustomSelect?.position()));
 new MutationObserver((records) => {
-  if (records.some((record) => record.attributeName === 'disabled')) refreshCustomSelects();
+  const changed = new Set();
+  for (const { attributeName, target } of records) {
+    if (attributeName !== 'disabled') continue;
+    if (target.matches('select')) changed.add(target);
+    else if (target.matches('fieldset')) {
+      for (const select of target.querySelectorAll('select')) changed.add(select);
+    }
+  }
+  for (const select of changed) customSelects.get(select)?.sync();
   openCustomSelect?.position();
 }).observe(document.documentElement, {
   subtree: true,
@@ -299,10 +308,8 @@ function installCustomSelect(select) {
           ) || []
         ).map((city) => ({
           value: city.id,
-          textContent:
-            city.city +
-            (city.nativeName && city.nativeName !== city.city ? ' — ' + city.nativeName : ''),
-          search: [city.city, city.nativeName, city.asciiName].join(' '),
+          textContent: cityLabel(city),
+          search: [cityLabel(city), city.city, city.nativeName, city.asciiName].join(' '),
         }))
       : [...select.options].filter(
           (option) => (showDisabledTopics || !option.disabled) && !option.closest('optgroup[disabled]'),
@@ -345,6 +352,11 @@ function installCustomSelect(select) {
       button.id = pop.id + '-' + index;
       button.setAttribute('aria-selected', String(row.value === select.value));
       button.textContent = row.textContent;
+      if (row.hasAttribute?.('data-no-ui-translation') || select.id === 'settings-city-select') {
+        button.setAttribute('data-no-ui-translation', '');
+        button.lang = row.lang;
+        button.dir = row.dir || 'auto';
+      }
       button.disabled = Boolean(row.disabled);
       if (button.disabled) button.setAttribute('aria-disabled', 'true');
       button.addEventListener('pointerdown', (event) => event.preventDefault());
@@ -614,15 +626,6 @@ function initializeFinalPolish() {
     renderSettingsForm(config, null);
     discardSettingsDrafts(drafts, true);
   });
-  document.getElementById('btn-open-mini-prayer').addEventListener('click', () =>
-    window.mihrabApi.toggleMiniPrayer().catch((error) =>
-      showOperationResultModal({
-        success: false,
-        title: 'تعذر فتح العرض المصغّر',
-        summary: error.message,
-      }),
-    ),
-  );
   document.querySelectorAll('select').forEach(installCustomSelect);
   for (const name of ['renderSettingsForm', 'populateCitiesDropdown']) {
     const original = window[name];

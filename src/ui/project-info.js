@@ -39,6 +39,8 @@ function positionProjectInfoButton() {
 function initializeProjectInfo() {
   positionProjectInfoButton();
   window.addEventListener('resize', positionProjectInfoButton);
+  window.addEventListener('mihrab:interface-language-changed', positionProjectInfoButton);
+  window.mihrabLocale.ready.then(positionProjectInfoButton);
   for (const kind of ['reading', 'hifz'])
     document.getElementById('btn-' + kind + '-notification').addEventListener('click', async () => {
       const buttons = [...document.querySelectorAll('.quran-notification-shortcut')];

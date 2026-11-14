@@ -188,6 +188,37 @@ function showOperationResultModal({ success, title, summary, details, extraUrl =
   if (modal) modal.classList.add('open');
 }
 
+let initialHadithLibrary;
+function prepareHadithLibrary() {
+  if (!hadithLibraryLoaded && !initialHadithLibrary)
+    initialHadithLibrary = loadHadithLibrary(0).finally(() => { initialHadithLibrary = null; });
+  return initialHadithLibrary;
+}
+
+window.addEventListener('mihrab-ready', () => setTimeout(() => {
+  const pending = ['prayers', 'adhkar', 'hadith', 'youtube', 'settings'];
+  function next(deadline) {
+    if (document.hidden || document.documentElement.dataset.performance === 'eco') return;
+    if (deadline && deadline.timeRemaining() < 8) { schedule(); return; }
+    const id = pending.shift();
+    const section = document.getElementById('tab-' + id);
+    if (section && !section.classList.contains('active')) {
+      if (id === 'hadith') prepareHadithLibrary();
+      if (id === 'youtube') renderFilteredLessons();
+      // Resolve initial styles and layout in isolation without activating the tab.
+      section.classList.add('tab-preparing');
+      section.getBoundingClientRect();
+      section.classList.remove('tab-preparing');
+    }
+    if (pending.length) schedule();
+  }
+  function schedule() {
+    if (window.requestIdleCallback) requestIdleCallback(next);
+    else setTimeout(next, 50);
+  }
+  schedule();
+}, 500), { once: true });
+
 function activateTabById(tabId) {
   if (
     tabId !== 'tab-settings' &&
@@ -199,7 +230,6 @@ function activateTabById(tabId) {
     return;
   }
   closeInlineSettings();
-  if (tabId === 'tab-hadith' && !hadithLibraryLoaded) loadHadithLibrary(0);
   if (!document.getElementById(tabId)?.classList.contains('tab-section')) return;
   document.querySelectorAll('[data-tab]').forEach((button) => {
     const active = button.dataset.tab === tabId;
@@ -211,7 +241,15 @@ function activateTabById(tabId) {
     .querySelectorAll('.tab-section')
     .forEach((section) => section.classList.toggle('active', section.id === tabId));
   recordShortcutTab(tabId);
-  document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'instant' });
+  const section = document.getElementById(tabId);
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      if (!section.classList.contains('active')) return;
+      const content = document.querySelector('.main-content');
+      if (content.scrollTop) content.scrollTop = 0;
+      if (tabId === 'tab-hadith') prepareHadithLibrary();
+    }, 0);
+  });
   if (tabId === 'tab-youtube') {
     renderFilteredLessons();
     ensureYoutubeRefresh();
@@ -342,7 +380,74 @@ function initializeNavigation() {
 // ============================================================================
 // 1. Theme CSS variable injection.
 // ============================================================================
+let undoThemePreview = null;
+
+function clearThemePreview() {
+  undoThemePreview?.();
+  undoThemePreview = null;
+}
+
+function renderThemePicker(selector, themes, activeTheme, mode) {
+  let picker = document.getElementById('theme-color-picker');
+  if (!picker) {
+    picker = document.createElement('div');
+    picker.id = 'theme-color-picker';
+    picker.setAttribute('role', 'group');
+    selector.after(picker);
+    selector.hidden = true;
+  }
+  const locale = window.mihrabLocale;
+  picker.setAttribute('aria-label', locale.t('theme.palette'));
+  picker.replaceChildren(...themes.map(theme => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'theme-color-button';
+    const key = 'theme.name.' + theme.id;
+    const name = locale.t(key);
+    button.title = name === key ? theme.name : name;
+    button.setAttribute('aria-label', button.title);
+    button.setAttribute('aria-pressed', String(theme.id === activeTheme));
+    for (const colorMode of ['light', 'dark']) {
+      const half = document.createElement('span');
+      half.className = 'theme-color-half';
+      const palette = theme.preview?.[colorMode] || {};
+      half.style.backgroundImage = `linear-gradient(145deg, ${palette['--bg-primary'] || '#555'}, ${palette['--accent-primary'] || '#888'})`;
+      button.append(half);
+    }
+    const preview = () => {
+      clearThemePreview();
+      if (theme.id === activeTheme || !theme.preview?.[mode]) return;
+      const root = document.documentElement;
+      const previousTheme = root.dataset.theme;
+      const previous = Object.keys(theme.preview[mode]).map(prop => [
+        prop, root.style.getPropertyValue(prop), root.style.getPropertyPriority(prop),
+      ]);
+      for (const [prop, value] of Object.entries(theme.preview[mode])) root.style.setProperty(prop, value);
+      root.dataset.theme = theme.id;
+      undoThemePreview = () => {
+        for (const [prop, value, priority] of previous) {
+          if (value) root.style.setProperty(prop, value, priority);
+          else root.style.removeProperty(prop);
+        }
+        root.dataset.theme = previousTheme;
+      };
+    };
+    button.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') preview(); });
+    button.addEventListener('pointerleave', clearThemePreview);
+    button.addEventListener('focus', preview);
+    button.addEventListener('blur', clearThemePreview);
+    button.addEventListener('click', () => {
+      clearThemePreview();
+      if (selector.value === theme.id) return;
+      selector.value = theme.id;
+      selector.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    return button;
+  }));
+}
+
 function applyThemeStateToDom(themeState) {
+  clearThemePreview();
   document.documentElement.dataset.theme = themeState?.activeTheme || '';
   if (!themeState) return;
   document.documentElement.dataset.activeColorMode = themeState.activeMode;
@@ -364,6 +469,7 @@ function applyThemeStateToDom(themeState) {
   }
   selector.replaceChildren(...modernThemes.map(theme => new Option(theme.name, theme.id)));
   if (modernEnabled) selector.value = themeState.activeTheme;
+  renderThemePicker(selector, modernThemes, themeState.activeTheme, themeState.activeMode);
 
   document.querySelectorAll('[data-color-mode]').forEach((button) => {
     const active = button.dataset.colorMode === themeState.activeMode;
@@ -375,17 +481,77 @@ function applyThemeStateToDom(themeState) {
 // ============================================================================
 // 2. Prayer times, countdown and Friday presentation.
 // ============================================================================
+function prayerLabel(prayer, friday = state.prayerData?.isFriday) {
+  if (document.documentElement.lang === 'ar') return prayer.name;
+  const id = prayer.id === 'dhuhr' && friday ? 'friday' : prayer.id;
+  const key = 'prayer.' + id;
+  const label = window.mihrabLocale.t(key);
+  return label === key ? prayer.name : label;
+}
+
+function prayerClock(prayer) {
+  const lang = document.documentElement.lang;
+  if (lang === 'ar' || !/^\d{1,2}:\d{2}$/.test(prayer.time24)) return prayer.time12;
+  const [hour, minute] = prayer.time24.split(':').map(Number);
+  return new Intl.DateTimeFormat(lang, {
+    timeZone: 'UTC', hour: 'numeric', minute: '2-digit', hour12: lang === 'en',
+  }).format(Date.UTC(2000, 0, 1, hour, minute));
+}
+
+function countryLabel(country) {
+  const lang = document.documentElement.lang;
+  return lang !== 'ar' && /^[A-Z]{2}$/.test(country?.code || '')
+    ? new Intl.DisplayNames([lang], { type: 'region', fallback: 'none' }).of(country.code) || country.name
+    : country?.name || '';
+}
+
+function cityLabel(city) {
+  const lang = document.documentElement.lang;
+  const localized = city.localizedNames?.[lang];
+  if (localized) return localized;
+  if (lang !== 'ar') return (lang === 'en' ? city.asciiName : city.nativeName) || city.asciiName || city.city;
+  return city.city + (city.nativeName && city.nativeName !== city.city ? ' — ' + city.nativeName : '');
+}
+
+function locationLabels(location) {
+  const lang = document.documentElement.lang;
+  if (lang === 'ar') return { city: location.city || '', country: location.country || '' };
+  const country = currentCountry(location.countryCode) || currentCountry(location.country);
+  const row = state.citiesByCountry.get(country?.code || location.countryCode)?.find(city =>
+    [city.city, city.asciiName, city.nativeName, ...Object.values(city.localizedNames || {})].includes(location.city) ||
+    (Math.abs(city.lat - location.lat) < 0.0001 && Math.abs(city.lng - location.lng) < 0.0001)
+  );
+  return {
+    city: row ? cityLabel(row) : location.city || '',
+    country: countryLabel(country || { code: location.countryCode, name: location.country }),
+  };
+}
+
+function renderPrayerLocation(location) {
+  const node = document.getElementById('top-city-name');
+  if (!node || !location) return;
+  const { city, country } = locationLabels(location);
+  node.textContent = [city, country].filter(Boolean).join(document.documentElement.lang === 'ar' ? '، ' : ', ');
+}
+
+function setRegionName(id, canonical, label) {
+  const field = document.getElementById(id);
+  field.value = label || canonical || '';
+  field.dataset.regionLabel = field.value;
+  field.dataset.regionCanonical = canonical || '';
+}
+
+function regionNameValue(id) {
+  const field = document.getElementById(id);
+  return field.value === field.dataset.regionLabel ? field.dataset.regionCanonical : field.value;
+}
+
 function renderPrayerTimes(prayerData) {
   if (!prayerData) return;
   state.prayerData = prayerData;
   renderVerificationStatus(prayerData.verification);
   renderLastPrayerUpdate(prayerData.lastTimingUpdate);
-  const cityEl = document.getElementById('top-city-name');
-  if (cityEl && prayerData.location) {
-    const cityName = prayerData.location.city || '';
-    const countryName = prayerData.location.country || '';
-    cityEl.textContent = countryName ? `${cityName}، ${countryName}` : cityName;
-  }
+  renderPrayerLocation(prayerData.location);
 
 
   const nextP = MihrabPrayerDisplay.select(prayerData)?.prayer;
@@ -400,11 +566,11 @@ function renderPrayerTimes(prayerData) {
       card.className = `prayer-item-card${isNext ? ' next-active' : ''}`;
 
       const adjVal = Number(p.adjustment) || 0;
-      const adjText = adjVal === 0 ? 'دون تعديل' : `${adjVal > 0 ? '+' : ''}${adjVal} دقيقة`;
+      const adjText = adjVal === 0 ? window.mihrabLocale.t('ui.a81210d7cb57b335') : window.mihrabLocale.t('prayer.adjustment', { minutes: (adjVal > 0 ? '+' : '') + adjVal });
 
       card.innerHTML = `
-        <div class="prayer-name">${p.name}</div>
-        <div class="prayer-time">${p.time12}</div>
+        <div class="prayer-name">${prayerLabel(p, prayerData.isFriday)}</div>
+        <div class="prayer-time">${prayerClock(p)}</div>
         <div style="font-size: var(--font-size-xs); color: var(--text-muted);">${p.time24}</div>
         <span class="prayer-adj-badge">${adjText}</span>
       `;
@@ -431,7 +597,7 @@ function renderPrayerHero(display) {
     elapsed = display.mode === 'elapsed',
     data = state.prayerData;
   text('hero-next-label', elapsed ? 'مضى على الأذان' : 'الصلاة القادمة');
-  text('hero-next-name', prayer.name);
+  text('hero-next-name', prayerLabel(prayer));
   text('hero-countdown', (elapsed ? '+' : '−') + MihrabPrayerDisplay.clock(display.seconds));
   document.getElementById('hero-countdown').dataset.mode = display.mode;
   if (elapsed) text('hero-pre-alert-info', 'يُعرض الموعد التالي بعد مرور 20 دقيقة على الأذان.');
@@ -448,14 +614,19 @@ function renderPrayerHero(display) {
     text(
       'hero-pre-alert-info',
       state.config?.screenLock?.enabled
-        ? `شاشة التهيئة قبل الصلاة بـ ${state.config.screenLock.minutesBeforeAdhan} دقيقة`
+        ? window.mihrabLocale.t('prayer.preparationIn', { count: state.config.screenLock.minutesBeforeAdhan })
         : enabled
-          ? `التنبيه قبل ${prayer.name} بـ ${minutes} دقيقة`
+          ? window.mihrabLocale.t('prayer.alertIn', { prayer: prayerLabel(prayer), count: minutes })
           : 'التنبيه القبلي لهذه الصلاة متوقف',
     );
   }
   const art = document.getElementById('hero-sun-art');
-  if (art && art.dataset.prayer !== prayer.id) {
+  if (art && window.mihrabPerformance.profile.id === 'eco') {
+    if (art.dataset.prayer) {
+      art.style.removeProperty('background-image');
+      delete art.dataset.prayer;
+    }
+  } else if (art && art.dataset.prayer !== prayer.id) {
     art.dataset.prayer = prayer.id;
     art.style.backgroundImage = `url('./assets/sun/${['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].includes(prayer.id) ? prayer.id : 'fajr'}.png')`;
   }
@@ -473,18 +644,19 @@ function resumeVisibleClock() {
 }
 document.addEventListener('visibilitychange', resumeVisibleClock);
 
+let liveClockFormat, liveClockZone;
 function updateLiveClockAndCountdown(now = new Date()) {
   checkAdhkarCycle(now);
   const clockEl = document.getElementById('live-clock');
   if (clockEl) {
-    clockEl.textContent = new Intl.DateTimeFormat('en-GB', {
-      timeZone:
-        state.prayerData?.location?.effectiveTimeZone || state.prayerData?.location?.timeZone,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hourCycle: 'h23',
-    }).format(now);
+    const zone = state.prayerData?.location?.effectiveTimeZone || state.prayerData?.location?.timeZone;
+    if (!liveClockFormat || liveClockZone !== zone) {
+      liveClockZone = zone;
+      liveClockFormat = new Intl.DateTimeFormat('en-GB', {
+        timeZone: zone, hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+      });
+    }
+    clockEl.textContent = liveClockFormat.format(now);
   }
 
   renderPrayerHero(MihrabPrayerDisplay.select(state.prayerData, now));
@@ -583,10 +755,14 @@ async function loadHadithLibrary(offset = 0) {
     if (request !== hadithLibraryRequest) return;
     hadithLibraryOffset = result.offset;
     hadithLibraryNext = result.nextOffset;
-    hadithLibraryLoaded = true;
     const grid = document.getElementById('hadith-library-grid');
     grid.replaceChildren();
-    for (const item of result.items) {
+    const fragment = document.createDocumentFragment();
+    for (const [index, item] of result.items.entries()) {
+      if (index % 4 === 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+        if (request !== hadithLibraryRequest) return;
+      }
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'hadith-library-card';
@@ -610,18 +786,18 @@ async function loadHadithLibrary(offset = 0) {
       const itemHost = document.createElement('article');
       itemHost.className = 'hadith-library-item';
       itemHost.append(card);
-      grid.append(itemHost);
+      fragment.append(itemHost);
+      if (index % 4 === 3 || index === result.items.length - 1) grid.append(fragment);
     }
-    status.textContent = result.total
-      ? 'عدد النتائج: ' + result.total
-      : 'لا توجد أحاديث تطابق البحث.';
+    hadithLibraryLoaded = true;
+    const locale = window.mihrabLocale;
+    status.textContent = result.total ? '' : 'لا توجد أحاديث تطابق البحث.';
     document.getElementById('hadith-library-page').textContent = result.total
-      ? 'عرض ' +
-        (result.offset + 1) +
-        '–' +
-        Math.min(result.offset + result.items.length, result.total) +
-        ' من ' +
-        result.total
+      ? locale.t('hadith.libraryRange', {
+          start: result.offset + 1,
+          end: Math.min(result.offset + result.items.length, result.total),
+          total: result.total,
+        })
       : '';
     document.getElementById('hadith-library-prev').disabled = result.offset === 0;
     document.getElementById('hadith-library-next').disabled = result.nextOffset === null;
@@ -773,14 +949,12 @@ function renderHadithState(hadithState, { skipDetails = false } = {}) {
   const h = hadithState.hadith;
   if (h) {
     document.getElementById('hero-hadith-preview').textContent = h.text;
-    document.getElementById('hero-hadith-grade').textContent =
-      `${h.grade || 'غير مسجلة'} — ${h.mohdith || ''}`;
+    const missing = (value) => !value || /^(?:-|غير مسجل[ة]?)$/.test(String(value).trim());
+    document.getElementById('hero-hadith-grade').textContent = h.grade || 'غير مسجلة';
 
     document.getElementById('main-hadith-text').textContent = h.text;
-    const missing = (value) => !value || /^(?:-|غير مسجل[ة]?)$/.test(String(value).trim());
     for (const [field, id] of [
       ['rawi', 'main-hadith-rawi'],
-      ['mohdith', 'main-hadith-mohdith'],
       ['book', 'main-hadith-book'],
       ['grade', 'main-hadith-grade'],
     ])
@@ -927,18 +1101,18 @@ function createLessonCard(v) {
              data-vid="${escapeYoutubeText(v.videoId)}"  />`
             : ''
         }
-        <span class="lesson-badge-overlay">🎯 ${escapeYoutubeText(v.contextTitle || 'علم وتزكية')}</span>
+        <span class="lesson-badge-overlay">🎯 ${escapeYoutubeText(lessonTopicLabel(v.contextId || 'ctx_general', v.contextTitle))}</span>
       </div>
       <div class="lesson-content">
-        <h4 class="lesson-title" title="${escapeYoutubeText(v.title)}">
+        <h4 class="lesson-title" data-no-ui-translation dir="auto" title="${escapeYoutubeText(v.title)}">
           ${escapeYoutubeText(v.title)}
         </h4>
         <div class="lesson-meta">
-          <span>🎙️ ${escapeYoutubeText(v.channelName)}</span>
+          <span data-no-ui-translation dir="auto">🎙️ ${escapeYoutubeText(v.channelName)}</span>
           <span>⏱️ ${escapeYoutubeText(v.durationEstimate || 'درس كامل')}</span>
         </div>
         <button data-watch-url="${escapeYoutubeText(v.url)}" class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-xs);" title="${escapeYoutubeText(v.url)}">
-          مشاهدة الدرس ↗
+          ${escapeYoutubeText(window.mihrabLocale.t('lessons.watch'))} ↗
         </button>
       </div>
     `;
@@ -1095,6 +1269,12 @@ async function refreshYoutubeData() {
   return state.youtubeRefreshPromise;
 }
 
+function lessonTopicLabel(id, fallback) {
+  const key = 'lessons.context.' + id;
+  const label = window.mihrabLocale.t(key);
+  return label === key ? fallback : label;
+}
+
 function renderYoutubeState(ytState) {
   if (!ytState) return;
   state.youtubeState = ytState;
@@ -1109,7 +1289,10 @@ function renderYoutubeState(ytState) {
     channelPicker.innerHTML = '<option value="">الشيوخ والقنوات</option>';
     for (const ch of ytState.channels) {
       if (!state.selectedChannelIds.has(ch.channelId)) {
-        channelPicker.appendChild(new Option(ch.name, ch.channelId));
+        const option = new Option(ch.name, ch.channelId);
+        option.setAttribute('data-no-ui-translation', '');
+        option.dir = 'auto';
+        channelPicker.appendChild(option);
       }
     }
   }
@@ -1136,7 +1319,7 @@ function renderYoutubeState(ytState) {
       const chip = document.createElement('span');
       chip.className = 'filter-chip active';
       chip.innerHTML = `
-        <span class="channel-chip-label" title="${escapeYoutubeText(ch.name)}">${escapeYoutubeText(ch.name)}</span>
+        <span class="channel-chip-label" data-no-ui-translation dir="auto" title="${escapeYoutubeText(ch.name)}">${escapeYoutubeText(ch.name)}</span>
         <button class="chip-remove" title="إلغاء التحديد">&times;</button>
       `;
       chip.querySelector('.chip-remove').addEventListener('click', (e) => {
@@ -1155,7 +1338,8 @@ function renderYoutubeState(ytState) {
     for (const ctx of ytState.contexts) {
       if (!state.selectedContextIds.has(ctx.id)) {
         const count = contextCounts.get(ctx.id) || 0;
-        const option = new Option(count ? `${ctx.title} (${count})` : ctx.title, ctx.id);
+        const title = lessonTopicLabel(ctx.id, ctx.title);
+        const option = new Option(count ? `${title} (${count})` : title, ctx.id);
         option.disabled = count === 0;
         contextPicker.appendChild(option);
       }
@@ -1184,7 +1368,7 @@ function renderYoutubeState(ytState) {
       const chip = document.createElement('span');
       chip.className = 'filter-chip active';
       chip.innerHTML = `
-        <span>🎯 ${escapeYoutubeText(ctx.title)}</span>
+        <span>🎯 ${escapeYoutubeText(lessonTopicLabel(ctx.id, ctx.title))}</span>
         <button class="chip-remove" title="إلغاء التحديد">&times;</button>
       `;
       chip.querySelector('.chip-remove').addEventListener('click', (e) => {
@@ -1250,6 +1434,10 @@ async function showQuranPageTurn(kind, updated, { random = false } = {}) {
     next = updated?.[kind + 'Summary'];
   const delta = (next?.startNumber || 0) - (previous?.startNumber || 0),
     forward = delta < 0;
+  if (window.mihrabPerformance.profile.id !== 'full') {
+    renderQuranState(updated);
+    return;
+  }
   // Increasing positions turn left to right; decreasing positions mirror that motion.
   const front = host
     .querySelector(forward ? '.book-start-page' : '.book-end-page')
@@ -1430,7 +1618,33 @@ function bindWirdPositionEditors() {
   window.addEventListener('mihrab:quran-state', event => renderQuranState(event.detail));
 }
 
+function localizedWirdSchedule(schedules, kind) {
+  const locale = window.mihrabLocale;
+  const time = schedules?.[kind + 'NotificationTime'];
+  const timing = schedules?.[kind + 'Timing'];
+  if (!schedules) return '';
+  if (!locale.has('wird.reminderOff')) return schedules[kind + 'TimingDescription'] || '';
+  if (!schedules[kind + 'Enabled']) return locale.t('wird.reminderOff');
+  if (!timing) return schedules[kind + 'TimingDescription'] || '';
+  if (timing.fixed) return locale.t('wird.fixedTime', { time });
+  return locale.t('wird.afterPrayerTime', { time, offset: timing.offset,
+    prayer: locale.t('prayer.' + timing.prayerId) });
+}
+
+window.addEventListener('mihrab:performance-profile', () => {
+  if (state.quranState) renderQuranSummaries(state.quranState);
+});
+
 function renderQuranSummaries(data) {
+  const locale = window.mihrabLocale;
+  if (!locale.has('wird.fromUnit')) return;
+  const t = locale.t;
+  const surahName = (name, surahNumber) => {
+    if (document.documentElement.lang === 'ar') return name;
+    const number = surahNumber || data.surahs?.find(row => row.name === name)?.number;
+    const key = 'surah.name.' + number;
+    return locale.has(key) ? t(key) : name;
+  };
   // Validate both sides of every incoming summary before changing any visible content.
   const prepared = [];
   for (const kind of ['reading', 'hifz']) {
@@ -1455,7 +1669,7 @@ function renderQuranSummaries(data) {
       const words = point.text.trim().split(/\s+/);
       return {
         side,
-        title: (side === 'start' ? 'من: ' : 'إلى: ') + point.surahName + ' — الآية ' + point.ayah,
+        title: t(side === 'start' ? 'wird.fromVerse' : 'wird.toVerse', { surah: surahName(point.surahName, point.surahNumber), ayah: point.ayah }),
         text:
           words.length > 14
             ? side === 'start'
@@ -1493,19 +1707,21 @@ function renderQuranSummaries(data) {
         quote = document.createElement('p');
         section.append(quote);
       }
-      label.textContent = point.title;
-      quote.textContent = point.text;
-      quote.title = point.fullText;
+      if (label.textContent !== point.title) label.textContent = point.title;
+      if (quote.textContent !== point.text) quote.textContent = point.text;
+      if (quote.title !== point.fullText) quote.title = point.fullText;
     }
-    if (!host.querySelector(':scope > .book-spine-divider')) {
+    const decorated = document.documentElement.dataset.performance !== 'eco';
+    if (decorated && !host.querySelector(':scope > .book-spine-divider')) {
       const spine = document.createElement('span');
       spine.className = 'book-spine-divider';
       spine.setAttribute('aria-hidden', 'true');
       host.append(spine);
     }
+    if (!decorated) host.querySelectorAll('.book-corner, .book-spine-divider').forEach(node => node.remove());
     // Ornaments belong to their paper surface, so cloned leaves carry them too.
     for (const node of host.querySelectorAll(':scope > .book-corner')) node.remove();
-    for (const [page, corners] of [
+    if (decorated) for (const [page, corners] of [
       [host.querySelector(':scope > .book-start-page'), ['tr', 'br']],
       [host.querySelector(':scope > .book-end-page'), ['tl', 'bl']],
     ]) {
@@ -1518,27 +1734,30 @@ function renderQuranSummaries(data) {
         }
     }
     const input = document.getElementById(kind + '-position-input');
-    const unit = summary.unitLabel;
+    const unitKey = 'wird.unit.' + summary.unit;
+    const unit = locale.has(unitKey) ? t(unitKey) : summary.unitLabel;
     const end = document.getElementById(kind + '-position-end');
     const label = document.getElementById(kind + '-position-label');
     const surah = document.getElementById(kind + '-position-surah');
     const bySurah = summary.unit === 'surah';
     label.htmlFor = bySurah ? surah.id : input.id;
-    label.textContent = bySurah ? (summary.amount > 1 ? 'من سورة' : 'سورة')
-      : (summary.amount > 1 ? 'من ' + unit : unit + ' رقم');
+    label.textContent = summary.amount > 1 ? t('wird.fromUnit', { unit }) : bySurah ? unit : t('wird.singleUnit', { unit });
     surah.closest('.wird-surah-picker').hidden = !bySurah;
     surah.disabled = !bySurah;
     input.hidden = bySurah;
     if (bySurah) {
       const options = data.surahs
         .filter(row => row.number >= summary.progress.min && row.number <= summary.maxStart)
-        .map(row => new Option(row.name, row.number));
+        .map(row => new Option(surahName(row.name, row.number), row.number));
       if (summary.startNumber > summary.maxStart) {
-        const current = new Option(data.surahs[summary.startNumber - 1].name, summary.startNumber);
+        const current = new Option(surahName(data.surahs[summary.startNumber - 1].name, summary.startNumber), summary.startNumber);
         current.disabled = true;
         options.push(current);
       }
-      surah.replaceChildren(...options);
+      const previous = surah.options;
+      if (options.length !== previous.length || options.some((option, index) =>
+        option.value !== previous[index].value || option.text !== previous[index].text ||
+        option.disabled !== previous[index].disabled)) surah.replaceChildren(...options);
       surah.value = summary.startNumber;
       surah.closest('.wird-surah-picker').dataset.surahName = surah.selectedOptions[0]?.textContent || '';
     }
@@ -1546,29 +1765,27 @@ function renderQuranSummaries(data) {
     input.max = summary.progress.max;
     input.value = summary.startNumber;
     input.disabled = bySurah;
-    input.title = summary.currentAssignment;
+    input.title = t('wird.rangePosition', { range: summary.startNumber === summary.endNumber ? summary.startNumber : summary.startNumber + '–' + summary.endNumber, total: summary.progress.max });
     end.hidden = summary.amount <= 1;
     const endName = bySurah ? data.surahs[summary.endNumber - 1].name : summary.endNumber;
-    end.textContent = 'إلى ' + unit + ' ' + endName;
+    end.textContent = t('wird.toUnit', { unit, end: bySurah ? surahName(endName, summary.endNumber) : endName });
     const marker = document.getElementById(kind + '-progress-mark');
     marker.hidden = !summary.bookmark;
     if (summary.bookmark) {
-      const title = 'الموضع المحفوظ: ' + summary.bookmark.surahName + '، الآية ' + summary.bookmark.ayah;
+      const title = t('wird.savedVerse', { surah: surahName(summary.bookmark.surahName, summary.bookmark.surah), ayah: summary.bookmark.ayah });
       marker.style.setProperty('--wird-mark', summary.progress.bookmarkPercentage + '%');
       marker.setAttribute('aria-label', title);
       marker.dataset.label = title;
       marker.toggleAttribute('data-near-start', summary.progress.bookmarkPercentage < 40);
     }
-    document.getElementById(kind + '-range-desc').textContent = summary.rangeDescription;
+    document.getElementById(kind + '-range-desc').textContent = t(kind === 'hifz' ? 'wird.fullReview' : summary.mode === 'random' ? 'wird.randomDaily' : 'wird.fullReading');
     const track = document.getElementById(kind + '-progress');
     track.style.setProperty('--wird-range-start', summary.progress.startPercentage + '%');
     track.style.setProperty('--wird-range-end', summary.progress.endPercentage + '%');
     document.getElementById(kind + '-progress-label').textContent =
-      'موضع الورد: ' + summary.startNumber +
-      (summary.endNumber === summary.startNumber ? '' : '–' + summary.endNumber) +
-      ' من ' + summary.progress.max;
+      input.title;
     document.getElementById(kind + '-schedule-badge').textContent =
-      data.schedules?.[kind + 'TimingDescription'] || '';
+      localizedWirdSchedule(data.schedules, kind);
   }
 }
 function updateQuranTiming(kind) {
@@ -1719,9 +1936,9 @@ function renderQuranState(quranState) {
 
   if (quranState.schedules) {
     document.getElementById('reading-schedule-badge').textContent =
-      quranState.schedules.readingTimingDescription;
+      localizedWirdSchedule(quranState.schedules, 'reading');
     document.getElementById('hifz-schedule-badge').textContent =
-      quranState.schedules.hifzTimingDescription;
+      localizedWirdSchedule(quranState.schedules, 'hifz');
   }
 }
 
@@ -1803,7 +2020,7 @@ function populateCitiesDropdown(countryValue, targetCityName = '', filterQuery =
   const query = fold(filterQuery.trim());
   const matches = query
     ? all.filter((city) =>
-        fold([city.city, city.asciiName, city.nativeName].join(' ')).includes(query),
+        fold([cityLabel(city), city.city, city.asciiName, city.nativeName].join(' ')).includes(query),
       )
     : all;
   const shown = matches.slice(0, 200);
@@ -1814,14 +2031,12 @@ function populateCitiesDropdown(countryValue, targetCityName = '', filterQuery =
       new Option(country ? 'لا توجد مدينة مطابقة؛ يمكنك إدخالها يدوياً' : 'اختر الدولة أولاً', ''),
     );
   const fragment = document.createDocumentFragment();
-  for (const city of shown)
-    fragment.appendChild(
-      new Option(
-        city.city +
-          (city.nativeName && city.nativeName !== city.city ? ' — ' + city.nativeName : ''),
-        city.id,
-      ),
-    );
+  for (const city of shown) {
+    const option = new Option(cityLabel(city), city.id);
+    option.setAttribute('data-no-ui-translation', '');
+    option.dir = 'auto';
+    fragment.appendChild(option);
+  }
   citySelect.appendChild(fragment);
   citySelect.disabled = !shown.length;
   if (search) search.disabled = !country || !all.length;
@@ -1868,8 +2083,8 @@ function renderSettingsForm(config, cities) {
       currentCountry(config.location?.countryCode) || currentCountry(config.location?.country);
     const fragment = document.createDocumentFragment();
     fragment.appendChild(new Option('اختر الدولة', ''));
-    for (const country of [...state.countries].sort((a, b) => a.name.localeCompare(b.name, 'ar')))
-      fragment.appendChild(new Option(country.name, country.code));
+    for (const country of [...state.countries].sort((a, b) => countryLabel(a).localeCompare(countryLabel(b), document.documentElement.lang)))
+      fragment.appendChild(new Option(countryLabel(country), country.code));
     countrySelect.replaceChildren(fragment);
     countrySelect.value = selected?.code || '';
     if (selected) {
@@ -1880,8 +2095,10 @@ function renderSettingsForm(config, cities) {
   state.methodManuallySelected = config.location?.calculationMethodSelection === 'manual';
   setMethodHint();
   populateTimeZones(config.location?.timeZone);
-  document.getElementById('settings-city-name').value = config.location?.city || '';
-  document.getElementById('settings-country-name').value = config.location?.country || '';
+  const labels = locationLabels(config.location || {});
+  setRegionName('settings-city-name', config.location?.city, labels.city);
+  setRegionName('settings-country-name', config.location?.country, labels.country);
+  renderPrayerLocation(state.prayerData?.location);
   document.getElementById('settings-calc-method').value =
     config.location?.calculationMethod || 'MuslimWorldLeague';
   document.getElementById('settings-lat').value = config.location?.lat ?? 35.7595;
@@ -1964,10 +2181,10 @@ function bindEvents() {
   document.querySelectorAll('[data-tab]').forEach((button) => {
     button.addEventListener('click', () => {
       activateTabById(button.dataset.tab);
-      button.classList.remove('is-pulsing');
-      void button.offsetWidth;
-      button.classList.add('is-pulsing');
-      setTimeout(() => button.classList.remove('is-pulsing'), 420);
+      if (window.mihrabPerformance.profile.animations && !button.classList.contains('is-pulsing')) {
+        button.classList.add('is-pulsing');
+        setTimeout(() => button.classList.remove('is-pulsing'), 420);
+      }
     });
   });
 
@@ -2348,7 +2565,7 @@ function bindEvents() {
     state.methodManuallySelected = false;
     document.getElementById('settings-calc-method').value = country.method;
     setMethodHint(false);
-    document.getElementById('settings-country-name').value = country.name;
+    setRegionName('settings-country-name', country.name, countryLabel(country));
     document.getElementById('settings-city-name').value = '';
     document.getElementById('settings-lat').value = '';
     document.getElementById('settings-lng').value = '';
@@ -2565,3 +2782,52 @@ window.addEventListener(
   },
   { once: true },
 );
+
+function refreshPrayerLanguage() {
+  if (state.config) {
+    const current = document.getElementById('settings-country-select')?.value;
+    const countries = document.getElementById('settings-country-select');
+    if (countries) {
+      for (const option of countries.options) {
+        const country = currentCountry(option.value);
+        if (country) option.textContent = countryLabel(country);
+      }
+    }
+    const cities = document.getElementById('settings-city-select');
+    if (cities) {
+      const rows = new Map((state.citiesByCountry.get(current) || []).map(city => [String(city.id), city]));
+      for (const option of cities.options) {
+        const row = rows.get(option.value);
+        if (row) option.textContent = cityLabel(row);
+      }
+    }
+    const labels = locationLabels(state.config.location || {});
+    for (const [id, key] of [['settings-city-name', 'city'], ['settings-country-name', 'country']]) {
+      const field = document.getElementById(id);
+      if (field?.value === field?.dataset.regionLabel)
+        setRegionName(id, field.dataset.regionCanonical, labels[key]);
+    }
+  }
+  if (state.prayerData) renderPrayerTimes(state.prayerData);
+}
+window.addEventListener('mihrab:interface-language-changed', refreshPrayerLanguage);
+window.mihrabLocale.ready.then(refreshPrayerLanguage);
+
+function refreshWirdLanguage() {
+  if (state.quranState) renderQuranSummaries(state.quranState);
+}
+window.addEventListener('mihrab:interface-language-changed', refreshWirdLanguage);
+window.mihrabLocale.ready.then(refreshWirdLanguage);
+
+
+function refreshThemeAndLessonLanguage() {
+  const theme = state.themeState;
+  if (theme) {
+    clearThemePreview();
+    renderThemePicker(document.getElementById('theme-selector'),
+      theme.availableThemes.filter(item => item.family !== 'classic'), theme.activeTheme, theme.activeMode);
+  }
+  if (state.youtubeState) renderYoutubeState(state.youtubeState);
+}
+window.addEventListener('mihrab:interface-language-changed', refreshThemeAndLessonLanguage);
+window.mihrabLocale.ready.then(refreshThemeAndLessonLanguage);

@@ -129,6 +129,8 @@ function bindLessonExtras() {
         const row = document.createElement('div');
         row.className = 'directory-row';
         const label = document.createElement('strong');
+        label.setAttribute('data-no-ui-translation', '');
+        label.dir = 'auto';
         label.textContent = entry.name;
         const add = document.createElement('button');
         add.className = 'btn btn-secondary';

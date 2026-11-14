@@ -199,7 +199,7 @@
 .hero-prayer-card,
 .mini-hero {
   --prayer-photo-overlay: linear-gradient(
-    to right,
+    var(--prayer-overlay-direction, to right),
     color-mix(in srgb, var(--bg-surface-elevated) 8%, transparent) 0%,
     color-mix(in srgb, var(--bg-surface-elevated) 20%, transparent) 35%,
     color-mix(in srgb, var(--bg-surface-elevated) 52%, transparent) 65%,
@@ -422,7 +422,7 @@ details[open] > .hadith-library-heading .hadith-chevron,
   flex-direction: column;
   gap: 12px;
   justify-content: space-between;
-  text-align: right;
+  text-align: start;
   min-width: 0;
   min-height: 156px;
   padding: 18px;
@@ -866,9 +866,7 @@ html[data-motion='enabled'] .scroll-item:not(.is-visible) {
   border-radius: 18px;
   background: var(--book-paper);
   box-shadow: 0 2px 3px #0005;
-  perspective: 3200px;
   perspective-origin: 50% 50%;
-  transform-style: preserve-3d;
   overflow: visible;
 }
 /* Exactly the same paper, frame and ornaments for stationary and turning pages. */
@@ -1211,7 +1209,7 @@ html[data-motion='enabled'] .scroll-item:not(.is-visible) {
   box-shadow: 0 16px 40px #0006;
   overflow-y: auto;
   overscroll-behavior: contain;
-  direction: rtl;
+  direction: inherit;
   box-sizing: border-box;
 }
 .inline-settings-popover:popover-open {
@@ -1343,7 +1341,7 @@ html[data-motion='enabled'] .scroll-item:not(.is-visible) {
 .hero-prayer-card > .region-settings-button {
   position: absolute;
   top: 18px;
-  left: 18px;
+  inset-inline-end: 18px;
   z-index: 3;
   font-size: 13px;
   padding: 9px 13px;
@@ -1535,7 +1533,7 @@ html[data-motion='enabled'] .scroll-item:not(.is-visible) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   align-items: start;
-  direction: rtl;
+  direction: inherit;
 }
 .notice-columns > .notice-group {
   min-width: 0;
@@ -1953,7 +1951,7 @@ html[data-motion='enabled'] .scroll-item:not(.is-visible) {
   padding: 24px;
   background: var(--bg-secondary);
   color: var(--text-primary);
-  direction: rtl;
+  direction: inherit;
   box-shadow: 0 20px 70px #0008;
 }
 .location-confirm-dialog::backdrop {
@@ -2150,7 +2148,7 @@ dialog.location-confirm-dialog {
 }
 .storage-composition {
   display: flex;
-  direction: rtl;
+  direction: inherit;
   width: 100%;
   height: 16px;
   overflow: hidden;
@@ -2371,7 +2369,7 @@ dialog.location-confirm-dialog {
   box-shadow: 0 12px 45px #0006;
   overflow-y: auto;
   overscroll-behavior: contain;
-  direction: rtl;
+  direction: inherit;
 }
 .a11y-header {
   display: flex;
@@ -2607,7 +2605,7 @@ html[data-a11y-motion='reduce'] .scroll-view {
 }
 .lesson-page-control {
   grid-column: 1/-1;
-  justify-self: center;
+  place-self: center;
   width: fit-content;
   padding: 10px 22px;
   border: 1px solid var(--border-subtle);
@@ -2944,7 +2942,7 @@ dialog.project-info-dialog {
 .bank-support-field [data-bank-value='swift_code'] {
   font-family: monospace;
   direction: ltr;
-  text-align: right;
+  text-align: start;
 }
 #bank-support-qr {
   display: block;
@@ -3087,7 +3085,7 @@ dialog.project-info-dialog {
   gap: 8px;
   padding-top: 0;
   padding-bottom: 24px;
-  direction: rtl;
+  direction: inherit;
 }
 .sidebar .brand-logo {
   width: 48px;
@@ -3267,7 +3265,7 @@ html[data-a11y-motion='reduce'][data-performance] #tab-settings .settings-transi
   box-shadow: 0 12px 35px #0006;
   overflow: auto;
   overscroll-behavior: contain;
-  direction: rtl;
+  direction: inherit;
   z-index: 2000;
   transform: none;
 }
@@ -3278,7 +3276,7 @@ html[data-a11y-motion='reduce'][data-performance] #tab-settings .settings-transi
   background: transparent;
   color: inherit;
   padding: 10px 12px;
-  text-align: right;
+  text-align: start;
   font: inherit;
   font-size: 13px;
   cursor: pointer;
@@ -3879,3 +3877,151 @@ input[type="checkbox"][hidden]{display:none!important}
   font-size: .75rem; text-align: start; white-space: pre-line; line-height: 1.65;
 }
 .wird-progress-mark[data-near-start]:is(:hover, :focus-visible)::after { inset-inline: 0 auto; }
+
+:root[dir="ltr"] { --prayer-overlay-direction: to left; }
+
+
+/* Arabic quotations retain their reading direction in every interface language. */
+.adhkar-text,
+.hadith-quote-box,
+.hadith-library-preview,
+#hero-hadith-preview,
+#hadith-explanation,
+.hadith-vocabulary-item {
+  direction: rtl;
+  text-align: right;
+}
+
+
+/* Preview pages follow the book's reading order in every UI language. */
+.quran-book-spread { direction: rtl; }
+:root[dir="ltr"] .quran-book-spread .quran-boundary h4 { direction: ltr; }
+
+:root[dir="ltr"] .project-info-toggle { left: auto; right: 30px; }
+:root[dir="ltr"] .accessibility-toggle:is([data-position="bottom-left"],[data-position="top-left"]) {
+  left: auto; right: 24px;
+}
+:root[dir="ltr"] .accessibility-toggle:is([data-position="bottom-right"],[data-position="top-right"]) {
+  right: auto; left: 24px;
+}
+:root[dir="ltr"] :is(.settings-toggle,.project-info-toggle) > .control-tooltip {
+  left: auto; right: calc(100% + 12px);
+  max-inline-size: min(16rem, calc(100vw - 6rem));
+  white-space: normal;
+}
+:root[dir="ltr"] :is(.settings-toggle,.project-info-toggle) > .control-tooltip::after {
+  left: auto; right: -4px;
+  border-left: 0; border-right: 1px solid var(--border-subtle);
+  border-bottom: 0; border-top: 1px solid var(--border-subtle);
+}
+:root[dir="ltr"] input[type="checkbox"]::before { left: auto; right: 2px; }
+:root[dir="ltr"] input[type="checkbox"]:checked::before { transform: translateX(-16px); }
+
+
+#theme-color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  padding: .4rem .25rem;
+}
+#theme-selector[hidden] { display: none !important; }
+.theme-color-button {
+  display: flex;
+  position: relative;
+  flex: none;
+  inline-size: 3rem;
+  block-size: 3rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+}
+.theme-color-half { display: block; flex: 1; }
+.theme-color-half:first-child { border-start-start-radius: 999px; border-end-start-radius: 999px; }
+.theme-color-half:last-child { border-start-end-radius: 999px; border-end-end-radius: 999px; }
+.theme-color-button[aria-pressed="true"] {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+.theme-color-button[aria-pressed="true"]::after {
+  content: "✓";
+  position: absolute;
+  inset-block-end: -.25rem;
+  inset-inline-end: -.25rem;
+  display: grid;
+  place-items: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1px solid var(--bg-primary);
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  font: bold .8rem/1 sans-serif;
+}
+
+/* Economy keeps controls and content while reducing paint and compositing work. */
+html[data-performance='eco'] :is(.card-panel, .hero-prayer-card, .lesson-card,
+  .quran-reader-page, .adhkar-reading-card, .location-confirm-dialog) {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+html[data-performance='eco'] .quran-reader-opening .quran-reader-page-flow {
+  background: var(--reader-paper);
+  box-shadow: none;
+}
+html[data-performance='eco'] .quran-reader-opening .quran-reader-page-flow::before {
+  display: none;
+}
+
+.main-content #yt-videos-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  grid-auto-rows: auto;
+  align-items: stretch;
+}
+.main-content #yt-videos-grid .lesson-card { min-inline-size: 0; overflow-wrap: anywhere; }
+html[data-performance='eco'] :is(.quran-book-spread, .adhkar-reading-card, .adhkar-tile, .app-shell, .lesson-card) {
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  perspective: none;
+  transform-style: flat;
+}
+html[data-performance='eco'] :is(.quran-book-spread, .adhkar-reading-card, .adhkar-tile)::before,
+html[data-performance='eco'] :is(.quran-book-spread, .adhkar-reading-card, .adhkar-tile)::after,
+html[data-performance='eco'] .quran-book-spread .quran-boundary::after {
+  content: none;
+}
+
+html[data-performance='eco'] .app-shell::before { content: none; }
+html[data-performance='eco'] .quran-book-spread .quran-boundary {
+  box-shadow: none;
+  backface-visibility: visible;
+}
+
+/* Only a turning spread needs a 3D scene. */
+html[data-performance='full'] .quran-book-spread.is-flipping {
+  perspective: 3200px;
+  transform-style: preserve-3d;
+}
+#tab-quran.tab-section.active {
+  animation: none;
+}
+
+html[data-performance]:not([data-performance='full']) .quran-book-shell::before,
+html[data-performance]:not([data-performance='full']) .quran-book-spread .quran-boundary {
+  box-shadow: none;
+  backface-visibility: visible;
+}
+html[data-performance]:not([data-performance='full']) .quran-book-shell::after,
+html[data-performance]:not([data-performance='full']) .quran-book-spread .quran-boundary::before {
+  content: none;
+}
+/* The stationary leaves use their borders and corner ornaments. */
+.quran-book-spread > .quran-boundary::before {
+  content: none;
+}
+
+html[data-performance='eco'] .main-content #yt-videos-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

@@ -41,6 +41,7 @@ class ThemeEngine {
           id: content.id || path.basename(file, '.json'),
           name: content.name || path.basename(file, '.json'),
           family: content.family === 'classic' ? 'classic' : 'modern',
+          preview: { light: this.compileCssVariables(content, 'light'), dark: this.compileCssVariables(content, 'dark') },
           author: content.author || 'User Custom',
           fileName: file,
         };

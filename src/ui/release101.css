@@ -234,7 +234,7 @@
 .adhkar-header #adhkar-back { flex: none; }
 .adhkar-header #adhkar-back[hidden], .adhkar-breadcrumb li[hidden] { display: none; }
 .adhkar-breadcrumb {
-  flex: 1; min-inline-size: 0; position: relative; direction: rtl;
+  flex: 1; min-inline-size: 0; position: relative; direction: inherit;
   font-size: clamp(.82rem, .7rem + .55vw, 1.12rem);
 }
 .adhkar-breadcrumb ol {
@@ -247,6 +247,8 @@
   margin-inline: .45em; border: solid var(--text-muted); border-width: 0 0 1px 1px;
   rotate: 45deg;
 }
+.adhkar-breadcrumb:dir(rtl) li:not(:last-child)::after { rotate: -135deg; }
+.adhkar-breadcrumb:dir(ltr) li:not(:last-child)::after { rotate: 45deg; }
 .adhkar-breadcrumb .adhkar-crumb-current {
   display: block; min-inline-size: 0; flex: 0 1 auto;
   overflow: hidden; text-overflow: ellipsis; font-weight: 700;

@@ -4,6 +4,20 @@ function bindLocalSync() {
   const content=panel.querySelector('[data-sync-content]');
   const mobile=Boolean(window.MihrabLocalSync);
   const api=mobile?window.MihrabLocalSync:window.mihrabApi;
+  const protocolMessage=()=>window.mihrabLocale.t('sync.protocolMismatch');
+  let mismatchShown=false;
+  function showProtocolWarning(state){
+    const blocked=Boolean(state.protocolMismatch||state.links?.some(peer=>peer.protocolMismatch));
+    if(blocked&&!mismatchShown){
+      mismatchShown=true;
+      showOperationResultModal({
+        success:false,
+        title:'حصل خطأ',
+        summary:protocolMessage(),
+      });
+    }
+    if(!blocked)mismatchShown=false;
+  }
   let renderTimer=null;
   let busy=false;
   const devices=document.getElementById('sync-device-dialog');
@@ -51,7 +65,7 @@ function bindLocalSync() {
   const camera=scanner?.querySelector('video');
   const cameraStatus=scanner?.querySelector('[data-sync-camera-status]');
   scanner?.addEventListener('close',stopCamera);
-  const labels={channels:'القنوات المتابعة',reminders:'التذكيرات المخصّصة',wird:'إعدادات الأوراد وتقدّمها',location:'الموقع من الهاتف'};
+  const labels={channels:'القنوات المتابعة',reminders:'التذكيرات المخصّصة',wird:'إعدادات الأوراد وتقدّمها',settings:'لغة الواجهة والمظهر',location:'الموقع من الهاتف'};
   const directions={'phone-to-desktop':'من الهاتف إلى الحاسوب','desktop-to-phone':'من الحاسوب إلى الهاتف','two-way':'تبادلي'};
   function button(label,action,style='btn-secondary'){
     const node=document.createElement('button');
@@ -65,7 +79,7 @@ function bindLocalSync() {
     if(busy)return;
     busy=true;message.textContent='';deviceStatus.textContent='';
     try{await action();}
-    catch(error){(devices.open?deviceStatus:message).textContent=error.message.replace(/^Error invoking remote method '[^']+': (?:Error: )?/,'');}
+    catch(error){(devices.open?deviceStatus:message).textContent=error.code==='protocol_version'?protocolMessage():error.message.replace(/^Error invoking remote method '[^']+': (?:Error: )?/,'');}
     finally{busy=false;}
   }
   function stopCamera(){
@@ -136,13 +150,13 @@ function bindLocalSync() {
     for(const peer of peers){
       const row=document.createElement('div');row.className='local-sync-row';
       const details=directions[peer.link.direction]+' · '+peer.link.groups.map(group=>labels[group]).join('، ');
-      const summary=mobile?(peer.conflicts?.length?'تعارض: '+peer.conflicts.map(group=>labels[group]).join('، '):
+      const summary=(mobile?peer.protocolMismatch:state.protocolMismatch)?protocolMessage():mobile?(peer.conflicts?.length?'تعارض: '+peer.conflicts.map(group=>labels[group]).join('، '):
         peer.last?'آخر اتصال '+new Date(peer.last).toLocaleTimeString('ar'):'بانتظار اتصال'):
         state.online?'بانتظار الهاتف على '+state.host:'عنوان الشبكة غير متاح.';
       const actions=document.createElement('div');actions.className='local-sync-actions';
       if(mobile)actions.append(button('تعديل الاتصال',()=>editDevice(peer,state)));
       actions.append(button('فك الربط',async()=>{
-        if(!window.confirm('فك ربط هذا الجهاز؟'))return;
+        if(!window.confirm(window.mihrabLocale.localize('فك ربط هذا الجهاز؟')))return;
         await api.syncUnlink(mobile?peer.link.desktopId:undefined);
         devices.close();await render();showSuccessFeedback('تم فك ربط الجهاز.');
       },'btn-danger'));
@@ -151,7 +165,8 @@ function bindLocalSync() {
       deviceList.append(row);
     }
   }
-  api.onSyncLinkChanged?.(()=>{
+  api.onSyncLinkChanged?.(state=>{
+    showProtocolWarning(state);
     if(!panel.hidden&&document.getElementById('tab-settings').classList.contains('active'))run(render);
   });
   window.addEventListener('mihrab-sync-applied',()=>{
@@ -159,8 +174,14 @@ function bindLocalSync() {
   });
   async function render(){
     const state=await api.syncStatus();
+    showProtocolWarning(state);
     if(pairingSelect)customSelects.get(pairingSelect)?.close();
     content.replaceChildren();
+    if(state.protocolMismatch||state.links?.some(peer=>peer.protocolMismatch)){
+      const warning=note(protocolMessage());
+      warning.setAttribute('role','status');
+      content.append(warning);
+    }
     if(mobile){
       if(state.links.length)content.append(button('الأجهزة المرتبطة ('+state.links.length+')',async()=>{
         showDevices(await api.syncStatus());
@@ -276,7 +297,7 @@ function bindLocalSync() {
           note(state.online?'عنوان الاتصال '+state.host:'عنوان الشبكة غير متاح.'),
           note('يمكن تعديل اتجاه الاتصال والبيانات من الهاتف المرتبط.'),
           button('فك الربط',async()=>{
-            if(!window.confirm('فك ربط الهاتف؟'))return;
+            if(!window.confirm(window.mihrabLocale.localize('فك ربط الهاتف؟')))return;
             await api.syncUnlink();await render();showSuccessFeedback('تم فك ربط الهاتف.');
           },'btn-danger'));
         content.append(row);

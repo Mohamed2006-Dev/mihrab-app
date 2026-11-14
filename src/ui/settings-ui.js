@@ -70,9 +70,9 @@ function collectRegionSettings() {
   return {
     location: {
       autoDetect: false,
-      city: value('settings-city-name').trim(),
+      city: regionNameValue('settings-city-name').trim(),
       countryCode: value('settings-country-select'),
-      country: value('settings-country-name').trim(),
+      country: regionNameValue('settings-country-name').trim(),
       timeZone: value('settings-time-zone'),
       calculationMethod: value('settings-calc-method'),
       calculationMethodSelection: state.methodManuallySelected ? 'manual' : 'auto',
@@ -795,6 +795,13 @@ function usageChartSamples(stats, range, now = Date.now()) {
 }
 function renderUsageChart() {
   if (!resourceStats) return;
+  const t = window.mihrabLocale.t;
+  const since = resourceStats.since
+    ? t('usage.since', { date: new Date(resourceStats.since).toLocaleString(document.documentElement.lang) }) : '';
+  const unknown = resourceStats.unknownResponses
+    ? t('usage.unknown', { count: resourceStats.unknownResponses }) : '';
+  document.getElementById('usage-since').textContent =
+    [since, t('usage.estimate'), unknown, window.mihrabLocale.localize(resourceStats.networkMeasurement || '')].filter(Boolean).join(' ');
   const samples = usageChartSamples(resourceStats, resourceRange),
     chart = document.getElementById('usage-chart'),
     tooltip = document.getElementById('usage-tooltip');
@@ -926,7 +933,7 @@ function renderUsageChart() {
     tooltip.replaceChildren();
     const title = document.createElement('strong');
     title.textContent =
-      new Date(p.start).toLocaleString('ar', {
+      new Date(p.start).toLocaleString(document.documentElement.lang, {
         timeZone: 'UTC',
         dateStyle: 'medium',
         ...(resourceRange === 1 ? { timeStyle: 'short' } : {}),
@@ -934,12 +941,12 @@ function renderUsageChart() {
     tooltip.append(title);
     const total = document.createElement('p');
     total.textContent = p.known
-      ? 'الإجمالي: ' + resourceAmount(p.total) + (p.partial ? ' — بدأ القياس خلال هذه الفترة' : '')
+      ? window.mihrabLocale.t('usage.total', { amount: resourceAmount(p.total) }) + (p.partial ? ' — ' + window.mihrabLocale.t('usage.partial') : '')
       : 'لا توجد بيانات مسجلة لهذه الفترة؛ الصفر المعروض ليس قياساً فعلياً.';
     tooltip.append(total);
-    for (const [key, label] of Object.entries(resourceCategoryNames)) {
+    for (const key of Object.keys(resourceCategoryNames)) {
       const row = document.createElement('p');
-      row.textContent = label + ': ' + (p.known ? resourceAmount(p.values[key] || 0) : 'غير مسجل');
+      row.textContent = window.mihrabLocale.t('usage.row', { label: window.mihrabLocale.t('usage.category.' + key), amount: p.known ? resourceAmount(p.values[key] || 0) : window.mihrabLocale.t('usage.missing') });
       tooltip.append(row);
     }
     tooltip.hidden = false;
@@ -982,16 +989,15 @@ function renderUsageChart() {
   chart.onfocus = () => show(index);
   const total = samples.reduce((sum, p) => sum + p.total, 0);
   document.getElementById('usage-total').textContent =
-    (resourceRange === 1 ? 'استهلاك آخر 24 ساعة: ' : 'استهلاك المدة المعروضة: ') +
-    resourceAmount(total);
+    window.mihrabLocale.t(resourceRange === 1 ? 'usage.day' : 'usage.period', { amount: resourceAmount(total) });
   document.getElementById('usage-coverage-note').textContent =
     'التوقيت العالمي UTC. الأجزاء المخططة تعني عدم وجود سجل سابق، وتُعرض عند الصفر دون اعتبارها استهلاكاً مقاساً.';
   const host = document.getElementById('usage-categories');
   host.replaceChildren();
-  for (const [key, label] of Object.entries(resourceCategoryNames)) {
+  for (const key of Object.keys(resourceCategoryNames)) {
     const row = document.createElement('p');
     row.textContent =
-      label + ': ' + resourceAmount(samples.reduce((sum, p) => sum + (p.values[key] || 0), 0));
+      window.mihrabLocale.t('usage.row', { label: window.mihrabLocale.t('usage.category.' + key), amount: resourceAmount(samples.reduce((sum, p) => sum + (p.values[key] || 0), 0)) });
     host.append(row);
   }
 }
@@ -1050,13 +1056,6 @@ async function refreshResourceStats() {
     resourceStats = await window.mihrabApi.getResourceStats();
     renderStorageComposition(resourceStats.disk);
     document.getElementById('memory-used').textContent = formatResourceBytes(resourceStats.memory);
-    document.getElementById('usage-since').textContent =
-      'بدأ القياس في ' +
-      new Date(resourceStats.since).toLocaleString('ar') +
-      '. الأرقام تقديرية للبيانات التي يمكن قياسها؛ ';
-    if (resourceStats.unknownResponses)
-      document.getElementById('usage-since').textContent +=
-        ' استجابات دون حجم معلن: ' + resourceStats.unknownResponses;
     renderUsageChart();
     status.textContent = '';
   } catch (error) {
@@ -1157,3 +1156,5 @@ function syncAutomationButtons(config){
  document.getElementById('btn-sync-habous').hidden = config.automation?.verifyPrayerTimes ?? config.officialSync?.enabled !== false;
  document.getElementById('btn-auto-location').hidden = phoneManagesLocation || config.location?.autoUpdate === true;
 }
+
+window.addEventListener('mihrab:interface-language-changed', renderUsageChart);

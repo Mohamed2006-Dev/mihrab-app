@@ -82,45 +82,46 @@
               color: var(--text-primary);
             "
             id="lock-prayer-title"
-          >
+          ><!--i18n:preparation.congregation-->
             حان وقت التهيؤ لصلاة الجماعة
           </h1>
         </div>
 
-        <div class="lock-motivational" id="lock-motivational-quote">
+        <div class="lock-motivational" id="lock-motivational-quote"><!--i18n:ui.3fe82e3e48e1bea4-->
           «قم لصلاتك، عملك سينتظرك.. أما الوقت فإنه يمضي إلى الله»
         </div>
 
-        <div class="hadith-quote-box" id="lock-hadith-text" style="width: 100%; text-align: right">
+        <div class="hadith-quote-box" id="lock-hadith-text" dir="rtl" style="width: 100%; text-align: right">
           ...
         </div>
 
         <div class="hadith-meta-bar" id="lock-hadith-meta">
-          <span class="meta-pill" id="lock-hadith-rawi">الراوي: -</span>
-          <span class="meta-pill" id="lock-hadith-grade">الدرجة: صحيح</span>
+          <span class="meta-pill" id="lock-hadith-rawi"><!--i18n:ui.1e243ab985a6810b-->الراوي: -</span>
+          <span class="meta-pill" id="lock-hadith-grade"><!--i18n:ui.efda3f812eed18b2-->الدرجة: صحيح</span>
         </div>
 
-        <div class="lock-timer-pill" id="lock-remaining-timer"> وقت التهيؤ المتبقي: 00:30 </div>
+        <div class="lock-timer-pill" id="lock-remaining-timer"><!--i18n:ui.077495a3d18a8ed7--> وقت التهيؤ المتبقي: 00:30 </div>
 
         <p id="lock-streak" hidden></p>
-        <button class="btn btn-danger" id="lock-reveal-bypass" hidden>تجاوز الشاشة</button>
+        <button class="btn btn-danger" id="lock-reveal-bypass" hidden><!--i18n:preparation.skip-->تجاوز الشاشة</button>
 
-        <div style="font-size: var(--font-size-xs); color: var(--text-muted)">
+        <div style="font-size: var(--font-size-xs); color: var(--text-muted)"><!--i18n:preparation.closesAutomatically-->
           تُغلق الشاشة تلقائياً عند انتهاء الوقت.
         </div>
       </div>
     </div>
 
     <dialog id="lock-bypass-dialog" aria-labelledby="lock-bypass-title">
-      <h2 id="lock-bypass-title">تجاوز شاشة التهيئة؟</h2>
-      <p id="lock-bypass-warning">سيُصفّر التأكيد عداد جلساتك المتتالية ويستهلك تجاوز اليوم. استخدمه عند الضرورة فقط.</p>
+      <h2 id="lock-bypass-title"><!--i18n:ui.37ce31e6cb40bd31-->تجاوز شاشة التهيئة؟</h2>
+      <p id="lock-bypass-warning"><!--i18n:ui.ba7263c1797f376f-->سيُصفّر التأكيد عداد جلساتك المتتالية ويستهلك تجاوز اليوم. استخدمه عند الضرورة فقط.</p>
       <p id="lock-bypass-error" role="alert"></p>
       <form method="dialog" class="lock-bypass-actions">
-        <button class="btn" value="cancel" autofocus>متابعة التهيئة</button>
-        <button class="btn btn-danger" id="lock-confirm-bypass" type="button">تأكيد التجاوز</button>
+        <button class="btn" value="cancel" autofocus><!--i18n:ui.66f08dd3087900ec-->متابعة التهيئة</button>
+        <button class="btn btn-danger" id="lock-confirm-bypass" type="button"><!--i18n:ui.0cb8d2961e91e740-->تأكيد التجاوز</button>
       </form>
     </dialog>
 
+    <script src="./interface-language.js"></script>
     <script>
       function applyThemeVariables(themeState) {
         if (!themeState || !themeState.cssVariables) return;

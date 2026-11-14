@@ -52,6 +52,8 @@ class NotificationCenter {
       );
     }
     const key = this.key(payload);
+    const existing = this.entries.get(key);
+    if (existing && !existing.win.isDestroyed()) return key;
     this.close(key);
     const area = this.getWorkArea();
     const width = Math.min(580, area.width - 32);

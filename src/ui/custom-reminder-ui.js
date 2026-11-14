@@ -151,7 +151,7 @@ function bindCustomReminders() {
 
 function showUpdateHighlights() {
   const dialog = document.getElementById('update-highlights');
-  const key = 'mihrab.seen-updates.1.0.2';
+  const key = 'mihrab.seen-updates.1.0.3';
   if (localStorage.getItem(key) || document.querySelector('dialog[open]')) return;
   dialog.addEventListener('close', () => localStorage.setItem(key, '1'), { once: true });
   dialog.showModal();

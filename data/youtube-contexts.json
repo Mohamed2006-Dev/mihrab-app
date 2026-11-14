@@ -11,6 +11,10 @@
       "partialKeywords": [
         "تزكية",
         "التزكية"
+      ],
+      "localizedPhrases": [
+        "Purification of the Soul",
+        "Penyucian Jiwa"
       ]
     },
     {
@@ -24,6 +28,13 @@
       "partialKeywords": [
         "الخشوع",
         "خشوع"
+      ],
+      "localizedPhrases": [
+        "Focus in Prayer",
+        "Khusyuk dalam Salat",
+        "khushu in salah",
+        "focus in salah",
+        "khusyuk salat"
       ]
     },
     {
@@ -38,6 +49,12 @@
       "partialKeywords": [
         "تدبر",
         "التدبر"
+      ],
+      "localizedPhrases": [
+        "Reflecting on the Quran",
+        "Tadabur Al-Qur’an",
+        "quran reflection",
+        "tadabbur al quran"
       ]
     },
     {
@@ -53,6 +70,10 @@
         "الفتن",
         "فتنة",
         "الشبهات"
+      ],
+      "localizedPhrases": [
+        "Steadfastness in Trials",
+        "Istikamah dalam Ujian"
       ]
     },
     {
@@ -70,6 +91,14 @@
         "الوتر",
         "السحر",
         "الليل"
+      ],
+      "localizedPhrases": [
+        "Night Prayer",
+        "Salat Malam",
+        "qiyam al layl",
+        "tahajjud",
+        "salat tahajud",
+        "tahajud"
       ]
     },
     {
@@ -89,6 +118,13 @@
         "الإفطار",
         "صوم",
         "صيام"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Fasting",
+        "Fikih Puasa",
+        "rules of fasting",
+        "fasting rulings",
+        "hukum puasa"
       ]
     },
     {
@@ -104,6 +140,13 @@
       "partialKeywords": [
         "السيرة",
         "الغزوات"
+      ],
+      "localizedPhrases": [
+        "Life of the Prophet",
+        "Sirah Nabi",
+        "prophetic biography",
+        "seerah",
+        "sirah nabawiyah"
       ]
     },
     {
@@ -121,6 +164,10 @@
       ],
       "partialKeywords": [
         "الحسنى"
+      ],
+      "localizedPhrases": [
+        "Names of Allah",
+        "Nama-Nama Allah"
       ]
     },
     {
@@ -136,6 +183,10 @@
         "التوبة",
         "التائب",
         "تائب"
+      ],
+      "localizedPhrases": [
+        "Repentance",
+        "Tobat"
       ]
     },
     {
@@ -150,6 +201,10 @@
         "التوكل",
         "توكل",
         "التفويض"
+      ],
+      "localizedPhrases": [
+        "Trust in Allah",
+        "Tawakal kepada Allah"
       ]
     },
     {
@@ -165,6 +220,10 @@
         "البلاء",
         "الابتلاء",
         "المصيبة"
+      ],
+      "localizedPhrases": [
+        "Patience in Hardship",
+        "Sabar dalam Ujian"
       ]
     },
     {
@@ -181,6 +240,10 @@
         "الوالدين",
         "والديك",
         "عقوق"
+      ],
+      "localizedPhrases": [
+        "Kindness to Parents",
+        "Berbakti kepada Orang Tua"
       ]
     },
     {
@@ -198,6 +261,10 @@
         "الحلم",
         "الرفق",
         "الكرم"
+      ],
+      "localizedPhrases": [
+        "Islamic Manners",
+        "Akhlak Islami"
       ]
     },
     {
@@ -214,6 +281,13 @@
         "التسبيح",
         "التهليل",
         "التحميد"
+      ],
+      "localizedPhrases": [
+        "Remembrance of Allah",
+        "Zikir kepada Allah",
+        "dhikr of allah",
+        "zikr of allah",
+        "dzikir kepada allah"
       ]
     },
     {
@@ -233,6 +307,10 @@
         "النار",
         "القبر",
         "الحساب"
+      ],
+      "localizedPhrases": [
+        "The Hereafter",
+        "Akhirat"
       ]
     },
     {
@@ -249,6 +327,10 @@
         "الزكاة",
         "زكاة",
         "النصاب"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Zakat",
+        "Fikih Zakat"
       ]
     },
     {
@@ -264,6 +346,10 @@
       "partialKeywords": [
         "التعلم",
         "المتعلم"
+      ],
+      "localizedPhrases": [
+        "Seeking Islamic Knowledge",
+        "Menuntut Ilmu Agama"
       ]
     },
     {
@@ -279,6 +365,10 @@
         "الأبناء",
         "التربية",
         "التربوية"
+      ],
+      "localizedPhrases": [
+        "Raising Children",
+        "Mendidik Anak"
       ]
     },
     {
@@ -294,6 +384,10 @@
         "الوقت",
         "الفراغ",
         "التسويف"
+      ],
+      "localizedPhrases": [
+        "Making the Most of Time",
+        "Memanfaatkan Waktu"
       ]
     },
     {
@@ -309,6 +403,10 @@
         "الصحبة",
         "الجليس",
         "الصديق"
+      ],
+      "localizedPhrases": [
+        "Good Companionship",
+        "Pergaulan yang Baik"
       ]
     },
     {
@@ -325,6 +423,10 @@
         "الرياء",
         "النية",
         "السريرة"
+      ],
+      "localizedPhrases": [
+        "Sincerity",
+        "Ikhlas"
       ]
     },
     {
@@ -340,6 +442,10 @@
         "الغيبة",
         "النميمة",
         "اللسان"
+      ],
+      "localizedPhrases": [
+        "Guarding the Tongue",
+        "Menjaga Lisan"
       ]
     },
     {
@@ -355,6 +461,10 @@
         "العفة",
         "الحياء",
         "العفاف"
+      ],
+      "localizedPhrases": [
+        "Lowering the Gaze",
+        "Menundukkan Pandangan"
       ]
     },
     {
@@ -377,6 +487,10 @@
       "partialKeywords": [
         "الأنبياء",
         "النبيين"
+      ],
+      "localizedPhrases": [
+        "Stories of the Prophets",
+        "Kisah Para Nabi"
       ]
     },
     {
@@ -393,6 +507,10 @@
       "partialKeywords": [
         "الصحابة",
         "الصحابي"
+      ],
+      "localizedPhrases": [
+        "Lives of the Companions",
+        "Kisah Para Sahabat"
       ]
     },
     {
@@ -409,6 +527,12 @@
         "التوحيد",
         "العقيدة",
         "الشرك"
+      ],
+      "localizedPhrases": [
+        "Tawhid",
+        "Tauhid",
+        "islamic monotheism",
+        "tauheed"
       ]
     },
     {
@@ -433,6 +557,10 @@
         "الرهن",
         "البيع",
         "الاحتيال"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Transactions",
+        "Fikih Muamalah"
       ]
     },
     {
@@ -451,6 +579,13 @@
         "الحج",
         "عرفة",
         "مزدلفة"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Hajj",
+        "Fikih Haji",
+        "hajj rulings",
+        "rules of hajj",
+        "hukum haji"
       ]
     },
     {
@@ -465,6 +600,10 @@
         "الزهد",
         "القناعة",
         "الورع"
+      ],
+      "localizedPhrases": [
+        "Detachment from Worldly Life",
+        "Zuhud"
       ]
     },
     {
@@ -480,6 +619,10 @@
         "اليتيم",
         "الأرملة",
         "التكافل"
+      ],
+      "localizedPhrases": [
+        "Social Solidarity",
+        "Solidaritas Sosial"
       ]
     },
     {
@@ -495,6 +638,10 @@
         "المحاسبة",
         "المراقبة",
         "التقوى"
+      ],
+      "localizedPhrases": [
+        "Self-Accountability",
+        "Muhasabah Diri"
       ]
     },
     {
@@ -511,6 +658,10 @@
         "الحزن",
         "الطمأنينة",
         "السكينة"
+      ],
+      "localizedPhrases": [
+        "Coping with Anxiety",
+        "Mengatasi Kecemasan"
       ]
     },
     {
@@ -524,6 +675,10 @@
       "partialKeywords": [
         "شعائر",
         "حرمات"
+      ],
+      "localizedPhrases": [
+        "Honoring Allah’s Rites",
+        "Mengagungkan Syiar Allah"
       ]
     },
     {
@@ -539,6 +694,10 @@
         "الدعوة",
         "النصيحة",
         "الداعية"
+      ],
+      "localizedPhrases": [
+        "Calling to Islam",
+        "Dakwah Islam"
       ]
     },
     {
@@ -552,6 +711,10 @@
       ],
       "partialKeywords": [
         "الجمعة"
+      ],
+      "localizedPhrases": [
+        "Virtues of Friday",
+        "Keutamaan Hari Jumat"
       ]
     },
     {
@@ -567,6 +730,10 @@
         "الشكر",
         "النعم",
         "العافية"
+      ],
+      "localizedPhrases": [
+        "Gratitude",
+        "Syukur"
       ]
     },
     {
@@ -583,6 +750,10 @@
         "الظلم",
         "الإنصاف",
         "المظلوم"
+      ],
+      "localizedPhrases": [
+        "Justice",
+        "Keadilan"
       ]
     },
     {
@@ -598,6 +769,10 @@
         "التفكر",
         "الكون",
         "المخلوقات"
+      ],
+      "localizedPhrases": [
+        "Reflecting on Creation",
+        "Merenungkan Ciptaan"
       ]
     },
     {
@@ -613,6 +788,10 @@
         "الاستقامة",
         "المداومة",
         "الفتور"
+      ],
+      "localizedPhrases": [
+        "Steadfastness",
+        "Istikamah"
       ]
     },
     {
@@ -625,6 +804,10 @@
       ],
       "partialKeywords": [
         "الخاتمة"
+      ],
+      "localizedPhrases": [
+        "A Good Ending",
+        "Husnul Khatimah"
       ]
     },
     {
@@ -637,6 +820,10 @@
       ],
       "partialKeywords": [
         "الرواتب"
+      ],
+      "localizedPhrases": [
+        "Regular Sunnah Prayers",
+        "Salat Sunah Rawatib"
       ]
     },
     {
@@ -652,6 +839,10 @@
         "المستضعفين",
         "الأقصى",
         "النصرة"
+      ],
+      "localizedPhrases": [
+        "Supporting the Oppressed",
+        "Membela Kaum Tertindas"
       ]
     },
     {
@@ -667,6 +858,10 @@
         "القلوب",
         "الحسد",
         "الكبر"
+      ],
+      "localizedPhrases": [
+        "Reforming the Heart",
+        "Memperbaiki Hati"
       ]
     },
     {
@@ -685,6 +880,10 @@
         "التفسير",
         "التجويد",
         "القراءات"
+      ],
+      "localizedPhrases": [
+        "Quranic Sciences",
+        "Ilmu Al-Qur’an"
       ]
     },
     {
@@ -698,6 +897,10 @@
       ],
       "partialKeywords": [
         "الشمائل"
+      ],
+      "localizedPhrases": [
+        "The Prophet’s Character",
+        "Syamail Nabi"
       ]
     },
     {
@@ -711,6 +914,10 @@
       "partialKeywords": [
         "الاستغفار",
         "استغفر"
+      ],
+      "localizedPhrases": [
+        "Seeking Forgiveness",
+        "Istigfar"
       ]
     },
     {
@@ -723,6 +930,10 @@
       ],
       "partialKeywords": [
         "اليقين"
+      ],
+      "localizedPhrases": [
+        "Thinking Well of Allah",
+        "Berbaik Sangka kepada Allah"
       ]
     },
     {
@@ -736,6 +947,10 @@
       "partialKeywords": [
         "الرضا",
         "القضاء"
+      ],
+      "localizedPhrases": [
+        "Acceptance of Allah’s Decree",
+        "Rida terhadap Takdir"
       ]
     },
     {
@@ -750,6 +965,10 @@
       "partialKeywords": [
         "الأرحام",
         "الأقارب"
+      ],
+      "localizedPhrases": [
+        "Maintaining Family Ties",
+        "Silaturahmi"
       ]
     },
     {
@@ -765,6 +984,10 @@
         "الدعاء",
         "دعاء",
         "دعائك"
+      ],
+      "localizedPhrases": [
+        "Supplication",
+        "Doa"
       ]
     },
     {
@@ -780,6 +1003,10 @@
         "التحصين",
         "الرقية",
         "المعوذات"
+      ],
+      "localizedPhrases": [
+        "Protective Adhkar",
+        "Zikir Perlindungan"
       ]
     },
     {
@@ -795,6 +1022,10 @@
         "الصدقة",
         "التصدق",
         "المتصدق"
+      ],
+      "localizedPhrases": [
+        "Charity",
+        "Sedekah"
       ]
     },
     {
@@ -809,6 +1040,10 @@
         "الإنفاق",
         "النفقة",
         "النفقات"
+      ],
+      "localizedPhrases": [
+        "Spending for Allah’s Sake",
+        "Infak di Jalan Allah"
       ]
     },
     {
@@ -825,6 +1060,13 @@
         "الزوجين",
         "الطلاق",
         "النكاح"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Marriage",
+        "Fikih Pernikahan",
+        "marriage in islam",
+        "islamic marriage",
+        "pernikahan dalam islam"
       ]
     },
     {
@@ -839,6 +1081,10 @@
       "partialKeywords": [
         "التابعين",
         "التابعي"
+      ],
+      "localizedPhrases": [
+        "Lives of the Tabi‘in",
+        "Kisah Para Tabiin"
       ]
     },
     {
@@ -851,6 +1097,13 @@
       ],
       "partialKeywords": [
         "العمرة"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Umrah",
+        "Fikih Umrah",
+        "umrah rulings",
+        "rules of umrah",
+        "hukum umrah"
       ]
     },
     {
@@ -864,6 +1117,10 @@
       ],
       "partialKeywords": [
         "الرجاء"
+      ],
+      "localizedPhrases": [
+        "Deeds of the Heart",
+        "Amalan Hati"
       ]
     },
     {
@@ -876,6 +1133,14 @@
       ],
       "partialKeywords": [
         "الضحى"
+      ],
+      "localizedPhrases": [
+        "Duha Prayer",
+        "Salat Duha",
+        "duha salah",
+        "duha salat",
+        "sholat dhuha",
+        "salat duha"
       ]
     },
     {
@@ -905,6 +1170,15 @@
         "القبلة",
         "المأموم",
         "المأمومين"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Prayer",
+        "Fikih Salat",
+        "prayer rulings",
+        "rules of salah",
+        "fiqh of salah",
+        "fikih shalat",
+        "hukum salat"
       ]
     },
     {
@@ -915,7 +1189,14 @@
         "الصلاة على رسول الله",
         "الصلاة الإبراهيمية"
       ],
-      "partialKeywords": []
+      "partialKeywords": [],
+      "localizedPhrases": [
+        "Blessings on the Prophet",
+        "Selawat kepada Nabi",
+        "salawat on the prophet",
+        "salawat upon the prophet",
+        "shalawat nabi"
+      ]
     },
     {
       "id": "ctx_purification",
@@ -934,6 +1215,13 @@
         "النجاسة",
         "التيمم",
         "يتيمم"
+      ],
+      "localizedPhrases": [
+        "Fiqh of Purification",
+        "Fikih Bersuci",
+        "rules of purification",
+        "fiqh of taharah",
+        "fikih thaharah"
       ]
     },
     {
